@@ -28,7 +28,7 @@ jobs:
         ssh-private-key: ${{ secrets.SITE_DEPLOY_TOKEN }}
 
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@4.1.4
+      uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
         REPOSITORY_NAME: razumovskii/razumovskii.github.io
         SSH: true
