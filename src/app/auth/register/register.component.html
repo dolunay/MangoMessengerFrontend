@@ -1,0 +1,56 @@
+<body class="authentication-page">
+<div class="main-layout card-bg-1">
+  <div class="container d-flex flex-column">
+    <div class="row no-gutters text-center align-items-center justify-content-center min-vh-100">
+      <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+        <h1 class="font-weight-bold">Register</h1>
+        <p class="text-dark mb-3">We are Different, We Make You Different.</p>
+        <form class="mb-3">
+          <div class="form-group">
+            <label for="phoneNumber" class="sr-only">Phone Number</label>
+            <input [(ngModel)]="PhoneNumber" name="PhoneNumber" type="text" class="form-control form-control-md"
+                   id="phoneNumber"
+                   placeholder="Enter your phone number">
+          </div>
+          <div class="form-group">
+            <label for="displayName" class="sr-only">Display Name</label>
+            <input [(ngModel)]="DisplayName" name="DisplayName" type="text" class="form-control form-control-md"
+                   id="displayName"
+                   placeholder="Enter your display name">
+          </div>
+          <div class="form-group">
+            <label for="email" class="sr-only">Email Address</label>
+            <input [(ngModel)]="Email" name="Email" type="email" class="form-control form-control-md" id="email"
+                   placeholder="Enter your email address">
+          </div>
+          <div class="form-group">
+            <label for="password" class="sr-only">Password</label>
+            <input [(ngModel)]="Password" name="Password" type="password" class="form-control form-control-md"
+                   id="password"
+                   placeholder="Enter your password">
+          </div>
+          <div>
+            Verification method:
+            <select>
+              <option [(ngModel)]="VerificationMethod" name="VerificationMethod" ngDefaultControl="VerificationMethod"
+                      *ngFor="let key of keys" [value]="key"
+                      [label]="verificationMethod[key]"></option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input [checked]="TermsAccepted" (change)="TermsAccepted = !TermsAccepted" [name]="TermsAccepted"
+                   type="checkbox"
+                   id="termsOfService" name="termsOfService" checked>
+            <label for="termsOfService">I accept terms of service</label>
+          </div>
+          <button (click)="register()" class="btn btn-primary btn-lg btn-block text-uppercase font-weight-semibold"
+                  type="submit">Register
+          </button>
+        </form>
+
+        <p>Already have an account? <a class="font-weight-semibold" href="#">Sign in</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>

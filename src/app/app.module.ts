@@ -1,29 +1,44 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {SignUpComponent} from './sign-up/sign-up.component';
 import {RouterModule} from '@angular/router';
-import { SendCodeComponent } from './send-code/send-code.component';
-import {FormsModule} from "@angular/forms";
-import { HttpClientModule } from '@angular/common/http';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {HttpClientModule} from '@angular/common/http';
+import {RegisterComponent} from './auth/register/register.component';
+import {LoginComponent} from './auth/login/login.component';
+import {VerifyEmailComponent} from './auth/verify-email/verify-email.component';
+import {VerifyPhoneComponent} from './auth/verify-phone/verify-phone.component';
+import {RefreshTokenComponent} from './auth/refresh-token/refresh-token.component';
+import {LogoutComponent} from './auth/logout/logout.component';
+import {LogoutAllComponent} from './auth/logout-all/logout-all.component';
+import { MainComponent } from './messenger/main/main.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignUpComponent,
-    SendCodeComponent
+    RegisterComponent,
+    LoginComponent,
+    VerifyEmailComponent,
+    VerifyPhoneComponent,
+    RefreshTokenComponent,
+    LogoutComponent,
+    LogoutAllComponent,
+    MainComponent
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
     RouterModule.forRoot([
-      {path: 'sign-up', component: SignUpComponent},
-      {path: 'send-code', component: SendCodeComponent},
-      {path: '', redirectTo: '/send-code', pathMatch: 'full'},
+      {path: 'register', component: RegisterComponent},
+      {path: 'login', component: LoginComponent},
+      {path: 'verify-phone', component: VerifyPhoneComponent},
+      {path: 'verify-email', component: VerifyEmailComponent},
+      {path: 'main', component: MainComponent},
+      {path: '', redirectTo: '/login', pathMatch: 'full'},
     ]),
     AppRoutingModule,
+    ReactiveFormsModule,
     FormsModule
   ],
   providers: [],

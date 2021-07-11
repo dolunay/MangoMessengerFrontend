@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SendCodeComponent } from './send-code.component';
+import { VerifyPhoneComponent } from './verify-phone.component';
 
-describe('SendCodeComponent', () => {
-  let component: SendCodeComponent;
-  let fixture: ComponentFixture<SendCodeComponent>;
+describe('VerifyPhoneComponent', () => {
+  let component: VerifyPhoneComponent;
+  let fixture: ComponentFixture<VerifyPhoneComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SendCodeComponent ]
+      declarations: [ VerifyPhoneComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SendCodeComponent);
+    fixture = TestBed.createComponent(VerifyPhoneComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
