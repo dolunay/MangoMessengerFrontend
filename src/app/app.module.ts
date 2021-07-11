@@ -12,6 +12,7 @@ import {VerifyPhoneComponent} from './auth/verify-phone/verify-phone.component';
 import {RefreshTokenComponent} from './auth/refresh-token/refresh-token.component';
 import {LogoutComponent} from './auth/logout/logout.component';
 import {LogoutAllComponent} from './auth/logout-all/logout-all.component';
+import { MainComponent } from './messenger/main/main.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {LogoutAllComponent} from './auth/logout-all/logout-all.component';
     VerifyPhoneComponent,
     RefreshTokenComponent,
     LogoutComponent,
-    LogoutAllComponent
+    LogoutAllComponent,
+    MainComponent
   ],
   imports: [
     HttpClientModule,
@@ -32,6 +34,7 @@ import {LogoutAllComponent} from './auth/logout-all/logout-all.component';
       {path: 'login', component: LoginComponent},
       {path: 'verify-phone', component: VerifyPhoneComponent},
       {path: 'verify-email', component: VerifyEmailComponent},
+      {path: 'main', component: MainComponent},
       {path: '', redirectTo: '/login', pathMatch: 'full'},
     ]),
     AppRoutingModule,
