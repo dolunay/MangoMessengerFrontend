@@ -1,9 +1,11 @@
-﻿export class RegisterCommand {
+﻿import {VerificationMethod} from "../../enums/VerificationMethod";
+
+export class RegisterCommand {
   phoneNumber: string;
   email: string;
   displayName: string;
   password: string;
-  verificationMethod: number;
+  verificationMethod: VerificationMethod;
   termsAccepted: boolean;
 
 
@@ -11,7 +13,7 @@
               email: string,
               displayName: string,
               password: string,
-              verificationMethod: number,
+              verificationMethod: VerificationMethod,
               termsAccepted: boolean) {
     this.phoneNumber = phoneNumber;
     this.email = email;
