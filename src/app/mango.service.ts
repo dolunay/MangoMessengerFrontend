@@ -28,7 +28,7 @@ export class MangoService {
   }
 
   login(command: LoginCommand): Observable<ILoginResponse> {
-    return this.httpClient.post<ILoginResponse>(this.mangoApiUrl + 'auth/login', command);
+    return this.httpClient.post<ILoginResponse>(this.mangoApiUrl + 'auth/login', command, {withCredentials: true});
   }
 
   refreshToken(): Observable<IRefreshTokenResponse> {
