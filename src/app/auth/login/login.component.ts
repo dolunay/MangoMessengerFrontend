@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
 
       localStorage.setItem(Tokens.accessToken, this.loginResponse.accessToken);
       localStorage.setItem(Tokens.refreshTokenId, this.loginResponse.refreshTokenId);
-      console.log(localStorage.getItem('MangoAccessToken'));
+      console.log(localStorage.getItem(Tokens.accessToken));
       this.router.navigateByUrl('main').then(r => r);
     });
   }
