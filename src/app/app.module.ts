@@ -8,12 +8,14 @@ import {RouterModule} from '@angular/router';
 import { SendCodeComponent } from './send-code/send-code.component';
 import {FormsModule} from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
+import { RegisterComponent } from './auth/register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignUpComponent,
-    SendCodeComponent
+    SendCodeComponent,
+    RegisterComponent
   ],
   imports: [
     HttpClientModule,

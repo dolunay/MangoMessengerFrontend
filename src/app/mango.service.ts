@@ -1,19 +1,19 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {SendCodePayload} from "./payload/SendCodePayload";
+import {RegisterCommand} from "./models/commands/RegisterCommand";
 import {Observable} from "rxjs";
-import {SendCodeResponse} from "./responses/SendCodeResponse";
+import {IRegisterResponse} from "./models/responses/IRegisterResponse";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MangoService {
-  private mangoApiUrl = 'https://api.mangomessenger.com';
+  private mangoApiUrl = 'https://mango-messenger-app.herokuapp.com/api';
 
   constructor(private httpClient: HttpClient) {
   }
 
-  sendCode(payload: SendCodePayload): Observable<SendCodeResponse> {
-    return this.httpClient.post<SendCodeResponse>(this.mangoApiUrl + '/auth/send-code', payload, {withCredentials: true});
+  register(command: RegisterCommand): Observable<IRegisterResponse> {
+    return this.httpClient.post<IRegisterResponse>(this.mangoApiUrl, command);
   }
 }
