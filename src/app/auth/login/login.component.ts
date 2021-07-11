@@ -3,6 +3,7 @@ import {ILoginResponse} from "../../models/responses/auth/ILoginResponse";
 import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {LoginCommand} from "../../models/commands/auth/LoginCommand";
+import {Tokens} from "../../models/consts/tokens";
 
 @Component({
   selector: 'app-login',
@@ -30,8 +31,9 @@ export class LoginComponent implements OnInit {
         return;
       }
 
-      localStorage.setItem('MangoAccessToken', this.loginResponse.accessToken);
-      console.log(localStorage.getItem('MangoAccessToken'));
+      localStorage.setItem(Tokens.accessToken, this.loginResponse.accessToken);
+      localStorage.setItem(Tokens.refreshTokenId, this.loginResponse.refreshTokenId);
+      console.log(localStorage.getItem(Tokens.accessToken));
       this.router.navigateByUrl('main').then(r => r);
     });
   }

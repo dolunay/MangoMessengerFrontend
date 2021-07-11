@@ -214,17 +214,17 @@
             <!-- Chat Contact List Start -->
             <ul class="contacts-list" id="chatContactTab" data-chat-list="">
               <li *ngFor="let chat of userChatsResponse.chats" class="contacts-item friends active">
-                <a class="contacts-link" href="javascript:;">
+                <a class="contacts-link" href="javascript:">
                   <div class="avatar avatar-online">
                     <!--      <img src="./../assets/media/avatar/2.png" alt="">-->
                   </div>
                   <div class="contacts-content">
                     <div class="contacts-info">
                       <h6 class="chat-name text-truncate">{{chat.title}}</h6>
-                      <div class="chat-time">Just now</div>
+                      <div class="chat-time">{{chat.lastMessageAt}}</div>
                     </div>
                     <div class="contacts-texts">
-                      <p class="text-truncate">I’m sorry, I didn’t catch that. Could you please repeat?</p>
+                      <p class="text-truncate">{{chat.lastMessage}}</p>
                     </div>
                   </div>
                 </a>
