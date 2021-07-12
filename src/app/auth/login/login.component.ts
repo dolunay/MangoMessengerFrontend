@@ -22,18 +22,14 @@ export class LoginComponent implements OnInit {
     this.service.login(new LoginCommand(this.email, this.password)).subscribe((data: ILoginResponse) => {
       this.loginResponse = data;
 
-      console.log(this.loginResponse);
-      console.log(this.loginResponse.success);
-
       if (!this.loginResponse.success) {
-        // to implement
-        console.log(this.loginResponse.message);
+        // to implement redirect
+        this.router.navigateByUrl('register').then(r => r);
         return;
       }
 
       localStorage.setItem(Tokens.accessToken, this.loginResponse.accessToken);
       localStorage.setItem(Tokens.refreshTokenId, this.loginResponse.refreshTokenId);
-      console.log(localStorage.getItem(Tokens.accessToken));
       this.router.navigateByUrl('main').then(r => r);
     });
   }
