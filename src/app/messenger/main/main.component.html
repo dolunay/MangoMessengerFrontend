@@ -22,8 +22,10 @@
             <!-- Chat Contact List Start -->
             <ul class="contacts-list" id="chatContactTab" data-chat-list="">
               <!-- Chat Item Start -->
-              <app-chat-item-active [chatName]="'Catherine Richardson'" [lastMessage]="'Hello world'"
-                                    [lastMessageDateTime]="'Just Now'"></app-chat-item-active>
+              <li *ngFor="let chat of getUserChatsResponse.chats">
+                <app-chat-item-active [chatName]="chat.title" [lastMessage]="chat.lastMessage"
+                                      [lastMessageDateTime]="chat.lastMessageAt"></app-chat-item-active>
+              </li>
               <!-- Chat Item End -->
 
               <!-- Chat Item Start -->
@@ -92,7 +94,8 @@
               <!-- Received Message End -->
 
               <!-- Self Message Start -->
-              <app-self-message [message]="'Слава Хi!!'" [sentDateTime]="'9:52pm'" [status]="'Edited'"></app-self-message>
+              <app-self-message [message]="'Слава Хi!!'" [sentDateTime]="'9:52pm'"
+                                [status]="'Edited'"></app-self-message>
               <!-- Self Message End -->
             </div>
             <!-- Message Day End -->

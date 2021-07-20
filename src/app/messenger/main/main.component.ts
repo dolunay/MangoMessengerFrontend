@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {IGetUserChatsResponse} from "../../../types/Chats/Responses/IGetUserChatsResponse";
+import {MangoService} from "../../mango.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-main',
@@ -7,9 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  // @ts-ignore
+  getUserChatsResponse: IGetUserChatsResponse;
 
-  ngOnInit(): void {
+  constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) {
   }
 
+  ngOnInit(): void {
+    this.service.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+      this.getUserChatsResponse = data;
+
+      if (!this.getUserChatsResponse.success) {
+        this.router.navigateByUrl('main').then(r => r);
+      }
+    })
+  }
 }
