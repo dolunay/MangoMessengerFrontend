@@ -10,12 +10,14 @@ import {LoginComponent} from './auth/login/login.component';
 import {VerifyEmailComponent} from './auth/verify-email/verify-email.component';
 import {VerifyPhoneComponent} from './auth/verify-phone/verify-phone.component';
 import {RefreshTokenComponent} from './auth/refresh-token/refresh-token.component';
-import {LogoutComponent} from './auth/logout/logout.component';
-import {LogoutAllComponent} from './auth/logout-all/logout-all.component';
 import {MainComponent} from './messenger/main/main.component';
 import {ProfileSettingsComponent} from './messenger/profile-settings/profile-settings.component';
 import {ContactsComponent} from './messenger/contacts/contacts.component';
 import { NavigationBarComponent } from './messenger/auxiliary/navigation-bar/navigation-bar.component';
+import { ReceivedMessageComponent } from './messenger/auxiliary/received-message/received-message.component';
+import { SelfMessageComponent } from './messenger/auxiliary/self-message/self-message.component';
+import { ChatFooterComponent } from './messenger/auxiliary/chat-footer/chat-footer.component';
+import { ChatHeaderComponent } from './messenger/auxiliary/chat-header/chat-header.component';
 
 @NgModule({
   declarations: [
@@ -25,12 +27,14 @@ import { NavigationBarComponent } from './messenger/auxiliary/navigation-bar/nav
     VerifyEmailComponent,
     VerifyPhoneComponent,
     RefreshTokenComponent,
-    LogoutComponent,
-    LogoutAllComponent,
     MainComponent,
     ProfileSettingsComponent,
     ContactsComponent,
     NavigationBarComponent,
+    ReceivedMessageComponent,
+    SelfMessageComponent,
+    ChatFooterComponent,
+    ChatHeaderComponent,
   ],
   imports: [
     HttpClientModule,

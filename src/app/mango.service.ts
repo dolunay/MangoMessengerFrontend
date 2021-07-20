@@ -2,15 +2,15 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {RegisterCommand} from "../types/Auth/Requests/RegisterCommand";
-import {IRegisterResponse} from "../types/Auth/Responses/IRegisterResponse";
-import {AuthRoutes, ChatsRoutes} from "../consts/Routes";
 import {VerifyPhoneCommand} from "../types/Auth/Requests/VerifyPhoneCommand";
-import {IVerifyPhoneCodeResponse} from "../types/Auth/Responses/IVerifyPhoneCodeResponse";
 import {LoginCommand} from "../types/Auth/Requests/LoginCommand";
 import {ILoginResponse} from "../types/Auth/Responses/ILoginResponse";
 import {IRefreshTokenResponse} from "../types/Auth/Responses/IRefreshTokenResponse";
-import {IGetUserChatsResponse} from "../types/Chats/Responses/IGetUserChatsResponse";
 import {Tokens} from "../consts/Tokens";
+import {IRegisterResponse} from "../types/Auth/Responses/IRegisterResponse";
+import {AuthRoutes, ChatsRoutes} from "../consts/Routes";
+import {IVerifyPhoneCodeResponse} from "../types/Auth/Responses/IVerifyPhoneCodeResponse";
+import {IGetUserChatsResponse} from "../types/Chats/Responses/IGetUserChatsResponse";
 
 @Injectable({
   providedIn: 'root'

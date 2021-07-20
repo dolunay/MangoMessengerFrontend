@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LogoutAllComponent } from './logout-all.component';
+import { SelfMessageComponent } from './self-message.component';
 
-describe('LogoutAllComponent', () => {
-  let component: LogoutAllComponent;
-  let fixture: ComponentFixture<LogoutAllComponent>;
+describe('SelfMessageComponent', () => {
+  let component: SelfMessageComponent;
+  let fixture: ComponentFixture<SelfMessageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LogoutAllComponent ]
+      declarations: [ SelfMessageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LogoutAllComponent);
+    fixture = TestBed.createComponent(SelfMessageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
