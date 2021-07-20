@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-group-item',
@@ -7,9 +7,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GroupItemComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
 
+  // @ts-ignore
+  @Input() groupName: string;
+  // @ts-ignore
+  @Input() lastMessage: string;
+  // @ts-ignore
+  @Input() lastMessageAuthor: string;
+  // @ts-ignore
+  @Input() lastMessageDateTime: string;
 }

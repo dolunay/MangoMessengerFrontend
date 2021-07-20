@@ -16,12 +16,17 @@
     </div>
     <div class="contacts-content">
       <div class="contacts-info">
-        <h6 class="chat-name">Themeforest Group</h6>
-        <div class="chat-time"><span>10:20 pm</span></div>
+        <h6 class="chat-name">{{groupName}}</h6>
+        <div class="chat-time"><span>{{lastMessageDateTime}}
+        </span>
+        </div>
       </div>
       <div class="contacts-texts">
-        <p class="text-truncate"><span>Jeny: </span>That’s pretty common. I heard
-          that a lot of people had the same experience.</p>
+        <p class="text-truncate">
+          <span>{{lastMessageAuthor}}:
+        </span>
+          {{lastMessage}}
+        </p>
         <div class="d-inline-flex align-items-center ml-1">
           <!-- Default :: Inline SVG -->
           <svg class="hw-16 text-muted" viewBox="0 0 20 20" fill="currentColor">
