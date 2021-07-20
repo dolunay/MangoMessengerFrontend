@@ -18,6 +18,9 @@ import { ReceivedMessageComponent } from './messenger/auxiliary/received-message
 import { SelfMessageComponent } from './messenger/auxiliary/self-message/self-message.component';
 import { ChatFooterComponent } from './messenger/auxiliary/chat-footer/chat-footer.component';
 import { ChatHeaderComponent } from './messenger/auxiliary/chat-header/chat-header.component';
+import { ChatSidebarHeaderComponent } from './messenger/auxiliary/chat-sidebar-header/chat-sidebar-header.component';
+import { ChatItemActiveComponent } from './messenger/auxiliary/chat-item-active/chat-item-active.component';
+import { GroupItemComponent } from './messenger/auxiliary/group-item/group-item.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +38,9 @@ import { ChatHeaderComponent } from './messenger/auxiliary/chat-header/chat-head
     SelfMessageComponent,
     ChatFooterComponent,
     ChatHeaderComponent,
+    ChatSidebarHeaderComponent,
+    ChatItemActiveComponent,
+    GroupItemComponent,
   ],
   imports: [
     HttpClientModule,
