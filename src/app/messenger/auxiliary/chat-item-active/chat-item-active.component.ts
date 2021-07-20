@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-chat-item-active',
@@ -7,9 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChatItemActiveComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
+
+  // @ts-ignore
+  @Input() chatName: string;
+  // @ts-ignore
+  @Input() lastMessage: string;
+  // @ts-ignore
+  @Input() lastMessageDateTime: string;
 
 }
