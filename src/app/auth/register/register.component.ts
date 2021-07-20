@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {VerificationMethod} from 'src/app/models/enums/VerificationMethod';
-import {IRegisterResponse} from "../../models/responses/auth/IRegisterResponse";
 import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {RegisterCommand} from "../../models/commands/auth/RegisterCommand";
+import {VerificationMethod} from 'src/types/Auth/Enums/VerificationMethod';
+import {IRegisterResponse} from "../../../types/Auth/Responses/IRegisterResponse";
+import {RegisterCommand} from "../../../types/Auth/Requests/RegisterCommand";
 
 @Component({
   selector: 'app-register',
@@ -31,24 +31,24 @@ export class RegisterComponent implements OnInit {
   register(): void {
     this.service.register(new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName, this.Password,
       this.VerificationMethod, this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
-        this.registerResponse = data;
+      this.registerResponse = data;
 
-        console.log(this.registerResponse);
-        console.log(this.registerResponse.success)
+      console.log(this.registerResponse);
+      console.log(this.registerResponse.success)
 
-        if (!this.registerResponse.success) {
-          // to implement
-          console.log(this.registerResponse.message);
-          return;
-        }
+      if (!this.registerResponse.success) {
+        // to implement
+        console.log(this.registerResponse.message);
+        return;
+      }
 
-        if (this.VerificationMethod === VerificationMethod.Email) {
-          this.router.navigateByUrl('verify-email').then(r => r);
-          return;
-        }
+      if (this.VerificationMethod === VerificationMethod.Email) {
+        this.router.navigateByUrl('verify-email').then(r => r);
+        return;
+      }
 
-        this.router.navigateByUrl('verify-phone').then(r => r);
-      });
+      this.router.navigateByUrl('verify-phone').then(r => r);
+    });
   }
 
 

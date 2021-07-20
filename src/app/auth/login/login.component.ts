@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {ILoginResponse} from "../../models/responses/auth/ILoginResponse";
+import {Component, OnInit} from '@angular/core';
 import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {LoginCommand} from "../../models/commands/auth/LoginCommand";
-import {Tokens} from "../../models/consts/tokens";
+import {ILoginResponse} from "../../../types/Auth/Responses/ILoginResponse";
+import {LoginCommand} from "../../../types/Auth/Requests/LoginCommand";
+import {Tokens} from "../../../consts/Tokens";
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,8 @@ export class LoginComponent implements OnInit {
   password = 'z[?6dMR#xmp=nr6q';
   loginResponse!: ILoginResponse;
 
-  constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) {
+  }
 
   login(): void {
     this.service.login(new LoginCommand(this.email, this.password)).subscribe((data: ILoginResponse) => {

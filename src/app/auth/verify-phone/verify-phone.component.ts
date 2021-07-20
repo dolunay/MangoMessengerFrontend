@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {IVerifyPhoneCodeResponse} from "../../models/responses/auth/IVerifyPhoneCodeResponse";
-import {VerifyPhoneCommand} from "../../models/commands/auth/VerifyPhoneCommand";
+import {IVerifyPhoneCodeResponse} from "../../../types/Auth/Responses/IVerifyPhoneCodeResponse";
+import {VerifyPhoneCommand} from 'src/types/Auth/Requests/VerifyPhoneCommand';
 
 @Component({
   selector: 'app-verify-phone',
