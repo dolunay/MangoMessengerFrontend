@@ -16,7 +16,7 @@ import {Tokens} from "../consts/Tokens";
   providedIn: 'root'
 })
 export class MangoService {
-  private mangoApiUrl = 'https://mango-messenger-app.herokuapp.com/api/';
+  private mangoApiUrl = 'https://mango-messenger-app.herokuapp.com/';
 
   constructor(private httpClient: HttpClient) {
   }

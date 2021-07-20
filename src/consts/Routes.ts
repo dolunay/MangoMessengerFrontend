@@ -1,5 +1,5 @@
 ﻿export class ApiRoute {
-  static apiDomain: 'https://mango-messenger-app.herokuapp.com';
+  static apiDomain: 'https://mango-messenger-app.herokuapp.com/';
 }
 
 export class AuthRoutes {
