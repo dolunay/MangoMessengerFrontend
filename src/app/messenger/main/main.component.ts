@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {IGetUserChatsResponse} from "../../../types/Chats/Responses/IGetUserChatsResponse";
 import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {IGetChatMessagesResponse} from "../../../types/Messages/Responses/IGetChatMessagesResponse";
+import {IMessage} from "../../../types/Messages/Models/IMessage";
 
 @Component({
   selector: 'app-main',
@@ -13,6 +15,9 @@ export class MainComponent implements OnInit {
   // @ts-ignore
   getUserChatsResponse: IGetUserChatsResponse;
 
+  // @ts-ignore
+  messages: IMessage[] = [];
+
   constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) {
   }
 
@@ -23,6 +28,12 @@ export class MainComponent implements OnInit {
       if (!this.getUserChatsResponse.success) {
         this.router.navigateByUrl('main').then(r => r);
       }
+    })
+  }
+
+  getChatMessages(chatId: number) : void {
+    this.service.getChatMessages(chatId).subscribe((data: IGetChatMessagesResponse) => {
+      this.messages = data.messages;
     })
   }
 }

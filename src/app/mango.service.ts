@@ -8,9 +8,10 @@ import {ILoginResponse} from "../types/Auth/Responses/ILoginResponse";
 import {IRefreshTokenResponse} from "../types/Auth/Responses/IRefreshTokenResponse";
 import {Tokens} from "../consts/Tokens";
 import {IRegisterResponse} from "../types/Auth/Responses/IRegisterResponse";
-import {AuthRoutes, ChatsRoutes} from "../consts/Routes";
+import {AuthRoutes, ChatsRoutes, MessagesRoutes} from "../consts/Routes";
 import {IVerifyPhoneCodeResponse} from "../types/Auth/Responses/IVerifyPhoneCodeResponse";
 import {IGetUserChatsResponse} from "../types/Chats/Responses/IGetUserChatsResponse";
+import {IGetChatMessagesResponse} from "../types/Messages/Responses/IGetChatMessagesResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,15 @@ export class MangoService {
         .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
     };
     return this.httpClient.get<IGetUserChatsResponse>(this.mangoApiUrl + ChatsRoutes.getChats, header);
+  }
+
+  getChatMessages(chatId: number): Observable<IGetChatMessagesResponse> {
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
+    };
+    console.log(this.mangoApiUrl + MessagesRoutes.getChatMessages + chatId);
+    return this.httpClient
+      .get<IGetChatMessagesResponse>(this.mangoApiUrl + 'api/messages/' + chatId, header);
   }
 }

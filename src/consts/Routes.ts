@@ -17,7 +17,7 @@ export class ChatsRoutes {
 }
 
 export class MessagesRoutes {
-  static getChatMessages: 'api/messages/{chatId}';
+  static getChatMessages: 'api/messages/';
   static postMessage: 'api/messages';
   static putMessage: 'api/messages';
   static deleteMessage: 'api/messages/{messageId}';
