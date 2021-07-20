@@ -88,11 +88,11 @@
               <div class="message-divider sticky-top pb-2" data-label="Today">&nbsp;</div>
 
               <!-- Received Message Start -->
-              <app-received-message></app-received-message>
+              <app-received-message [message]="'Слава партии!!'" [sentDateTime]="'9:52pm'"></app-received-message>
               <!-- Received Message End -->
 
               <!-- Self Message Start -->
-              <app-self-message></app-self-message>
+              <app-self-message [message]="'Слава Хi!!'" [sentDateTime]="'9:52pm'" [status]="'Edited'"></app-self-message>
               <!-- Self Message End -->
             </div>
             <!-- Message Day End -->

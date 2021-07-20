@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-self-message',
@@ -7,9 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelfMessageComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
+
+  // @ts-ignore
+  @Input() message: string;
+  // @ts-ignore
+  @Input() sentDateTime: string;
+  // @ts-ignore
+  @Input() status: string;
 
 }
