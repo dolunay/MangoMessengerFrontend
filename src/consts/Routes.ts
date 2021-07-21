@@ -10,19 +10,19 @@ export class AuthRoutes {
 }
 
 export class ChatsRoutes {
-  static getChats = '/api/chats';
-  static postGroup = '/api/chats/group';
-  static postDirectChat = '/api/chats/direct-chat';
-  static postJoinGroup = '/api/chats/group/join/{chatId}';
+  static getChats = 'api/chats';
+  static postGroup = 'api/chats/group';
+  static postDirectChat = 'api/chats/direct-chat';
+  static postJoinGroup = 'api/chats/group/join/{chatId}';
 }
 
 export class MessagesRoutes {
-  static getChatMessages: '/api/messages/{chatId}';
-  static postMessage: '/api/messages';
-  static putMessage: '/api/messages';
-  static deleteMessage: '/api/messages/{messageId}';
+  static getChatMessages: 'api/messages/';
+  static postMessage: 'api/messages';
+  static putMessage: 'api/messages';
+  static deleteMessage: 'api/messages/{messageId}';
 }
 
 export class UserRoutes {
-  static getUserById: '/api/users/{userId}';
+  static getUserById: 'api/users/{userId}';
 }

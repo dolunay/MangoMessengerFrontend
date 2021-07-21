@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LogoutAllComponent } from './logout-all.component';
+import { GroupItemComponent } from './group-item.component';
 
-describe('LogoutAllComponent', () => {
-  let component: LogoutAllComponent;
-  let fixture: ComponentFixture<LogoutAllComponent>;
+describe('GroupItemComponent', () => {
+  let component: GroupItemComponent;
+  let fixture: ComponentFixture<GroupItemComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LogoutAllComponent ]
+      declarations: [ GroupItemComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LogoutAllComponent);
+    fixture = TestBed.createComponent(GroupItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
