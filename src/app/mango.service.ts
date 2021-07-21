@@ -39,7 +39,7 @@ export class MangoService {
   }
 
   refreshToken(request: RefreshTokenCommand): Observable<IRefreshTokenResponse> {
-    return this.httpClient.post<IRefreshTokenResponse>(this.mangoApiUrl + AuthRoutes.postRefreshToken, request);
+    return this.httpClient.post<IRefreshTokenResponse>(this.mangoApiUrl + 'api/auth/refresh-token', request);
   }
 
   getUserChats(): Observable<IGetUserChatsResponse> {

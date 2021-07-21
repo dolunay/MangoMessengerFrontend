@@ -6,6 +6,9 @@ import {IGetChatMessagesResponse} from "../../../types/Messages/Responses/IGetCh
 import {IMessage} from "../../../types/Messages/Models/IMessage";
 import {SendMessageCommand} from "../../../types/Messages/Requests/SendMessageCommand";
 import {ISendMessageResponse} from "../../../types/Messages/Responses/ISendMessageResponse";
+import {RefreshTokenCommand} from "../../../types/Auth/Requests/RefreshTokenCommand";
+import {Tokens} from "../../../consts/Tokens";
+import {IRefreshTokenResponse} from "../../../types/Auth/Responses/IRefreshTokenResponse";
 
 @Component({
   selector: 'app-main',
@@ -29,25 +32,56 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.getUserChats().subscribe((data: IGetUserChatsResponse) => {
-      this.getUserChatsResponse = data;
+        this.getUserChatsResponse = data;
 
-      if (!this.getUserChatsResponse.success) {
-        this.router.navigateByUrl('main').then(r => r);
-      }
-    })
+        if (!this.getUserChatsResponse.success) {
+          this.router.navigateByUrl('main').then(r => r);
+        }
+      },
+      error => {
+        let refreshToken = localStorage.getItem(Tokens.refreshTokenId);
+        console.log(refreshToken);
+        this.service.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe((data: IRefreshTokenResponse) => {
+            if (!data.success) {
+              this.router.navigateByUrl('login').then(r => r);
+            }
+          },
+          error1 => {
+            this.router.navigateByUrl('login').then(r => r);
+          })
+      })
   }
 
-  getChatMessages(chatId: number) : void {
+  getChatMessages(chatId: number): void {
     this.service.getChatMessages(chatId).subscribe((data: IGetChatMessagesResponse) => {
-      this.messages = data.messages;
-      this.activeChatId = chatId;
-    })
+        this.messages = data.messages;
+        this.activeChatId = chatId;
+      },
+      error => {
+        let refreshToken = localStorage.getItem(Tokens.refreshTokenId);
+        console.log(refreshToken);
+        this.service.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe((data: IRefreshTokenResponse) => {
+          if (!data.success) {
+            this.router.navigateByUrl('login').then(r => r);
+          }
+        })
+      })
   }
 
-  sendMessage() : void {
+  sendMessage(): void {
     this.service.sendMessage(new SendMessageCommand(this.activeMessageText, this.activeChatId))
       .subscribe((data: ISendMessageResponse) => {
-
-    })
+      }, error => {
+        let refreshToken = localStorage.getItem(Tokens.refreshTokenId);
+        console.log(refreshToken);
+        this.service.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe((data: IRefreshTokenResponse) => {
+          if (!data.success) {
+            this.router.navigateByUrl('login').then(r => r);
+          }
+          this.activeMessageText = '';
+        }, error1 => {
+          this.router.navigateByUrl('login').then(r => r);
+        })
+      })
   }
 }
