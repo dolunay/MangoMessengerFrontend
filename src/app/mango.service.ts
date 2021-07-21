@@ -8,10 +8,13 @@ import {ILoginResponse} from "../types/Auth/Responses/ILoginResponse";
 import {IRefreshTokenResponse} from "../types/Auth/Responses/IRefreshTokenResponse";
 import {Tokens} from "../consts/Tokens";
 import {IRegisterResponse} from "../types/Auth/Responses/IRegisterResponse";
-import {AuthRoutes, ChatsRoutes, MessagesRoutes} from "../consts/Routes";
+import {AuthRoutes, ChatsRoutes} from "../consts/Routes";
 import {IVerifyPhoneCodeResponse} from "../types/Auth/Responses/IVerifyPhoneCodeResponse";
 import {IGetUserChatsResponse} from "../types/Chats/Responses/IGetUserChatsResponse";
 import {IGetChatMessagesResponse} from "../types/Messages/Responses/IGetChatMessagesResponse";
+import {RefreshTokenCommand} from "../types/Auth/Requests/RefreshTokenCommand";
+import {SendMessageCommand} from "../types/Messages/Requests/SendMessageCommand";
+import {ISendMessageResponse} from "../types/Messages/Responses/ISendMessageResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +38,8 @@ export class MangoService {
       {withCredentials: true});
   }
 
-  refreshToken(): Observable<IRefreshTokenResponse> {
-    return this.httpClient.post<IRefreshTokenResponse>(this.mangoApiUrl + AuthRoutes.postRefreshToken, {});
+  refreshToken(request: RefreshTokenCommand): Observable<IRefreshTokenResponse> {
+    return this.httpClient.post<IRefreshTokenResponse>(this.mangoApiUrl + AuthRoutes.postRefreshToken, request);
   }
 
   getUserChats(): Observable<IGetUserChatsResponse> {
@@ -52,8 +55,14 @@ export class MangoService {
       headers: new HttpHeaders()
         .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
     };
-    console.log(this.mangoApiUrl + MessagesRoutes.getChatMessages + chatId);
-    return this.httpClient
-      .get<IGetChatMessagesResponse>(this.mangoApiUrl + 'api/messages/' + chatId, header);
+    return this.httpClient.get<IGetChatMessagesResponse>(this.mangoApiUrl + 'api/messages/' + chatId, header);
+  }
+
+  sendMessage(request: SendMessageCommand): Observable<ISendMessageResponse> {
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
+    };
+    return this.httpClient.post<ISendMessageResponse>(this.mangoApiUrl + 'api/messages/', request, header);
   }
 }
