@@ -13,14 +13,14 @@ import {RefreshTokenComponent} from './auth/refresh-token/refresh-token.componen
 import {MainComponent} from './messenger/main/main.component';
 import {ProfileSettingsComponent} from './messenger/profile-settings/profile-settings.component';
 import {ContactsComponent} from './messenger/contacts/contacts.component';
-import { NavigationBarComponent } from './messenger/auxiliary/navigation-bar/navigation-bar.component';
-import { ReceivedMessageComponent } from './messenger/auxiliary/received-message/received-message.component';
-import { SelfMessageComponent } from './messenger/auxiliary/self-message/self-message.component';
-import { ChatFooterComponent } from './messenger/auxiliary/chat-footer/chat-footer.component';
-import { ChatHeaderComponent } from './messenger/auxiliary/chat-header/chat-header.component';
-import { ChatSidebarHeaderComponent } from './messenger/auxiliary/chat-sidebar-header/chat-sidebar-header.component';
-import { ChatItemActiveComponent } from './messenger/auxiliary/chat-item-active/chat-item-active.component';
-import { GroupItemComponent } from './messenger/auxiliary/group-item/group-item.component';
+import {NavigationBarComponent} from './messenger/auxiliary/navigation-bar/navigation-bar.component';
+import {ReceivedMessageComponent} from './messenger/auxiliary/received-message/received-message.component';
+import {SelfMessageComponent} from './messenger/auxiliary/self-message/self-message.component';
+import {ChatFooterComponent} from './messenger/auxiliary/chat-footer/chat-footer.component';
+import {ChatHeaderComponent} from './messenger/auxiliary/chat-header/chat-header.component';
+import {ChatSidebarHeaderComponent} from './messenger/auxiliary/chat-sidebar-header/chat-sidebar-header.component';
+import {ChatItemActiveComponent} from './messenger/auxiliary/chat-item-active/chat-item-active.component';
+import {GroupItemComponent} from './messenger/auxiliary/group-item/group-item.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +53,7 @@ import { GroupItemComponent } from './messenger/auxiliary/group-item/group-item.
       {path: 'main', component: MainComponent},
       {path: 'contacts', component: ContactsComponent},
       {path: 'profile-settings', component: ProfileSettingsComponent},
+      {path: 'refresh-token', component: RefreshTokenComponent},
       {path: '', redirectTo: '/login', pathMatch: 'full'},
     ]),
     AppRoutingModule,
