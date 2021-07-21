@@ -19,4 +19,6 @@ export class ReceivedMessageComponent implements OnInit {
   @Input() sentDateTime: string;
   // @ts-ignore
   @Input() status: string;
+  // @ts-ignore
+  @Input() messageAuthor: string;
 }

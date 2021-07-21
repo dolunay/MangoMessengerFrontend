@@ -12,8 +12,8 @@ import {RegisterCommand} from "../../../types/Auth/Requests/RegisterCommand";
 })
 export class RegisterComponent implements OnInit {
 
-  PhoneNumber = '+380974913858';
-  Email = 'maintester@gmail.com';
+  PhoneNumber = '+3809749138593';
+  Email = 'kolosovp94@gmail.com';
   Password = 'z[?6dMR#xmp=nr6q';
   VerificationMethod: VerificationMethod = 1;
   TermsAccepted = false;

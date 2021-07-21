@@ -12,7 +12,7 @@ import {Tokens} from "../../../consts/Tokens";
 })
 export class LoginComponent implements OnInit {
 
-  email = 'maintester@gmail.com';
+  email = 'kolosovp94@gmail.com';
   password = 'z[?6dMR#xmp=nr6q';
   loginResponse!: ILoginResponse;
 

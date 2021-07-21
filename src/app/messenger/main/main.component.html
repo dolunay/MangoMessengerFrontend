@@ -92,7 +92,7 @@
               <div class="message-divider sticky-top pb-2" data-label="Today">&nbsp;</div>
 
               <div *ngFor="let message of messages">
-                <app-received-message [message]="message.messageText"
+                <app-received-message [messageAuthor]="message.userDisplayName" [message]="message.messageText"
                                       [sentDateTime]="message.sentAt"></app-received-message>
               </div>
 
@@ -231,7 +231,7 @@
                 <!-- Textarea Start-->
                 <input class="form-control transparent-bg border-0 no-resize hide-scrollbar"
                        [(ngModel)]="activeMessageText"
-                       placeholder="Write your message..." (click)="sendMessage()"/>
+                       placeholder="Write your message..."/>
                 <!-- Textarea End -->
               </div>
             </div>
@@ -239,7 +239,8 @@
 
             <!-- Submit Button Start -->
             <div class="col-auto">
-              <div class="btn btn-primary btn-icon rounded-circle text-light mb-1" role="button">
+              <div class="btn btn-primary btn-icon rounded-circle text-light mb-1" role="button"
+                   (click)="sendMessage()">
                 <!-- Default :: Inline SVG -->
                 <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
