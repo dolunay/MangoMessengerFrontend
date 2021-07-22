@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {VerificationMethod} from 'src/types/Auth/Enums/VerificationMethod';
 import {IRegisterResponse} from "../../../types/Auth/Responses/IRegisterResponse";
 import {RegisterCommand} from "../../../types/Auth/Requests/RegisterCommand";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-register',
@@ -24,12 +24,12 @@ export class RegisterComponent implements OnInit {
   keys!: any[];
   verificationMethod = VerificationMethod;
 
-  constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
     this.keys = Object.keys(this.verificationMethod).filter(k => !isNaN(Number(k)));
   }
 
   register(): void {
-    this.service.register(new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName, this.Password,
+    this.authService.register(new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName, this.Password,
       this.VerificationMethod, this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
       this.registerResponse = data;
 

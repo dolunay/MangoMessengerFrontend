@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Tokens} from "../../../consts/Tokens";
 import {RefreshTokenCommand} from "../../../types/Auth/Requests/RefreshTokenCommand";
 import {IRefreshTokenResponse} from "../../../types/Auth/Responses/IRefreshTokenResponse";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-refresh-token',
@@ -12,7 +12,7 @@ import {IRefreshTokenResponse} from "../../../types/Auth/Responses/IRefreshToken
 })
 export class RefreshTokenComponent implements OnInit {
 
-  constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -23,7 +23,7 @@ export class RefreshTokenComponent implements OnInit {
     console.log(refreshToken);
     let command = new RefreshTokenCommand(refreshToken);
     console.log(command);
-    this.service.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe(
+    this.authService.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe(
       (data: IRefreshTokenResponse) => {
         if (data.success) {
           localStorage.setItem(Tokens.accessToken, data.accessToken);
