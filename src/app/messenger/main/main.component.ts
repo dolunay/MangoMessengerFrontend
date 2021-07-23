@@ -31,6 +31,9 @@ export class MainComponent implements OnInit {
   // @ts-ignore
   activeMessageText: string = '';
 
+  activeChatTitle: string = '';
+  activeChatMembersCount: number = 0;
+
   constructor(private authService: AuthService,
               private chatService: ChatsService,
               private messageService: MessagesService,
@@ -72,6 +75,7 @@ export class MainComponent implements OnInit {
     this.messageService.getChatMessages(chatId).subscribe((data: IGetChatMessagesResponse) => {
         this.messages = data.messages;
         this.activeChatId = chatId;
+        this.activeChatTitle = this.getUserChatsResponse.chats.filter(x => x.chatId === chatId)[0].title;
       },
       error => {
         if (error && error.response) {
