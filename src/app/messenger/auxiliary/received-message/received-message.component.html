@@ -1,4 +1,4 @@
-<div class="message">
+<div [ngClass]="self ? 'message self' : 'message'">
   <div class="message-wrapper">
     <div class="message-content">
       <div><b>{{messageAuthor}}</b></div>

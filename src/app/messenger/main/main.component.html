@@ -92,10 +92,10 @@
               <div class="message-divider sticky-top pb-2" data-label="Today">&nbsp;</div>
 
               <div *ngFor="let message of messages">
-                <app-received-message [messageAuthor]="message.userDisplayName" [message]="message.messageText"
+                <app-received-message [self]="message.self"
+                                      [messageAuthor]="message.userDisplayName" [message]="message.messageText"
                                       [sentDateTime]="message.sentAt"></app-received-message>
               </div>
-
             </div>
             <!-- Message Day End -->
           </div>

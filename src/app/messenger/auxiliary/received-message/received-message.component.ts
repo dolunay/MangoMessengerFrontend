@@ -21,4 +21,7 @@ export class ReceivedMessageComponent implements OnInit {
   @Input() status: string;
   // @ts-ignore
   @Input() messageAuthor: string;
+
+  // @ts-ignore
+  @Input() self: boolean;
 }
