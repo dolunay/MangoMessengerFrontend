@@ -21,6 +21,8 @@ export class MainComponent implements OnInit {
 
   // @ts-ignore
   getUserChatsResponse: IGetUserChatsResponse;
+  // @ts-ignore
+  refreshTokenResponse: IRefreshTokenResponse;
 
   // @ts-ignore
   messages: IMessage[] = [];
@@ -48,20 +50,22 @@ export class MainComponent implements OnInit {
               break;
             case 401:
               this.refreshToken();
-              this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
-                this.getUserChatsResponse = data;
-              });
-              this.reloadComponent();
+              setTimeout(() => {
+                if (this.refreshTokenResponse.success) {
+                  console.log("ok");
+                  this.reloadComponent("/main");
+                }
+              }, 1000);
               break;
           }
         }
       });
   }
 
-  reloadComponent(): void {
+  reloadComponent(component: string): void {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate(['/main']).then(r => r);
+    this.router.navigate([component]).then(r => r);
   }
 
   getChatMessages(chatId: number): void {
@@ -107,10 +111,14 @@ export class MainComponent implements OnInit {
     this.authService.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe(
       (data: IRefreshTokenResponse) => {
         if (data.success) {
+          this.refreshTokenResponse = data;
           localStorage.setItem(Tokens.accessToken, data.accessToken);
           localStorage.setItem(Tokens.refreshTokenId, data.refreshTokenId);
+          return;
         }
-      }
+
+        this.router.navigateByUrl('login').then(r => r);
+      }, error => this.router.navigateByUrl('login').then(r => r)
     )
   }
 }
