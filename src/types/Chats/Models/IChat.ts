@@ -5,4 +5,5 @@
     lastMessageAuthor: string
     lastMessage: string
     lastMessageAt: string
+    membersCount: number
 }

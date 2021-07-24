@@ -23,7 +23,9 @@
             <ul class="contacts-list" id="chatContactTab" data-chat-list="">
               <!-- Chat Item Start -->
               <li *ngFor="let chat of chats">
-                <app-chat-item-active [chatName]="chat.title" [lastMessage]="chat.lastMessage"
+                <app-chat-item-active [chatName]="chat.title"
+                                      [lastMessageAuthor]="chat.lastMessageAuthor"
+                                      [lastMessage]="chat.lastMessage"
                                       [lastMessageDateTime]="chat.lastMessageAt"
                                       [chatId]="chat.chatId"
                                       (click)="getChatMessages(chat.chatId)"

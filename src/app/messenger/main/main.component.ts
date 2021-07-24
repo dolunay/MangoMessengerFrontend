@@ -77,7 +77,9 @@ export class MainComponent implements OnInit {
     this.messageService.getChatMessages(chatId).subscribe((data: IGetChatMessagesResponse) => {
         this.messages = data.messages;
         this.activeChatId = chatId;
-        this.activeChatTitle = this.getUserChatsResponse.chats.filter(x => x.chatId === chatId)[0].title;
+        let chat = this.getUserChatsResponse.chats.filter(x => x.chatId === chatId)[0];
+        this.activeChatTitle = chat.title;
+        this.activeChatMembersCount = chat.membersCount;
       },
       error => {
         if (error && error.response) {
