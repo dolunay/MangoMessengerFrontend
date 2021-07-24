@@ -1,6 +1,7 @@
 ﻿export interface IMessage {
-    userDisplayName: string
-    messageText: string
-    sentAt: string
-    editedAt: string
+  userDisplayName: string
+  messageText: string
+  sentAt: string
+  editedAt: string
+  self: boolean
 }

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MangoService } from './mango.service';
+import { MessagesService } from './messages.service';
 
-describe('MangoService', () => {
-  let service: MangoService;
+describe('MessagesService', () => {
+  let service: MessagesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(MangoService);
+    service = TestBed.inject(MessagesService);
   });
 
   it('should be created', () => {
