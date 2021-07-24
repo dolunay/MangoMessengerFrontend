@@ -11,6 +11,7 @@ import {IRefreshTokenResponse} from "../../../types/Auth/Responses/IRefreshToken
 import {AuthService} from "../../services/auth.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
+import {IChat} from "../../../types/Chats/Models/IChat";
 
 @Component({
   selector: 'app-main',
@@ -24,8 +25,8 @@ export class MainComponent implements OnInit {
   // @ts-ignore
   refreshTokenResponse: IRefreshTokenResponse;
 
-  // @ts-ignore
   messages: IMessage[] = [];
+  chats: IChat[] = [];
 
   activeChatId = 0;
   // @ts-ignore
@@ -44,6 +45,7 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
         this.getUserChatsResponse = data;
+        this.chats = data.chats;
       },
       error => {
         if (error && error.status) {

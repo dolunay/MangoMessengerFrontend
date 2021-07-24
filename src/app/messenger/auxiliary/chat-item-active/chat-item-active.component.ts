@@ -21,5 +21,4 @@ export class ChatItemActiveComponent implements OnInit {
   @Input() lastMessageDateTime: string;
   // @ts-ignore
   @Input() chatId: number;
-
 }
