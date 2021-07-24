@@ -1,7 +1,7 @@
 ﻿export class LogoutCommand {
-    refreshTokenId : string;
+  refreshTokenId: string | null;
 
-    constructor(refreshTokenId: string) {
-        this.refreshTokenId = refreshTokenId;
-    }
+  constructor(refreshTokenId: string | null) {
+    this.refreshTokenId = refreshTokenId;
+  }
 }

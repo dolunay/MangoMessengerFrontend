@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {RegisterCommand} from "../../types/Auth/Requests/RegisterCommand";
 import {Observable} from "rxjs";
 import {IRegisterResponse} from "../../types/Auth/Responses/IRegisterResponse";
@@ -15,6 +15,7 @@ import {LogoutCommand} from "../../types/Auth/Requests/LogoutCommand";
 import {ILogoutResponse} from "../../types/Auth/Responses/ILogoutResponse";
 import {LogoutAllCommand} from "../../types/Auth/Requests/LogoutAllCommand";
 import {IVerifyEmailResponse} from "../../types/Auth/Responses/IVerifyEmailResponse";
+import {Tokens} from "../../consts/Tokens";
 
 @Injectable({
   providedIn: 'root'
@@ -41,13 +42,22 @@ export class AuthService implements IAuthService {
     return this.httpClient.post<IRefreshTokenResponse>(ApiRoute.apiDomain + AuthRoutes.postRefreshToken, request);
   }
 
-  // @ts-ignore
   logout(request: LogoutCommand): Observable<ILogoutResponse> {
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
+    };
+
+    return this.httpClient.post<ILogoutResponse>(ApiRoute.apiDomain + AuthRoutes.postLogout, request, header);
   }
 
   logoutAll(request: LogoutAllCommand): Observable<ILogoutResponse> {
-    // @ts-ignore
-    return undefined;
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
+    };
+
+    return this.httpClient.post<ILogoutResponse>(ApiRoute.apiDomain + AuthRoutes.postLogoutAll, request, header);
   }
 
   verifyEmail(email: string, userId: string): Observable<IVerifyEmailResponse> {
