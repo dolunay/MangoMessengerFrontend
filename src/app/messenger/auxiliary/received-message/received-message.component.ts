@@ -11,6 +11,7 @@ export class ReceivedMessageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
   // @ts-ignore
@@ -19,4 +20,9 @@ export class ReceivedMessageComponent implements OnInit {
   @Input() sentDateTime: string;
   // @ts-ignore
   @Input() status: string;
+  // @ts-ignore
+  @Input() messageAuthor: string;
+
+  // @ts-ignore
+  @Input() self: boolean;
 }

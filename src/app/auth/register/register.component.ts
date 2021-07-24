@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {VerificationMethod} from 'src/types/Auth/Enums/VerificationMethod';
 import {IRegisterResponse} from "../../../types/Auth/Responses/IRegisterResponse";
 import {RegisterCommand} from "../../../types/Auth/Requests/RegisterCommand";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-register',
@@ -12,8 +12,8 @@ import {RegisterCommand} from "../../../types/Auth/Requests/RegisterCommand";
 })
 export class RegisterComponent implements OnInit {
 
-  PhoneNumber = '+380974913858';
-  Email = 'maintester@gmail.com';
+  PhoneNumber = '+3809749138593';
+  Email = 'kolosovp94@gmail.com';
   Password = 'z[?6dMR#xmp=nr6q';
   VerificationMethod: VerificationMethod = 1;
   TermsAccepted = false;
@@ -24,12 +24,12 @@ export class RegisterComponent implements OnInit {
   keys!: any[];
   verificationMethod = VerificationMethod;
 
-  constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
     this.keys = Object.keys(this.verificationMethod).filter(k => !isNaN(Number(k)));
   }
 
   register(): void {
-    this.service.register(new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName, this.Password,
+    this.authService.register(new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName, this.Password,
       this.VerificationMethod, this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
       this.registerResponse = data;
 
@@ -48,6 +48,33 @@ export class RegisterComponent implements OnInit {
       }
 
       this.router.navigateByUrl('verify-phone').then(r => r);
+    }, 
+    error => {
+      
+      switch(error.error.message) {
+        case "USER_ALREADY_REGISTERED":
+          alert("User Already Registered");
+          break;
+        case "INVALID_EMAIL":
+          alert("Invalid Email");
+          break;
+        case "WEAK_PASSWORD":
+          alert("Weak Password");
+          break;
+        case "TERMS_NOT_ACCEPTED":
+          alert("Terms Not Accepted");
+          break;
+        case "INVALID_VERIFICATION_METHOD":
+          alert("Invalid Verification Method");
+          break;
+        case "PHONE_NUMBER_OCCUPIED":
+          alert("Phone Number Occupied");
+          break;
+        case "INVALID_DISPLAY_NAME":
+          alert("Invalid Display Name");
+          break;
+      }
+
     });
   }
 

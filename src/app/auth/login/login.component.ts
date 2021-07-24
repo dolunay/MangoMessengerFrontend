@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ILoginResponse} from "../../../types/Auth/Responses/ILoginResponse";
 import {LoginCommand} from "../../../types/Auth/Requests/LoginCommand";
 import {Tokens} from "../../../consts/Tokens";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -12,15 +12,15 @@ import {Tokens} from "../../../consts/Tokens";
 })
 export class LoginComponent implements OnInit {
 
-  email = 'maintester@gmail.com';
+  email = 'kolosovp94@gmail.com';
   password = 'z[?6dMR#xmp=nr6q';
   loginResponse!: ILoginResponse;
 
-  constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
   }
 
   login(): void {
-    this.service.login(new LoginCommand(this.email, this.password)).subscribe((data: ILoginResponse) => {
+    this.authService.login(new LoginCommand(this.email, this.password)).subscribe((data: ILoginResponse) => {
       this.loginResponse = data;
 
       if (!this.loginResponse.success) {

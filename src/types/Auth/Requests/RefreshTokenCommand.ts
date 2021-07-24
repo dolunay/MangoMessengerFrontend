@@ -1,7 +1,7 @@
 ﻿export class RefreshTokenCommand {
-    refreshTokenId : string;
-    
-    constructor(refreshTokenId: string) {
+    refreshTokenId : string | null;
+
+  constructor(refreshTokenId: string | null) {
         this.refreshTokenId = refreshTokenId;
     }
 }

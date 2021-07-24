@@ -1,5 +1,5 @@
 ﻿export class ApiRoute {
-  static apiDomain: 'https://mango-messenger-app.herokuapp.com/';
+  static apiDomain = 'https://mango-messenger-app.herokuapp.com/';
 }
 
 export class AuthRoutes {
@@ -17,12 +17,12 @@ export class ChatsRoutes {
 }
 
 export class MessagesRoutes {
-  static getChatMessages: 'api/messages/';
-  static postMessage: 'api/messages';
-  static putMessage: 'api/messages';
-  static deleteMessage: 'api/messages/{messageId}';
+  static getChatMessages = 'api/messages/';
+  static postMessage = 'api/messages';
+  static putMessage = 'api/messages';
+  static deleteMessage: 'api/messages/';
 }
 
 export class UserRoutes {
-  static getUserById: 'api/users/{userId}';
+  static getUserById = 'api/users/';
 }
