@@ -11,6 +11,7 @@ export class ReceivedMessageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
   // @ts-ignore

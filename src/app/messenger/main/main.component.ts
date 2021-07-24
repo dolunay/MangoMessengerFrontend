@@ -25,6 +25,8 @@ export class MainComponent implements OnInit {
   // @ts-ignore
   refreshTokenResponse: IRefreshTokenResponse;
 
+  hui = document.getElementsByClassName('message-day');
+
   messages: IMessage[] = [];
   chats: IChat[] = [];
 
@@ -57,7 +59,6 @@ export class MainComponent implements OnInit {
               this.refreshToken();
               setTimeout(() => {
                 if (this.refreshTokenResponse.success) {
-                  console.log("ok");
                   this.reloadComponent("/main");
                 }
               }, 1000);
@@ -80,6 +81,7 @@ export class MainComponent implements OnInit {
         let chat = this.getUserChatsResponse.chats.filter(x => x.chatId === chatId)[0];
         this.activeChatTitle = chat.title;
         this.activeChatMembersCount = chat.membersCount;
+        this.scrollToEnd();
       },
       error => {
         if (error && error.response) {
@@ -94,6 +96,13 @@ export class MainComponent implements OnInit {
           }
         }
       });
+  }
+
+  scrollToEnd(): void {
+    setTimeout(() => {
+      let element = document.getElementById('messageList');
+      element?.scrollIntoView({block: "end"});
+    }, 0);
   }
 
   sendMessage(): void {
