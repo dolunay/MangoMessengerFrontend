@@ -7,7 +7,7 @@ import {IEditMessageResponse} from "../Messages/Responses/IEditMessageResponse";
 import {IDeleteMessageResponse} from "../Messages/Responses/IDeleteMessageResponse";
 
 export interface IMessagesService {
-  getChatMessages(chatId: number): Observable<IGetChatMessagesResponse>;
+  getChatMessages(chatId: string): Observable<IGetChatMessagesResponse>;
 
   sendMessage(request: SendMessageCommand): Observable<ISendMessageResponse>;
 

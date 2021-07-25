@@ -4,6 +4,7 @@ import {VerificationMethod} from 'src/types/Auth/Enums/VerificationMethod';
 import {IRegisterResponse} from "../../../types/Auth/Responses/IRegisterResponse";
 import {RegisterCommand} from "../../../types/Auth/Requests/RegisterCommand";
 import {AuthService} from "../../services/auth.service";
+import {Tokens} from "../../../consts/Tokens";
 
 @Component({
   selector: 'app-register',
@@ -17,7 +18,7 @@ export class RegisterComponent implements OnInit {
   Password = 'z[?6dMR#xmp=nr6q';
   VerificationMethod: VerificationMethod = 1;
   TermsAccepted = false;
-  DisplayName = 'Main tester';
+  DisplayName = 'razumovskiy';
 
   registerResponse!: IRegisterResponse;
 
@@ -31,51 +32,43 @@ export class RegisterComponent implements OnInit {
   register(): void {
     this.authService.register(new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName, this.Password,
       this.VerificationMethod, this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
-      this.registerResponse = data;
+        this.registerResponse = data;
 
-      console.log(this.registerResponse);
-      console.log(this.registerResponse.success)
+        if (this.VerificationMethod === VerificationMethod.Email) {
+          this.router.navigateByUrl('verify-email').then(r => r);
+          return;
+        }
 
-      if (!this.registerResponse.success) {
-        // to implement
-        console.log(this.registerResponse.message);
-        return;
-      }
+        localStorage.setItem(Tokens.userId, data.userId);
+        this.router.navigateByUrl('verify-phone').then(r => r);
+      },
+      error => {
 
-      if (this.VerificationMethod === VerificationMethod.Email) {
-        this.router.navigateByUrl('verify-email').then(r => r);
-        return;
-      }
+        switch (error.error.message) {
+          case "USER_ALREADY_REGISTERED":
+            alert("User Already Registered");
+            break;
+          case "INVALID_EMAIL":
+            alert("Invalid Email");
+            break;
+          case "WEAK_PASSWORD":
+            alert("Weak Password");
+            break;
+          case "TERMS_NOT_ACCEPTED":
+            alert("Terms Not Accepted");
+            break;
+          case "INVALID_VERIFICATION_METHOD":
+            alert("Invalid Verification Method");
+            break;
+          case "PHONE_NUMBER_OCCUPIED":
+            alert("Phone Number Occupied");
+            break;
+          case "INVALID_DISPLAY_NAME":
+            alert("Invalid Display Name");
+            break;
+        }
 
-      this.router.navigateByUrl('verify-phone').then(r => r);
-    }, 
-    error => {
-      
-      switch(error.error.message) {
-        case "USER_ALREADY_REGISTERED":
-          alert("User Already Registered");
-          break;
-        case "INVALID_EMAIL":
-          alert("Invalid Email");
-          break;
-        case "WEAK_PASSWORD":
-          alert("Weak Password");
-          break;
-        case "TERMS_NOT_ACCEPTED":
-          alert("Terms Not Accepted");
-          break;
-        case "INVALID_VERIFICATION_METHOD":
-          alert("Invalid Verification Method");
-          break;
-        case "PHONE_NUMBER_OCCUPIED":
-          alert("Phone Number Occupied");
-          break;
-        case "INVALID_DISPLAY_NAME":
-          alert("Invalid Display Name");
-          break;
-      }
-
-    });
+      });
   }
 
 

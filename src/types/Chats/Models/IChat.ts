@@ -1,5 +1,5 @@
 ﻿export interface IChat {
-    chatId: number;
+    chatId: string;
     title: string
     image: string
     lastMessageAuthor: string

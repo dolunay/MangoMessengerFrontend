@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {IVerifyPhoneCodeResponse} from "../../../types/Auth/Responses/IVerifyPhoneCodeResponse";
 import {VerifyPhoneCommand} from 'src/types/Auth/Requests/VerifyPhoneCommand';
 import {AuthService} from "../../services/auth.service";
+import {Tokens} from "../../../consts/Tokens";
 
 @Component({
   selector: 'app-verify-phone',
@@ -21,19 +22,13 @@ export class VerifyPhoneComponent implements OnInit {
   }
 
   verifyPhone(): void {
-    this.authService.verifyPhone(new VerifyPhoneCommand(this.phoneCode))
+    let userId = localStorage.getItem(Tokens.userId);
+    this.authService.verifyPhone(new VerifyPhoneCommand(this.phoneCode, userId))
       .subscribe((data: IVerifyPhoneCodeResponse) => {
         this.verifyPhoneResponse = data;
-
-        console.log(this.verifyPhoneResponse);
-
-        if (!this.verifyPhoneResponse.success) {
-          // to implement
-          console.log(this.verifyPhoneResponse.message);
-          return;
-        }
-
         this.router.navigateByUrl('login').then(r => r);
+      }, error => {
+        this.router.navigateByUrl('register').then(r => r);
       });
   }
 

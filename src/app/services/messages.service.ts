@@ -19,7 +19,7 @@ export class MessagesService implements IMessagesService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getChatMessages(chatId: number): Observable<IGetChatMessagesResponse> {
+  getChatMessages(chatId: string): Observable<IGetChatMessagesResponse> {
     const header = {
       headers: new HttpHeaders()
         .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)

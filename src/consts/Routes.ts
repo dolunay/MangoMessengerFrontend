@@ -15,7 +15,7 @@ export class ChatsRoutes {
   static getChats = 'api/chats';
   static postGroup = 'api/chats/group';
   static postDirectChat = 'api/chats/direct-chat';
-  static postJoinGroup = 'api/chats/group/join/{chatId}';
+  static postJoinGroup = 'api/chats/join';
 }
 
 export class MessagesRoutes {
