@@ -16,25 +16,22 @@ export class RegisterComponent implements OnInit {
   PhoneNumber = '+3809749138593';
   Email = 'kolosovp94@gmail.com';
   Password = 'z[?6dMR#xmp=nr6q';
-  VerificationMethod: VerificationMethod = 1;
+  verificationMethod = VerificationMethod.Email;
   TermsAccepted = false;
   DisplayName = 'razumovskiy';
 
   registerResponse!: IRegisterResponse;
-
-  keys!: any[];
-  verificationMethod = VerificationMethod;
+  verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
   constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
-    this.keys = Object.keys(this.verificationMethod).filter(k => !isNaN(Number(k)));
   }
 
   register(): void {
     this.authService.register(new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName, this.Password,
-      this.VerificationMethod, this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
+      this.verificationMethod, this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
         this.registerResponse = data;
 
-        if (this.VerificationMethod === VerificationMethod.Email) {
+        if (this.verificationMethod === VerificationMethod.Email) {
           this.router.navigateByUrl('verify-email').then(r => r);
           return;
         }
