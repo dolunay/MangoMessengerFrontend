@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
       localStorage.setItem(Tokens.accessToken, this.loginResponse.accessToken);
       localStorage.setItem(Tokens.refreshTokenId, this.loginResponse.refreshTokenId);
       this.router.navigateByUrl('main').then(r => r);
-    });
+    }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")));
   }
 
   ngOnInit(): void {
