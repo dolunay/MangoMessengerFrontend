@@ -21,6 +21,8 @@ import {ChatHeaderComponent} from './messenger/auxiliary/chat-header/chat-header
 import {ChatSidebarHeaderComponent} from './messenger/auxiliary/chat-sidebar-header/chat-sidebar-header.component';
 import {ChatItemActiveComponent} from './messenger/auxiliary/chat-item-active/chat-item-active.component';
 import {GroupItemComponent} from './messenger/auxiliary/group-item/group-item.component';
+import {ProfileSettingsSidebarComponent} from "./messenger/auxiliary/profile-settings-sidebar/profile-settings-sidebar.component";
+import { ProfileLogoutButtonComponent } from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import {GroupItemComponent} from './messenger/auxiliary/group-item/group-item.co
     ChatSidebarHeaderComponent,
     ChatItemActiveComponent,
     GroupItemComponent,
+    ProfileSettingsSidebarComponent,
+    ProfileLogoutButtonComponent,
   ],
   imports: [
     HttpClientModule,

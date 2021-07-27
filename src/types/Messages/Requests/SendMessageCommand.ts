@@ -1,9 +1,9 @@
 ﻿export class SendMessageCommand {
-    content: string
-    chatId: number
-    
-    constructor(content: string, chatId: number) {
-        this.content = content;
-        this.chatId = chatId;
-    }
+  messageText: string
+  chatId: string;
+
+  constructor(content: string, chatId: string) {
+    this.messageText = content;
+    this.chatId = chatId;
+  }
 }

@@ -20,7 +20,7 @@ export class ChatItemActiveComponent implements OnInit {
   // @ts-ignore
   @Input() lastMessageDateTime: string;
   // @ts-ignore
-  @Input() chatId: number;
+  @Input() chatId: string;
   // @ts-ignore
   @Input() lastMessageAuthor: string;
 }

@@ -30,7 +30,7 @@ export class MainComponent implements OnInit {
   messages: IMessage[] = [];
   chats: IChat[] = [];
 
-  activeChatId = 0;
+  activeChatId = '';
   // @ts-ignore
   activeMessageText: string = '';
 
@@ -74,7 +74,7 @@ export class MainComponent implements OnInit {
     this.router.navigate([component]).then(r => r);
   }
 
-  getChatMessages(chatId: number): void {
+  getChatMessages(chatId: string): void {
     this.messageService.getChatMessages(chatId).subscribe((data: IGetChatMessagesResponse) => {
         this.messages = data.messages;
         this.activeChatId = chatId;
