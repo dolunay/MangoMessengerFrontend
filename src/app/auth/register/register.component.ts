@@ -27,8 +27,14 @@ export class RegisterComponent implements OnInit {
   }
 
   register(): void {
-    this.authService.register(new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName, this.Password,
-      this.verificationMethod, this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
+    this.authService.register(new RegisterCommand(
+      this.PhoneNumber,
+      this.Email,
+      this.DisplayName,
+      this.Password,
+      Number(this.verificationMethod),
+      this.TermsAccepted)
+    ).subscribe((data: IRegisterResponse) => {
         this.registerResponse = data;
 
         if (this.verificationMethod === VerificationMethod.Email) {
