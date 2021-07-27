@@ -32,8 +32,7 @@
           <div>
             Verification method:
             <select [(ngModel)]="verificationMethod" name="verificationMethod" [value]="verificationMethod">
-              <option [(ngModel)]="verificationMethod" name="VerificationMethod" ngDefaultControl="VerificationMethod"
-                      *ngFor="let method of verificationMethods" [value]="method"
+              <option *ngFor="let method of verificationMethods" [value]="method"
                       [label]="method"></option>
             </select>
           </div>

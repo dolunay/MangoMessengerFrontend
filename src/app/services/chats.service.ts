@@ -34,6 +34,7 @@ export class ChatsService implements IChatsService {
   }
 
   createGroup(request: CreateGroupCommand): Observable<ICreateGroupResponse> {
+    console.log('works');
     // @ts-ignore
     return undefined;
   }
