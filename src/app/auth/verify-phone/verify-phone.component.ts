@@ -28,8 +28,14 @@ export class VerifyPhoneComponent implements OnInit {
         this.verifyPhoneResponse = data;
         this.router.navigateByUrl('login').then(r => r);
       }, error => {
-        this.router.navigateByUrl('register').then(r => r);
+        console.log(error);
+
+        if(error.error.title != undefined) {
+          alert("invalid confirmation code");
+        } else {
+          alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " "));
+        }
+
       });
   }
-
 }
