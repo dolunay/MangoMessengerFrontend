@@ -28,11 +28,11 @@ export class VerifyPhoneComponent implements OnInit {
         this.verifyPhoneResponse = data;
         this.router.navigateByUrl('login').then(r => r);
       }, error => {
-        console.log(error);
 
         if(error.error.title != undefined) {
           alert("invalid confirmation code");
-        } else {
+        } 
+        else {
           alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " "));
         }
 
