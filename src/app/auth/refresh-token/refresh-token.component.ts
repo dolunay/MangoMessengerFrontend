@@ -31,9 +31,7 @@ export class RefreshTokenComponent implements OnInit {
           return;
         }
         this.router.navigateByUrl('login').then(r => r);
-      }, error => {
-      }
-    )
+      }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")) );
   }
 
 }

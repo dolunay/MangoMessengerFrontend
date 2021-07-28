@@ -44,12 +44,7 @@ export class RegisterComponent implements OnInit {
 
         localStorage.setItem(Tokens.userId, data.userId);
         this.router.navigateByUrl('verify-phone').then(r => r);
-      },
-      error => {
-
-        alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " "));
-
-      });
+      }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")) );
   }
 
 
