@@ -4,7 +4,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {RegisterComponent} from './auth/register/register.component';
 import {LoginComponent} from './auth/login/login.component';
 import {VerifyEmailComponent} from './auth/verify-email/verify-email.component';
@@ -22,7 +22,8 @@ import {ChatSidebarHeaderComponent} from './messenger/auxiliary/chat-sidebar-hea
 import {ChatItemActiveComponent} from './messenger/auxiliary/chat-item-active/chat-item-active.component';
 import {GroupItemComponent} from './messenger/auxiliary/group-item/group-item.component';
 import {ProfileSettingsSidebarComponent} from "./messenger/auxiliary/profile-settings-sidebar/profile-settings-sidebar.component";
-import { ProfileLogoutButtonComponent } from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
+import {ProfileLogoutButtonComponent} from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
+import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -64,7 +65,11 @@ import { ProfileLogoutButtonComponent } from './messenger/auxiliary/profile-logo
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {
