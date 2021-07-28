@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
         this.registerResponse = data;
 
         if (this.verificationMethod === VerificationMethod.Email) {
-          this.router.navigateByUrl('verify-email').then(r => r);
+          alert(this.registerResponse.message.toLowerCase().replace("_", " "));
           return;
         }
 
@@ -47,29 +47,7 @@ export class RegisterComponent implements OnInit {
       },
       error => {
 
-        switch (error.error.message) {
-          case "USER_ALREADY_REGISTERED":
-            alert("User Already Registered");
-            break;
-          case "INVALID_EMAIL":
-            alert("Invalid Email");
-            break;
-          case "WEAK_PASSWORD":
-            alert("Weak Password");
-            break;
-          case "TERMS_NOT_ACCEPTED":
-            alert("Terms Not Accepted");
-            break;
-          case "INVALID_VERIFICATION_METHOD":
-            alert("Invalid Verification Method");
-            break;
-          case "PHONE_NUMBER_OCCUPIED":
-            alert("Phone Number Occupied");
-            break;
-          case "INVALID_DISPLAY_NAME":
-            alert("Invalid Display Name");
-            break;
-        }
+        alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " "));
 
       });
   }
