@@ -45,7 +45,7 @@ export class AuthService implements IAuthService {
   logout(request: LogoutCommand): Observable<ILogoutResponse> {
     const header = {
       headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
+        .set('Authorization', `Bearer ${this.getAccessToken()}`)
     };
 
     return this.httpClient.post<ILogoutResponse>(ApiRoute.apiDomain + AuthRoutes.postLogout, request, header);
@@ -54,7 +54,7 @@ export class AuthService implements IAuthService {
   logoutAll(request: LogoutAllCommand): Observable<ILogoutResponse> {
     const header = {
       headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
+        .set('Authorization', `Bearer ${this.getAccessToken()}`)
     };
 
     return this.httpClient.post<ILogoutResponse>(ApiRoute.apiDomain + AuthRoutes.postLogoutAll, request, header);
@@ -63,5 +63,21 @@ export class AuthService implements IAuthService {
   verifyEmail(email: string, userId: string): Observable<IVerifyEmailResponse> {
     // @ts-ignore
     return undefined;
+  }
+
+  getAccessToken(): string | null {
+    return localStorage.getItem(Tokens.accessToken);
+  }
+
+  getRefreshTokenId(): string | null {
+    return localStorage.getItem(Tokens.refreshTokenId);
+  }
+
+  writeAccessToken(token: string): void {
+    localStorage.setItem(Tokens.accessToken, token);
+  }
+
+  writeRefreshTokenId(tokenId: string): void {
+    localStorage.setItem(Tokens.refreshTokenId, tokenId);
   }
 }

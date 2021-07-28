@@ -26,4 +26,12 @@ export interface IAuthService {
   logout(request: LogoutCommand): Observable<ILogoutResponse>;
 
   logoutAll(request: LogoutAllCommand): Observable<ILogoutResponse>;
+
+  getRefreshTokenId(): string | null;
+
+  getAccessToken(): string | null;
+
+  writeAccessToken(token: string): void;
+
+  writeRefreshTokenId(tokenId: string): void;
 }

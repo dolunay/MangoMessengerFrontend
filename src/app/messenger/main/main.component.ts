@@ -5,8 +5,6 @@ import {IGetChatMessagesResponse} from "../../../types/Messages/Responses/IGetCh
 import {IMessage} from "../../../types/Messages/Models/IMessage";
 import {SendMessageCommand} from "../../../types/Messages/Requests/SendMessageCommand";
 import {ISendMessageResponse} from "../../../types/Messages/Responses/ISendMessageResponse";
-import {RefreshTokenCommand} from "../../../types/Auth/Requests/RefreshTokenCommand";
-import {Tokens} from "../../../consts/Tokens";
 import {IRefreshTokenResponse} from "../../../types/Auth/Responses/IRefreshTokenResponse";
 import {AuthService} from "../../services/auth.service";
 import {ChatsService} from "../../services/chats.service";
@@ -52,16 +50,8 @@ export class MainComponent implements OnInit {
       error => {
         if (error && error.status) {
           switch (error.status) {
-            case 400:
-              this.router.navigateByUrl('login').then(r => r);
-              break;
-            case 401:
-              this.refreshToken();
-              setTimeout(() => {
-                if (this.refreshTokenResponse.success) {
-                  this.reloadComponent("/main");
-                }
-              }, 1000);
+            case 409:
+              alert(error.message);
               break;
           }
         }
@@ -87,11 +77,7 @@ export class MainComponent implements OnInit {
         if (error && error.response) {
           switch (error.response.status) {
             case 400:
-              this.router.navigateByUrl('login').then(r => r);
-              break;
-            case 401:
-              this.refreshToken();
-              this.getChatMessages(chatId);
+              alert(error.message);
               break;
           }
         }
@@ -112,30 +98,10 @@ export class MainComponent implements OnInit {
         if (error && error.response) {
           switch (error.response.status) {
             case 400:
-              this.router.navigateByUrl('login').then(r => r);
-              break;
-            case 401:
-              this.refreshToken();
-              this.ngOnInit();
+              alert(error.message);
               break;
           }
         }
       });
-  }
-
-  refreshToken(): void {
-    let refreshToken = localStorage.getItem(Tokens.refreshTokenId);
-    this.authService.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe(
-      (data: IRefreshTokenResponse) => {
-        if (data.success) {
-          this.refreshTokenResponse = data;
-          localStorage.setItem(Tokens.accessToken, data.accessToken);
-          localStorage.setItem(Tokens.refreshTokenId, data.refreshTokenId);
-          return;
-        }
-
-        this.router.navigateByUrl('login').then(r => r);
-      }, error => this.router.navigateByUrl('login').then(r => r)
-    )
   }
 }
