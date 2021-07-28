@@ -34,8 +34,12 @@ export class ChatsService implements IChatsService {
   }
 
   createGroup(request: CreateGroupCommand): Observable<ICreateGroupResponse> {
-    // @ts-ignore
-    return undefined;
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
+    };
+
+    return this.httpClient.post<ICreateGroupResponse>(ApiRoute.apiDomain + ChatsRoutes.postGroup, request, header);
   }
 
   joinGroup(groupId: number): Observable<IJoinGroupResponse> {
