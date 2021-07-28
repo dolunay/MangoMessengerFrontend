@@ -4,6 +4,10 @@ import {ChatsService} from "../../../services/chats.service";
 import {CreateGroupCommand} from "../../../../types/Chats/Requests/CreateGroupCommand";
 import {ICreateGroupResponse} from "../../../../types/Chats/Responses/ICreateGroupResponse";
 import {ActivatedRoute, Router} from "@angular/router";
+import {Tokens} from "../../../../consts/Tokens";
+import {RefreshTokenCommand} from "../../../../types/Auth/Requests/RefreshTokenCommand";
+import {IRefreshTokenResponse} from "../../../../types/Auth/Responses/IRefreshTokenResponse";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-chat-sidebar-header',
@@ -14,7 +18,8 @@ export class ChatSidebarHeaderComponent implements OnInit {
 
   constructor(private chatService: ChatsService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private authService: AuthService) {
   }
 
   chatTypes = [GroupType.PrivateChannel, GroupType.PublicChannel, GroupType.ReadOnlyChannel];
@@ -27,12 +32,27 @@ export class ChatSidebarHeaderComponent implements OnInit {
   }
 
   createGroup(): void {
+    console.log(this.groupName);
+    console.log(this.groupType);
     this.chatService.createGroup(new CreateGroupCommand(this.groupType, this.groupName))
       .subscribe((data: ICreateGroupResponse) => {
 
       }, error => {
-        alert("error during creation of a group");
+        this.refreshToken();
+        setTimeout(() => this.createGroup(), 0);
       })
+  }
+
+  refreshToken(): void {
+    let refreshToken = localStorage.getItem(Tokens.refreshTokenId);
+    this.authService.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe(
+      (data: IRefreshTokenResponse) => {
+        localStorage.setItem(Tokens.accessToken, data.accessToken);
+        localStorage.setItem(Tokens.refreshTokenId, data.refreshTokenId);
+      }, error => {
+        this.router.navigateByUrl('login').then(r => alert(error.message));
+      }
+    )
   }
 
 }
