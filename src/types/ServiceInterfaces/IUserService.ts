@@ -3,4 +3,5 @@ import {IGetUserResponse} from "../Users/Responses/IGetUserResponse";
 
 export interface IUserService {
   getUserById(userId: number): Observable<IGetUserResponse>;
+  getCurrentUser() : Observable<IGetUserResponse>;
 }
