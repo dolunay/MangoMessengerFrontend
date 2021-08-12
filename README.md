@@ -1,6 +1,11 @@
 # Mango Messenger Angular Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.7.
+![Build](https://img.shields.io/badge/Build-succeeded-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-%23bfc400)
+[![NPM](https://img.shields.io/badge/npm-14.17.3-%23009127)](https://nodejs.org/en/download/)
+[![Angular](https://img.shields.io/badge/Angular%20CLI-11.2.7-%23d61111)](https://angular.io/guide/setup-local)
+[![Contributors](https://img.shields.io/badge/Contributors-2-red)](https://github.com/kolosovpetro/MangoAPI/graphs/contributors)
+[![Trello board](https://img.shields.io/badge/Task%20Board-Trello-blue)](https://trello.com/b/Z7IlfrRb/mango-messenger-trello)
 
 ## Git flow
 - Each task is assigned a number (MANGO-ID)
