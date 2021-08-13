@@ -7,7 +7,7 @@
 [![Contributors](https://img.shields.io/badge/Contributors-2-red)](https://github.com/kolosovpetro/MangoAPI/graphs/contributors)
 [![Trello board](https://img.shields.io/badge/Task%20Board-Trello-blue)](https://trello.com/b/Z7IlfrRb/mango-messenger-trello)
 
-## Aplication Start
+## Manual run
 - Clone this repository https://github.com/razumovskii/mango-angular-frontend.git
 - Install LTS Node Package Manager https://nodejs.org/en/download/
 - Check if NPM is installed correctly `npm -v`
@@ -16,6 +16,10 @@
 - Go to the project folder
 - Install Node modules `npm install`
 - Run project `ng serve`
+
+## Docker run
+- Build container `docker build -t mango-angular-frontend .`
+- Run it `docker run -d -p 9080:80 --name mango_frontend mango-angular-frontend:latest`
 
 ## Git flow
 - Each task is assigned a number (MANGO-ID)
