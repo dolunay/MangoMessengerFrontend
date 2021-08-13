@@ -7,6 +7,16 @@
 [![Contributors](https://img.shields.io/badge/Contributors-2-red)](https://github.com/kolosovpetro/MangoAPI/graphs/contributors)
 [![Trello board](https://img.shields.io/badge/Task%20Board-Trello-blue)](https://trello.com/b/Z7IlfrRb/mango-messenger-trello)
 
+## Aplication Start
+- Clone this repository https://github.com/razumovskii/mango-angular-frontend.git
+- Install LTS Node Package Manager https://nodejs.org/en/download/
+- Check if NPM is installed correctly `npm -v`
+- Install Angular CLI 11.2.7  `npm install -g @angular/cli@11.2.7`
+- Check id Angular CLI is installed corectly `ng version`
+- Go to the project folder
+- Install Node modules `npm install`
+- Run project `ng serve`
+
 ## Git flow
 - Each task is assigned a number (MANGO-ID)
 - Tasks are at Trello board https://trello.com/b/F4N6Afg7/api-docs
