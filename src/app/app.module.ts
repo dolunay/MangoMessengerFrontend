@@ -54,7 +54,7 @@ import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
       {path: 'register', component: RegisterComponent},
       {path: 'login', component: LoginComponent},
       {path: 'verify-phone', component: VerifyPhoneComponent},
-      {path: 'verify-email', component: VerifyEmailComponent},
+      {path: 'verify-email/:id/:id2', component: VerifyEmailComponent},
       {path: 'main', component: MainComponent},
       {path: 'contacts', component: ContactsComponent},
       {path: 'profile-settings', component: ProfileSettingsComponent},
