@@ -5,7 +5,6 @@ import {CreateGroupCommand} from "../../../../types/Chats/Requests/CreateGroupCo
 import {ICreateGroupResponse} from "../../../../types/Chats/Responses/ICreateGroupResponse";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Tokens} from "../../../../consts/Tokens";
-import {RefreshTokenCommand} from "../../../../types/Auth/Requests/RefreshTokenCommand";
 import {IRefreshTokenResponse} from "../../../../types/Auth/Responses/IRefreshTokenResponse";
 import {AuthService} from "../../../services/auth.service";
 
@@ -45,7 +44,7 @@ export class ChatSidebarHeaderComponent implements OnInit {
 
   refreshToken(): void {
     let refreshToken = localStorage.getItem(Tokens.refreshTokenId);
-    this.authService.postRefreshSession(new RefreshTokenCommand(refreshToken)).subscribe(
+    this.authService.postRefreshSession(refreshToken).subscribe(
       (data: IRefreshTokenResponse) => {
         localStorage.setItem(Tokens.accessToken, data.accessToken);
         localStorage.setItem(Tokens.refreshTokenId, data.refreshTokenId);
@@ -54,5 +53,4 @@ export class ChatSidebarHeaderComponent implements OnInit {
       }
     )
   }
-
 }

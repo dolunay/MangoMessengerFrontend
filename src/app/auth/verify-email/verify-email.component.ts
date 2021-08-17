@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {IVerifyEmailResponse} from "../../../types/Auth/Responses/IVerifyEmailResponse";
+import {VerifyEmailCommand} from "../../../types/Auth/Requests/VerifyEmailCommand";
 
 @Component({
   selector: 'app-verify-email',
@@ -18,12 +19,13 @@ export class VerifyEmailComponent implements OnInit {
   ngOnInit(): void {
     this.email = this.route.snapshot.paramMap.get('id');
     this.userId = this.route.snapshot.paramMap.get('id2');
-    this.authService.putEmailConfirmation(this.email, this.userId).subscribe((data: IVerifyEmailResponse) => {
-      let response = data;
-      this.router.navigateByUrl('login').then(r => alert(response.message));
-    }, error => {
-      this.router.navigateByUrl('login').then(r => alert(error.message));
-    })
+    this.authService.putEmailConfirmation(new VerifyEmailCommand(this.email, this.userId))
+      .subscribe((data: IVerifyEmailResponse) => {
+        let response = data;
+        this.router.navigateByUrl('login').then(r => alert(response.message));
+      }, error => {
+        this.router.navigateByUrl('login').then(r => alert(error.message));
+      })
   }
 
 }

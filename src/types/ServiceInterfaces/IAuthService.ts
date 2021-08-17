@@ -17,13 +17,13 @@ export interface IAuthService {
 
   postSession(command: LoginCommand): Observable<ILoginResponse>;
 
-  postRefreshSession(refreshToken: string): Observable<IRefreshTokenResponse>;
+  postRefreshSession(refreshToken: string | null): Observable<IRefreshTokenResponse>;
 
   putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse>;
 
-  deleteSession(refreshToken: string): Observable<ILogoutResponse>;
+  deleteSession(refreshToken: string | null): Observable<ILogoutResponse>;
 
-  deleteAllSessions(): Observable<ILogoutResponse>;
+  deleteAllSessions(refreshToken: string | null): Observable<ILogoutResponse>;
 
   getRefreshTokenId(): string | null;
 

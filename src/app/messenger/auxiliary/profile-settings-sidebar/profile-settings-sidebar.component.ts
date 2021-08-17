@@ -1,11 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {LogoutCommand} from "../../../../types/Auth/Requests/LogoutCommand";
-import {Tokens} from "../../../../consts/Tokens";
 import {ILogoutResponse} from "../../../../types/Auth/Responses/ILogoutResponse";
-import {RefreshTokenCommand} from "../../../../types/Auth/Requests/RefreshTokenCommand";
-import {LogoutAllCommand} from "../../../../types/Auth/Requests/LogoutAllCommand";
 
 @Component({
   selector: 'app-profile-settings-sidebar',
@@ -23,7 +19,8 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.deleteSession(new LogoutCommand(localStorage.getItem(Tokens.refreshTokenId)))
+    let refreshToken = this.authService.getRefreshTokenId();
+    this.authService.deleteSession(refreshToken)
       .subscribe((data: ILogoutResponse) => {
         this.router.navigateByUrl('login').then(r => r);
       }, error => {
@@ -33,7 +30,8 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   }
 
   logoutAll(): void {
-    this.authService.deleteAllSessions(new LogoutAllCommand(localStorage.getItem(Tokens.refreshTokenId)))
+    let refreshToken = this.authService.getRefreshTokenId();
+    this.authService.deleteAllSessions(refreshToken)
       .subscribe((data: ILogoutResponse) => {
         this.router.navigateByUrl('login').then(r => r);
       }, error => {

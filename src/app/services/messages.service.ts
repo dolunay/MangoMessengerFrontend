@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Domain, MessagesRoutes} from "../../consts/Routes";
-import {Tokens} from "../../consts/Tokens";
 import {IGetChatMessagesResponse} from "../../types/Messages/Responses/IGetChatMessagesResponse";
 import {SendMessageCommand} from "../../types/Messages/Requests/SendMessageCommand";
 import {ISendMessageResponse} from "../../types/Messages/Responses/ISendMessageResponse";
@@ -10,28 +9,35 @@ import {IMessagesService} from "../../types/ServiceInterfaces/IMessagesService";
 import {IDeleteMessageResponse} from "../../types/Messages/Responses/IDeleteMessageResponse";
 import {EditMessageCommand} from "../../types/Messages/Requests/EditMessageCommand";
 import {IEditMessageResponse} from "../../types/Messages/Responses/IEditMessageResponse";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagesService implements IMessagesService {
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private authService: AuthService) {
   }
 
   getChatMessages(chatId: string): Observable<IGetChatMessagesResponse> {
+    let accessToken = this.authService.getAccessToken();
+
     const header = {
       headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
+        .set('Authorization', `Bearer ${accessToken}`)
     };
+
     return this.httpClient.get<IGetChatMessagesResponse>(Domain.route + MessagesRoutes.getChatMessages + chatId, header);
   }
 
   sendMessage(request: SendMessageCommand): Observable<ISendMessageResponse> {
+    let accessToken = this.authService.getAccessToken();
+
     const header = {
       headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
+        .set('Authorization', `Bearer ${accessToken}`)
     };
+
     return this.httpClient.post<ISendMessageResponse>(Domain.route + MessagesRoutes.postMessage, request, header);
   }
 

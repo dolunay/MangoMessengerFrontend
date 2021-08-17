@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {RegisterCommand} from "../../types/Auth/Requests/RegisterCommand";
 import {Observable} from "rxjs";
 import {IRegisterResponse} from "../../types/Auth/Responses/IRegisterResponse";
-import {Domain, AuthRoutes, SessionRoutes, UserRoutes} from "../../consts/Routes";
+import {Domain, SessionRoutes, UserRoutes} from "../../consts/Routes";
 import {VerifyPhoneCommand} from "../../types/Auth/Requests/VerifyPhoneCommand";
 import {IVerifyPhoneCodeResponse} from "../../types/Auth/Responses/IVerifyPhoneCodeResponse";
 import {LoginCommand} from "../../types/Auth/Requests/LoginCommand";
@@ -36,11 +36,11 @@ export class AuthService implements IAuthService {
       {withCredentials: true});
   }
 
-  postRefreshSession(refreshToken: string): Observable<IRefreshTokenResponse> {
+  postRefreshSession(refreshToken: string | null): Observable<IRefreshTokenResponse> {
     return this.httpClient.post<IRefreshTokenResponse>(Domain.route + SessionRoutes.route + '/' + refreshToken, {});
   }
 
-  deleteSession(refreshToken: string): Observable<ILogoutResponse> {
+  deleteSession(refreshToken: string | null): Observable<ILogoutResponse> {
     const header = {
       headers: new HttpHeaders()
         .set('Authorization', `Bearer ${this.getAccessToken()}`)
@@ -49,7 +49,7 @@ export class AuthService implements IAuthService {
     return this.httpClient.delete<ILogoutResponse>(Domain.route + SessionRoutes.route + '/' + refreshToken, header);
   }
 
-  deleteAllSessions(): Observable<ILogoutResponse> {
+  deleteAllSessions(refreshToken: string | null): Observable<ILogoutResponse> {
     const header = {
       headers: new HttpHeaders()
         .set('Authorization', `Bearer ${this.getAccessToken()}`)
@@ -59,7 +59,7 @@ export class AuthService implements IAuthService {
   }
 
   putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse> {
-    return this.httpClient.put<IVerifyEmailResponse>(Domain.route + AuthRoutes.postVerifyEmail, request);
+    return this.httpClient.put<IVerifyEmailResponse>(Domain.route + UserRoutes.putEmailConfirmation, request);
   }
 
   getAccessToken(): string | null {
