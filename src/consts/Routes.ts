@@ -9,6 +9,7 @@ export class AuthRoutes {
   static getVerifyPhone = 'api/auth/verify-phone';
   static postLogout = 'api/auth/logout'
   static postLogoutAll = 'api/auth/logout-all'
+  static postVerifyEmail = 'api/auth/verify-email'
 }
 
 export class ChatsRoutes {

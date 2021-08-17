@@ -16,6 +16,7 @@ import {ILogoutResponse} from "../../types/Auth/Responses/ILogoutResponse";
 import {LogoutAllCommand} from "../../types/Auth/Requests/LogoutAllCommand";
 import {IVerifyEmailResponse} from "../../types/Auth/Responses/IVerifyEmailResponse";
 import {Tokens} from "../../consts/Tokens";
+import {VerifyEmailCommand} from "../../types/Auth/Requests/VerifyEmailCommand";
 
 @Injectable({
   providedIn: 'root'
@@ -60,9 +61,9 @@ export class AuthService implements IAuthService {
     return this.httpClient.post<ILogoutResponse>(ApiRoute.apiDomain + AuthRoutes.postLogoutAll, request, header);
   }
 
-  verifyEmail(email: string, userId: string): Observable<IVerifyEmailResponse> {
-    // @ts-ignore
-    return undefined;
+  verifyEmail(email: string | null, userId: string | null): Observable<IVerifyEmailResponse> {
+    return this.httpClient.post<IVerifyEmailResponse>(ApiRoute.apiDomain + AuthRoutes.postVerifyEmail,
+      new VerifyEmailCommand(email, userId));
   }
 
   getAccessToken(): string | null {
