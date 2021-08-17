@@ -45,7 +45,7 @@ export class ChatSidebarHeaderComponent implements OnInit {
 
   refreshToken(): void {
     let refreshToken = localStorage.getItem(Tokens.refreshTokenId);
-    this.authService.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe(
+    this.authService.postRefreshSession(new RefreshTokenCommand(refreshToken)).subscribe(
       (data: IRefreshTokenResponse) => {
         localStorage.setItem(Tokens.accessToken, data.accessToken);
         localStorage.setItem(Tokens.refreshTokenId, data.refreshTokenId);

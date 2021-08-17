@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ApiRoute, ChatsRoutes} from "../../consts/Routes";
+import {Domain, ChatsRoutes} from "../../consts/Routes";
 import {IGetUserChatsResponse} from "../../types/Chats/Responses/IGetUserChatsResponse";
 import {Tokens} from "../../consts/Tokens";
 import {IChatsService} from "../../types/ServiceInterfaces/IChatsService";
@@ -25,7 +25,7 @@ export class ChatsService implements IChatsService {
         .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
     };
 
-    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.apiDomain + ChatsRoutes.getChats, header);
+    return this.httpClient.get<IGetUserChatsResponse>(Domain.route + ChatsRoutes.getChats, header);
   }
 
   createDirectChat(request: CreateDirectChatCommand): Observable<ICreateDirectChatResponse> {
@@ -39,7 +39,7 @@ export class ChatsService implements IChatsService {
         .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
     };
 
-    return this.httpClient.post<ICreateGroupResponse>(ApiRoute.apiDomain + ChatsRoutes.postGroup, request, header);
+    return this.httpClient.post<ICreateGroupResponse>(Domain.route + ChatsRoutes.postGroup, request, header);
   }
 
   joinGroup(groupId: number): Observable<IJoinGroupResponse> {

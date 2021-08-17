@@ -5,27 +5,25 @@ import {VerifyPhoneCommand} from "../Auth/Requests/VerifyPhoneCommand";
 import {IVerifyPhoneCodeResponse} from "../Auth/Responses/IVerifyPhoneCodeResponse";
 import {LoginCommand} from "../Auth/Requests/LoginCommand";
 import {ILoginResponse} from "../Auth/Responses/ILoginResponse";
-import {RefreshTokenCommand} from "../Auth/Requests/RefreshTokenCommand";
 import {IRefreshTokenResponse} from "../Auth/Responses/IRefreshTokenResponse";
 import {IVerifyEmailResponse} from "../Auth/Responses/IVerifyEmailResponse";
-import {LogoutCommand} from "../Auth/Requests/LogoutCommand";
 import {ILogoutResponse} from "../Auth/Responses/ILogoutResponse";
-import {LogoutAllCommand} from "../Auth/Requests/LogoutAllCommand";
+import {VerifyEmailCommand} from "../Auth/Requests/VerifyEmailCommand";
 
 export interface IAuthService {
-  register(command: RegisterCommand): Observable<IRegisterResponse>;
+  postUser(command: RegisterCommand): Observable<IRegisterResponse>;
 
-  verifyPhone(command: VerifyPhoneCommand): Observable<IVerifyPhoneCodeResponse>;
+  putPhoneConfirmation(command: VerifyPhoneCommand): Observable<IVerifyPhoneCodeResponse>;
 
-  login(command: LoginCommand): Observable<ILoginResponse>;
+  postSession(command: LoginCommand): Observable<ILoginResponse>;
 
-  refreshToken(request: RefreshTokenCommand): Observable<IRefreshTokenResponse>;
+  postRefreshSession(refreshToken: string): Observable<IRefreshTokenResponse>;
 
-  verifyEmail(email: string, userId: string): Observable<IVerifyEmailResponse>;
+  putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse>;
 
-  logout(request: LogoutCommand): Observable<ILogoutResponse>;
+  deleteSession(refreshToken: string): Observable<ILogoutResponse>;
 
-  logoutAll(request: LogoutAllCommand): Observable<ILogoutResponse>;
+  deleteAllSessions(): Observable<ILogoutResponse>;
 
   getRefreshTokenId(): string | null;
 

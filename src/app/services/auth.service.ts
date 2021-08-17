@@ -3,17 +3,14 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {RegisterCommand} from "../../types/Auth/Requests/RegisterCommand";
 import {Observable} from "rxjs";
 import {IRegisterResponse} from "../../types/Auth/Responses/IRegisterResponse";
-import {ApiRoute, AuthRoutes} from "../../consts/Routes";
+import {Domain, AuthRoutes, SessionRoutes, UserRoutes} from "../../consts/Routes";
 import {VerifyPhoneCommand} from "../../types/Auth/Requests/VerifyPhoneCommand";
 import {IVerifyPhoneCodeResponse} from "../../types/Auth/Responses/IVerifyPhoneCodeResponse";
 import {LoginCommand} from "../../types/Auth/Requests/LoginCommand";
 import {ILoginResponse} from "../../types/Auth/Responses/ILoginResponse";
-import {RefreshTokenCommand} from "../../types/Auth/Requests/RefreshTokenCommand";
 import {IRefreshTokenResponse} from "../../types/Auth/Responses/IRefreshTokenResponse";
 import {IAuthService} from "../../types/ServiceInterfaces/IAuthService";
-import {LogoutCommand} from "../../types/Auth/Requests/LogoutCommand";
 import {ILogoutResponse} from "../../types/Auth/Responses/ILogoutResponse";
-import {LogoutAllCommand} from "../../types/Auth/Requests/LogoutAllCommand";
 import {IVerifyEmailResponse} from "../../types/Auth/Responses/IVerifyEmailResponse";
 import {Tokens} from "../../consts/Tokens";
 import {VerifyEmailCommand} from "../../types/Auth/Requests/VerifyEmailCommand";
@@ -26,44 +23,43 @@ export class AuthService implements IAuthService {
   constructor(private httpClient: HttpClient) {
   }
 
-  register(command: RegisterCommand): Observable<IRegisterResponse> {
-    return this.httpClient.post<IRegisterResponse>(ApiRoute.apiDomain + AuthRoutes.postRegister, command);
+  postUser(command: RegisterCommand): Observable<IRegisterResponse> {
+    return this.httpClient.post<IRegisterResponse>(Domain.route + SessionRoutes.route, command);
   }
 
-  verifyPhone(command: VerifyPhoneCommand): Observable<IVerifyPhoneCodeResponse> {
-    return this.httpClient.post<IVerifyPhoneCodeResponse>(ApiRoute.apiDomain + AuthRoutes.getVerifyPhone, command);
+  putPhoneConfirmation(command: VerifyPhoneCommand): Observable<IVerifyPhoneCodeResponse> {
+    return this.httpClient.put<IVerifyPhoneCodeResponse>(Domain.route + UserRoutes.putPhoneConfirmation, command);
   }
 
-  login(command: LoginCommand): Observable<ILoginResponse> {
-    return this.httpClient.post<ILoginResponse>(ApiRoute.apiDomain + AuthRoutes.postLogin, command,
+  postSession(command: LoginCommand): Observable<ILoginResponse> {
+    return this.httpClient.post<ILoginResponse>(Domain.route + SessionRoutes.route, command,
       {withCredentials: true});
   }
 
-  refreshToken(request: RefreshTokenCommand): Observable<IRefreshTokenResponse> {
-    return this.httpClient.post<IRefreshTokenResponse>(ApiRoute.apiDomain + AuthRoutes.postRefreshToken, request);
+  postRefreshSession(refreshToken: string): Observable<IRefreshTokenResponse> {
+    return this.httpClient.post<IRefreshTokenResponse>(Domain.route + SessionRoutes.route + '/' + refreshToken, {});
   }
 
-  logout(request: LogoutCommand): Observable<ILogoutResponse> {
+  deleteSession(refreshToken: string): Observable<ILogoutResponse> {
     const header = {
       headers: new HttpHeaders()
         .set('Authorization', `Bearer ${this.getAccessToken()}`)
     };
 
-    return this.httpClient.post<ILogoutResponse>(ApiRoute.apiDomain + AuthRoutes.postLogout, request, header);
+    return this.httpClient.delete<ILogoutResponse>(Domain.route + SessionRoutes.route + '/' + refreshToken, header);
   }
 
-  logoutAll(request: LogoutAllCommand): Observable<ILogoutResponse> {
+  deleteAllSessions(): Observable<ILogoutResponse> {
     const header = {
       headers: new HttpHeaders()
         .set('Authorization', `Bearer ${this.getAccessToken()}`)
     };
 
-    return this.httpClient.post<ILogoutResponse>(ApiRoute.apiDomain + AuthRoutes.postLogoutAll, request, header);
+    return this.httpClient.delete<ILogoutResponse>(Domain.route + SessionRoutes.route, header);
   }
 
-  verifyEmail(email: string | null, userId: string | null): Observable<IVerifyEmailResponse> {
-    return this.httpClient.post<IVerifyEmailResponse>(ApiRoute.apiDomain + AuthRoutes.postVerifyEmail,
-      new VerifyEmailCommand(email, userId));
+  putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse> {
+    return this.httpClient.put<IVerifyEmailResponse>(Domain.route + AuthRoutes.postVerifyEmail, request);
   }
 
   getAccessToken(): string | null {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ApiRoute, MessagesRoutes} from "../../consts/Routes";
+import {Domain, MessagesRoutes} from "../../consts/Routes";
 import {Tokens} from "../../consts/Tokens";
 import {IGetChatMessagesResponse} from "../../types/Messages/Responses/IGetChatMessagesResponse";
 import {SendMessageCommand} from "../../types/Messages/Requests/SendMessageCommand";
@@ -24,7 +24,7 @@ export class MessagesService implements IMessagesService {
       headers: new HttpHeaders()
         .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
     };
-    return this.httpClient.get<IGetChatMessagesResponse>(ApiRoute.apiDomain + MessagesRoutes.getChatMessages + chatId, header);
+    return this.httpClient.get<IGetChatMessagesResponse>(Domain.route + MessagesRoutes.getChatMessages + chatId, header);
   }
 
   sendMessage(request: SendMessageCommand): Observable<ISendMessageResponse> {
@@ -32,7 +32,7 @@ export class MessagesService implements IMessagesService {
       headers: new HttpHeaders()
         .set('Authorization', `Bearer ${localStorage.getItem(Tokens.accessToken)}`)
     };
-    return this.httpClient.post<ISendMessageResponse>(ApiRoute.apiDomain + MessagesRoutes.postMessage, request, header);
+    return this.httpClient.post<ISendMessageResponse>(Domain.route + MessagesRoutes.postMessage, request, header);
   }
 
   deleteMessage(messageId: number): Observable<IDeleteMessageResponse> {

@@ -23,7 +23,7 @@ export class RefreshTokenComponent implements OnInit {
     console.log(refreshToken);
     let command = new RefreshTokenCommand(refreshToken);
     console.log(command);
-    this.authService.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe(
+    this.authService.postRefreshSession(new RefreshTokenCommand(refreshToken)).subscribe(
       (data: IRefreshTokenResponse) => {
         if (data.success) {
           localStorage.setItem(Tokens.accessToken, data.accessToken);

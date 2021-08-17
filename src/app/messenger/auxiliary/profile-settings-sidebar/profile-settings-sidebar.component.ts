@@ -23,7 +23,7 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout(new LogoutCommand(localStorage.getItem(Tokens.refreshTokenId)))
+    this.authService.deleteSession(new LogoutCommand(localStorage.getItem(Tokens.refreshTokenId)))
       .subscribe((data: ILogoutResponse) => {
         this.router.navigateByUrl('login').then(r => r);
       }, error => {
@@ -33,7 +33,7 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   }
 
   logoutAll(): void {
-    this.authService.logoutAll(new LogoutAllCommand(localStorage.getItem(Tokens.refreshTokenId)))
+    this.authService.deleteAllSessions(new LogoutAllCommand(localStorage.getItem(Tokens.refreshTokenId)))
       .subscribe((data: ILogoutResponse) => {
         this.router.navigateByUrl('login').then(r => r);
       }, error => {

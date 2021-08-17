@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
   }
 
   register(): void {
-    this.authService.register(new RegisterCommand(
+    this.authService.postUser(new RegisterCommand(
       this.PhoneNumber,
       this.Email,
       this.DisplayName,

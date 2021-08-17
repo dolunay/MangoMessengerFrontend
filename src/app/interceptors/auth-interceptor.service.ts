@@ -24,7 +24,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     if (shouldHandle) {
       let refreshTokenId = this.authService.getRefreshTokenId();
-      const refreshTokenResponse = this.authService.refreshToken(new RefreshTokenCommand(refreshTokenId));
+      const refreshTokenResponse = this.authService.postRefreshSession(new RefreshTokenCommand(refreshTokenId));
       return refreshTokenResponse.pipe(switchMap((loginData) => {
         this.authService.writeAccessToken(loginData.accessToken);
         this.authService.writeRefreshTokenId(loginData.refreshTokenId);

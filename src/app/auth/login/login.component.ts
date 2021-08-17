@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    this.authService.login(new LoginCommand(this.email, this.password)).subscribe((data: ILoginResponse) => {
+    this.authService.postSession(new LoginCommand(this.email, this.password)).subscribe((data: ILoginResponse) => {
       this.loginResponse = data;
 
       if (!this.loginResponse.success) {

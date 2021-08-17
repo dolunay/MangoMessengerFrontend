@@ -18,7 +18,7 @@ export class VerifyEmailComponent implements OnInit {
   ngOnInit(): void {
     this.email = this.route.snapshot.paramMap.get('id');
     this.userId = this.route.snapshot.paramMap.get('id2');
-    this.authService.verifyEmail(this.email, this.userId).subscribe((data: IVerifyEmailResponse) => {
+    this.authService.putEmailConfirmation(this.email, this.userId).subscribe((data: IVerifyEmailResponse) => {
       let response = data;
       this.router.navigateByUrl('login').then(r => alert(response.message));
     }, error => {

@@ -23,7 +23,7 @@ export class VerifyPhoneComponent implements OnInit {
 
   verifyPhone(): void {
     let userId = localStorage.getItem(Tokens.userId);
-    this.authService.verifyPhone(new VerifyPhoneCommand(this.phoneCode, userId))
+    this.authService.putPhoneConfirmation(new VerifyPhoneCommand(this.phoneCode, userId))
       .subscribe((data: IVerifyPhoneCodeResponse) => {
         this.verifyPhoneResponse = data;
         this.router.navigateByUrl('login').then(r => r);
@@ -31,7 +31,7 @@ export class VerifyPhoneComponent implements OnInit {
 
         if(error.error.title != undefined) {
           alert("invalid confirmation code");
-        } 
+        }
         else {
           alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " "));
         }
