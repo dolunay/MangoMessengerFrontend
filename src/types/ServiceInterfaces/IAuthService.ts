@@ -13,7 +13,7 @@ import {VerifyEmailCommand} from "../Auth/Requests/VerifyEmailCommand";
 export interface IAuthService {
   postUser(command: RegisterCommand): Observable<IRegisterResponse>;
 
-  putPhoneConfirmation(command: VerifyPhoneCommand): Observable<IVerifyPhoneCodeResponse>;
+  putPhoneConfirmation(phoneCode: number): Observable<IVerifyPhoneCodeResponse>;
 
   postSession(command: LoginCommand): Observable<ILoginResponse>;
 
@@ -25,11 +25,11 @@ export interface IAuthService {
 
   deleteAllSessions(refreshToken: string | null): Observable<ILogoutResponse>;
 
-  getRefreshTokenId(): string | null;
+  getRefreshToken(): string | null;
 
   getAccessToken(): string | null;
 
   writeAccessToken(token: string): void;
 
-  writeRefreshTokenId(tokenId: string): void;
+  writeRefreshToken(tokenId: string): void;
 }

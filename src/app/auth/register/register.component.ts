@@ -4,7 +4,6 @@ import {VerificationMethod} from 'src/types/Auth/Enums/VerificationMethod';
 import {IRegisterResponse} from "../../../types/Auth/Responses/IRegisterResponse";
 import {RegisterCommand} from "../../../types/Auth/Requests/RegisterCommand";
 import {AuthService} from "../../services/auth.service";
-import {Tokens} from "../../../consts/Tokens";
 
 @Component({
   selector: 'app-register',
@@ -42,7 +41,6 @@ export class RegisterComponent implements OnInit {
           return;
         }
 
-        localStorage.setItem(Tokens.userId, data.userId);
         this.router.navigateByUrl('verify-phone').then(r => r);
       }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")) );
   }

@@ -27,8 +27,9 @@ export class AuthService implements IAuthService {
     return this.httpClient.post<IRegisterResponse>(Domain.route + SessionRoutes.route, command);
   }
 
-  putPhoneConfirmation(command: VerifyPhoneCommand): Observable<IVerifyPhoneCodeResponse> {
-    return this.httpClient.put<IVerifyPhoneCodeResponse>(Domain.route + UserRoutes.putPhoneConfirmation, command);
+  putPhoneConfirmation(phoneCode: number): Observable<IVerifyPhoneCodeResponse> {
+    return this.httpClient.put<IVerifyPhoneCodeResponse>(Domain.route + UserRoutes.putPhoneConfirmation + '/' + phoneCode,
+      {});
   }
 
   postSession(command: LoginCommand): Observable<ILoginResponse> {
@@ -66,15 +67,15 @@ export class AuthService implements IAuthService {
     return localStorage.getItem(Tokens.accessToken);
   }
 
-  getRefreshTokenId(): string | null {
-    return localStorage.getItem(Tokens.refreshTokenId);
+  getRefreshToken(): string | null {
+    return localStorage.getItem(Tokens.refreshToken);
   }
 
   writeAccessToken(token: string): void {
     localStorage.setItem(Tokens.accessToken, token);
   }
 
-  writeRefreshTokenId(tokenId: string): void {
-    localStorage.setItem(Tokens.refreshTokenId, tokenId);
+  writeRefreshToken(tokenId: string): void {
+    localStorage.setItem(Tokens.refreshToken, tokenId);
   }
 }

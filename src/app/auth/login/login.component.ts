@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
       }
 
       localStorage.setItem(Tokens.accessToken, this.loginResponse.accessToken);
-      localStorage.setItem(Tokens.refreshTokenId, this.loginResponse.refreshTokenId);
+      localStorage.setItem(Tokens.refreshToken, this.loginResponse.refreshToken);
       this.router.navigateByUrl('main').then(r => r);
     }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")));
   }

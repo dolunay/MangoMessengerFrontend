@@ -43,11 +43,11 @@ export class ChatSidebarHeaderComponent implements OnInit {
   }
 
   refreshToken(): void {
-    let refreshToken = localStorage.getItem(Tokens.refreshTokenId);
+    let refreshToken = localStorage.getItem(Tokens.refreshToken);
     this.authService.postRefreshSession(refreshToken).subscribe(
       (data: IRefreshTokenResponse) => {
         localStorage.setItem(Tokens.accessToken, data.accessToken);
-        localStorage.setItem(Tokens.refreshTokenId, data.refreshTokenId);
+        localStorage.setItem(Tokens.refreshToken, data.refreshToken);
       }, error => {
         this.router.navigateByUrl('login').then(r => alert(error.message));
       }

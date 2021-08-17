@@ -22,11 +22,11 @@ export class AuthInterceptor implements HttpInterceptor {
       request.headers.get('Authorization')?.startsWith('Bearer');
 
     if (shouldHandle) {
-      let refreshToken = this.authService.getRefreshTokenId();
+      let refreshToken = this.authService.getRefreshToken();
       const refreshTokenResponse = this.authService.postRefreshSession(refreshToken);
       return refreshTokenResponse.pipe(switchMap((loginData) => {
         this.authService.writeAccessToken(loginData.accessToken);
-        this.authService.writeRefreshTokenId(loginData.refreshTokenId);
+        this.authService.writeRefreshToken(loginData.refreshToken);
         return next.handle(request.clone({
           setHeaders: {
             Authorization: 'Bearer ' + loginData.accessToken

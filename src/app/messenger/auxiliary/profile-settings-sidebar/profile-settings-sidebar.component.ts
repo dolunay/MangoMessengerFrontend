@@ -19,7 +19,7 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   }
 
   logout(): void {
-    let refreshToken = this.authService.getRefreshTokenId();
+    let refreshToken = this.authService.getRefreshToken();
     this.authService.deleteSession(refreshToken)
       .subscribe((data: ILogoutResponse) => {
         this.router.navigateByUrl('login').then(r => r);
@@ -30,7 +30,7 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   }
 
   logoutAll(): void {
-    let refreshToken = this.authService.getRefreshTokenId();
+    let refreshToken = this.authService.getRefreshToken();
     this.authService.deleteAllSessions(refreshToken)
       .subscribe((data: ILogoutResponse) => {
         this.router.navigateByUrl('login').then(r => r);
