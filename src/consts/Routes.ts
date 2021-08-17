@@ -14,9 +14,8 @@ export class AuthRoutes {
 
 export class ChatsRoutes {
   static getChats = 'api/chats';
-  static postGroup = 'api/chats/group';
-  static postDirectChat = 'api/chats/direct-chat';
-  static postJoinGroup = 'api/chats/join';
+  static postGroup = 'api/chats';
+  static postDirectChat = 'api/chats';
 }
 
 export class MessagesRoutes {
@@ -28,4 +27,21 @@ export class MessagesRoutes {
 
 export class UserRoutes {
   static getUserById = 'api/users/';
+  static getCurrentUser = 'api/users/';
+  static putEmailConfirmation = 'api/users/email-confirmation';
+  static putPhoneConfirmation = 'api/users/phone-confirmation';
+  static putUserInformation = '/api/users/information'
+}
+
+export class ContactsRoutes {
+  static getContacts = 'api/contacts';
+  static postContacts = 'api/contacts';
+}
+
+export class SessionRoutes {
+  static route = 'api/sessions'
+}
+
+export class UserChats {
+  static route = 'api/user-chats'
 }
