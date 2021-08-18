@@ -27,7 +27,7 @@ export class MessagesService implements IMessagesService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.get<IGetChatMessagesResponse>(Domain.route + MessagesRoutes.getChatMessages + chatId, header);
+    return this.httpClient.get<IGetChatMessagesResponse>(Domain.route + MessagesRoutes.route + chatId, header);
   }
 
   sendMessage(request: SendMessageCommand): Observable<ISendMessageResponse> {
@@ -38,12 +38,18 @@ export class MessagesService implements IMessagesService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.post<ISendMessageResponse>(Domain.route + MessagesRoutes.postMessage, request, header);
+    return this.httpClient.post<ISendMessageResponse>(Domain.route + MessagesRoutes.route, request, header);
   }
 
   deleteMessage(messageId: number): Observable<IDeleteMessageResponse> {
-    // @ts-ignore
-    return undefined;
+    let accessToken = this.authService.getAccessToken();
+
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${accessToken}`)
+    };
+
+    return this.httpClient.delete<IDeleteMessageResponse>(Domain.route + MessagesRoutes.route + messageId, header);
   }
 
   editMessage(request: EditMessageCommand): Observable<IEditMessageResponse> {

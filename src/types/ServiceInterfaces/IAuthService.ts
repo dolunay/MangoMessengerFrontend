@@ -1,7 +1,6 @@
 ﻿import {RegisterCommand} from "../Auth/Requests/RegisterCommand";
 import {Observable} from "rxjs";
 import {IRegisterResponse} from "../Auth/Responses/IRegisterResponse";
-import {VerifyPhoneCommand} from "../Auth/Requests/VerifyPhoneCommand";
 import {IVerifyPhoneCodeResponse} from "../Auth/Responses/IVerifyPhoneCodeResponse";
 import {LoginCommand} from "../Auth/Requests/LoginCommand";
 import {ILoginResponse} from "../Auth/Responses/ILoginResponse";
@@ -9,6 +8,7 @@ import {IRefreshTokenResponse} from "../Auth/Responses/IRefreshTokenResponse";
 import {IVerifyEmailResponse} from "../Auth/Responses/IVerifyEmailResponse";
 import {ILogoutResponse} from "../Auth/Responses/ILogoutResponse";
 import {VerifyEmailCommand} from "../Auth/Requests/VerifyEmailCommand";
+import {HttpHeaders} from "@angular/common/http";
 
 export interface IAuthService {
   postUser(command: RegisterCommand): Observable<IRegisterResponse>;
@@ -32,4 +32,6 @@ export interface IAuthService {
   writeAccessToken(token: string): void;
 
   writeRefreshToken(tokenId: string): void;
+
+  getHeader(): HttpHeaders;
 }

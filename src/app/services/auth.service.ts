@@ -4,7 +4,6 @@ import {RegisterCommand} from "../../types/Auth/Requests/RegisterCommand";
 import {Observable} from "rxjs";
 import {IRegisterResponse} from "../../types/Auth/Responses/IRegisterResponse";
 import {Domain, SessionRoutes, UserRoutes} from "../../consts/Routes";
-import {VerifyPhoneCommand} from "../../types/Auth/Requests/VerifyPhoneCommand";
 import {IVerifyPhoneCodeResponse} from "../../types/Auth/Responses/IVerifyPhoneCodeResponse";
 import {LoginCommand} from "../../types/Auth/Requests/LoginCommand";
 import {ILoginResponse} from "../../types/Auth/Responses/ILoginResponse";
@@ -28,8 +27,13 @@ export class AuthService implements IAuthService {
   }
 
   putPhoneConfirmation(phoneCode: number): Observable<IVerifyPhoneCodeResponse> {
-    return this.httpClient.put<IVerifyPhoneCodeResponse>(Domain.route + UserRoutes.putPhoneConfirmation + '/' + phoneCode,
-      {});
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${this.getAccessToken()}`)
+    };
+
+    return this.httpClient.put<IVerifyPhoneCodeResponse>(Domain.route + UserRoutes.route + 'phone-confirmation/' +
+      phoneCode, {}, header);
   }
 
   postSession(command: LoginCommand): Observable<ILoginResponse> {
@@ -60,7 +64,13 @@ export class AuthService implements IAuthService {
   }
 
   putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse> {
-    return this.httpClient.put<IVerifyEmailResponse>(Domain.route + UserRoutes.putEmailConfirmation, request);
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${this.getAccessToken()}`)
+    };
+
+    return this.httpClient.put<IVerifyEmailResponse>(Domain.route + UserRoutes.route + 'email-confirmation/',
+      request, header);
   }
 
   getAccessToken(): string | null {
@@ -77,5 +87,10 @@ export class AuthService implements IAuthService {
 
   writeRefreshToken(tokenId: string): void {
     localStorage.setItem(Tokens.refreshToken, tokenId);
+  }
+
+  getHeader(): HttpHeaders {
+    const accessToken = this.getAccessToken();
+    return new HttpHeaders().set('Authorization', `Bearer ${accessToken}`);
   }
 }

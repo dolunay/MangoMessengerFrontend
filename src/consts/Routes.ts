@@ -2,41 +2,26 @@
   static route = 'https://mango-messenger-app.herokuapp.com/';
 }
 
-export class AuthRoutes {
-  static postLogout = 'api/auth/logout'
-  static postLogoutAll = 'api/auth/logout-all'
-}
-
 export class ChatsRoutes {
-  static getChats = 'api/chats';
-  static postGroup = 'api/chats';
-  static postDirectChat = 'api/chats';
+  static route = 'api/chats/'
 }
 
 export class MessagesRoutes {
-  static getChatMessages = 'api/messages/';
-  static postMessage = 'api/messages';
-  static putMessage = 'api/messages';
-  static deleteMessage: 'api/messages/';
+  static route = 'api/messages/'
 }
 
 export class UserRoutes {
-  static getUserById = 'api/users/';
-  static getCurrentUser = 'api/users/';
-  static putEmailConfirmation = 'api/users/email-confirmation';
-  static putPhoneConfirmation = 'api/users/phone-confirmation';
-  static putUserInformation = '/api/users/information'
+  static route = 'api/users/';
 }
 
 export class ContactsRoutes {
-  static getContacts = 'api/contacts';
-  static postContacts = 'api/contacts';
+  static route = 'api/contacts';
 }
 
 export class SessionRoutes {
-  static route = 'api/sessions'
+  static route = 'api/sessions/'
 }
 
 export class UserChats {
-  static route = 'api/user-chats'
+  static route = 'api/user-chats/'
 }
