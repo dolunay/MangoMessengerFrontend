@@ -19,7 +19,7 @@ export class ChatsService implements IChatsService {
   }
 
   getUserChats(): Observable<IGetUserChatsResponse> {
-    let accessToken = this.authService.getAccessToken();
+    const accessToken = this.authService.getAccessToken();
 
     const header = {
       headers: new HttpHeaders()
@@ -30,7 +30,7 @@ export class ChatsService implements IChatsService {
   }
 
   createDirectChat(userId: string): Observable<ICreateDirectChatResponse> {
-    let accessToken = this.authService.getAccessToken();
+    const accessToken = this.authService.getAccessToken();
 
     const header = {
       headers: new HttpHeaders()
@@ -42,7 +42,7 @@ export class ChatsService implements IChatsService {
   }
 
   createGroup(request: CreateGroupCommand): Observable<ICreateGroupResponse> {
-    let accessToken = this.authService.getAccessToken();
+    const accessToken = this.authService.getAccessToken();
 
     const header = {
       headers: new HttpHeaders()
@@ -53,7 +53,7 @@ export class ChatsService implements IChatsService {
   }
 
   joinGroup(groupId: number): Observable<IJoinGroupResponse> {
-    let accessToken = this.authService.getAccessToken();
+    const accessToken = this.authService.getAccessToken();
 
     const header = {
       headers: new HttpHeaders()

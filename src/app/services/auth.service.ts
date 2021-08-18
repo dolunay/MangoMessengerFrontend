@@ -46,27 +46,30 @@ export class AuthService implements IAuthService {
   }
 
   deleteSession(refreshToken: string | null): Observable<ILogoutResponse> {
+    const accessToken = this.getAccessToken();
+
     const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${this.getAccessToken()}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
     return this.httpClient.delete<ILogoutResponse>(Domain.route + SessionRoutes.route + '/' + refreshToken, header);
   }
 
   deleteAllSessions(refreshToken: string | null): Observable<ILogoutResponse> {
+    const accessToken = this.getAccessToken();
+
     const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${this.getAccessToken()}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
     return this.httpClient.delete<ILogoutResponse>(Domain.route + SessionRoutes.route, header);
   }
 
   putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse> {
+    const accessToken = this.getAccessToken();
+
     const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${this.getAccessToken()}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
     return this.httpClient.put<IVerifyEmailResponse>(Domain.route + UserRoutes.route + 'email-confirmation/',
