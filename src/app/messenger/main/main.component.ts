@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
+import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
 import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
@@ -30,7 +30,7 @@ export class MainComponent implements OnInit {
   activeChatTitle: string = '';
   activeChatMembersCount: number = 0;
 
-  constructor(private authService: AuthService,
+  constructor(private authService: SessionService,
               private chatService: ChatsService,
               private messageService: MessagesService,
               private route: ActivatedRoute,

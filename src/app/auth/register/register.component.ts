@@ -1,9 +1,10 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
+import {SessionService} from "../../services/session.service";
 import {RegisterCommand} from "../../../types/requests/RegisterCommand";
 import {IRegisterResponse} from "../../../types/responses/IRegisterResponse";
 import {VerificationMethod} from "../../../types/enums/VerificationMethod";
+import {UsersService} from "../../services/users.service";
 
 @Component({
   selector: 'app-register',
@@ -21,19 +22,20 @@ export class RegisterComponent {
 
   verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
+  constructor(private usersService: UsersService, private sessionService: SessionService,
+              private route: ActivatedRoute, private router: Router) {
   }
 
   register(): void {
-    this.authService.postUser(new RegisterCommand(
+    this.usersService.postUser(new RegisterCommand(
       this.PhoneNumber,
       this.Email,
       this.DisplayName,
       this.Password,
       Number(this.verificationMethod),
       this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
-      this.authService.writeAccessToken(data.accessToken);
-      this.authService.writeRefreshToken(data.refreshToken);
+      this.sessionService.writeAccessToken(data.accessToken);
+      this.sessionService.writeRefreshToken(data.refreshToken);
 
       if (this.verificationMethod === VerificationMethod.Email) {
         alert(data.message.toLowerCase().replace("_", " "));

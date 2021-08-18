@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../../services/auth.service";
+import {SessionService} from "../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {VerifyEmailCommand} from "../../../types/requests/VerifyEmailCommand";
 import {IVerifyEmailResponse} from "../../../types/responses/IVerifyEmailResponse";
@@ -13,7 +13,7 @@ export class VerifyEmailComponent implements OnInit {
   userId: string | null = '';
   email: string | null = '';
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
+  constructor(private authService: SessionService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {

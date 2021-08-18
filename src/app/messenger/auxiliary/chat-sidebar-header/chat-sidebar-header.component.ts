@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ChatsService} from "../../../services/chats.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Tokens} from "../../../../consts/Tokens";
-import {AuthService} from "../../../services/auth.service";
+import {SessionService} from "../../../services/session.service";
 import {GroupType} from "../../../../types/enums/GroupType";
 import {CreateGroupCommand} from "../../../../types/requests/CreateGroupCommand";
 import {ICreateGroupResponse} from "../../../../types/responses/ICreateGroupResponse";
@@ -18,7 +18,7 @@ export class ChatSidebarHeaderComponent implements OnInit {
   constructor(private chatService: ChatsService,
               private route: ActivatedRoute,
               private router: Router,
-              private authService: AuthService) {
+              private authService: SessionService) {
   }
 
   chatTypes = [GroupType.PrivateChannel, GroupType.PublicChannel, GroupType.ReadOnlyChannel];

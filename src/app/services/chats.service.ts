@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Domain, ChatsRoutes, UserChats} from "../../consts/Routes";
-import {AuthService} from "./auth.service";
+import {SessionService} from "./session.service";
 import {IChatsService} from "../../types/interfaces/IChatsService";
 import {IGetUserChatsResponse} from "../../types/responses/IGetUserChatsResponse";
 import {ICreateDirectChatResponse} from "../../types/responses/ICreateDirectChatResponse";
@@ -15,7 +15,7 @@ import {IJoinGroupResponse} from "../../types/responses/IJoinGroupResponse";
 })
 export class ChatsService implements IChatsService {
 
-  constructor(private httpClient: HttpClient, private authService: AuthService) {
+  constructor(private httpClient: HttpClient, private authService: SessionService) {
   }
 
   getUserChats(): Observable<IGetUserChatsResponse> {

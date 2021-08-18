@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Domain, MessagesRoutes} from "../../consts/Routes";
-import {AuthService} from "./auth.service";
+import {SessionService} from "./session.service";
 import {IMessagesService} from "../../types/interfaces/IMessagesService";
 import {IGetChatMessagesResponse} from "../../types/responses/IGetChatMessagesResponse";
 import {SendMessageCommand} from "../../types/requests/SendMessageCommand";
@@ -16,7 +16,7 @@ import {EditMessageCommand} from "../../types/requests/EditMessageCommand";
 })
 export class MessagesService implements IMessagesService {
 
-  constructor(private httpClient: HttpClient, private authService: AuthService) {
+  constructor(private httpClient: HttpClient, private authService: SessionService) {
   }
 
   getChatMessages(chatId: string): Observable<IGetChatMessagesResponse> {

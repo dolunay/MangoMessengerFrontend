@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../../../services/auth.service";
+import {SessionService} from "../../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ILogoutResponse} from "../../../../types/responses/ILogoutResponse";
 
@@ -10,7 +10,7 @@ import {ILogoutResponse} from "../../../../types/responses/ILogoutResponse";
 })
 export class ProfileSettingsSidebarComponent implements OnInit {
 
-  constructor(private authService: AuthService,
+  constructor(private authService: SessionService,
               private route: ActivatedRoute,
               private router: Router) {
   }
