@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {VerificationMethod} from 'src/types/Auth/Enums/VerificationMethod';
 import {IRegisterResponse} from "../../../types/Auth/Responses/IRegisterResponse";
@@ -10,14 +10,14 @@ import {AuthService} from "../../services/auth.service";
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
 
-  PhoneNumber = '+3809749138593';
-  Email = 'kolosovp94@gmail.com';
-  Password = 'z[?6dMR#xmp=nr6q';
+  PhoneNumber = '';
+  Email = '';
+  Password = '';
   verificationMethod = VerificationMethod.Email;
   TermsAccepted = false;
-  DisplayName = 'razumovskiy';
+  DisplayName = '';
 
   verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
@@ -43,9 +43,4 @@ export class RegisterComponent implements OnInit {
       this.router.navigateByUrl('verify-phone').then(r => r);
     }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")));
   }
-
-
-  ngOnInit(): void {
-  }
-
 }
