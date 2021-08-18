@@ -27,9 +27,10 @@ export class AuthService implements IAuthService {
   }
 
   putPhoneConfirmation(phoneCode: number): Observable<IVerifyPhoneCodeResponse> {
+    const accessToken = this.getAccessToken();
+
     const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${this.getAccessToken()}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
     return this.httpClient.put<IVerifyPhoneCodeResponse>(Domain.route + UserRoutes.route + 'phone-confirmation/' +
