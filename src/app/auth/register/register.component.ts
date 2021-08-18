@@ -19,7 +19,6 @@ export class RegisterComponent implements OnInit {
   TermsAccepted = false;
   DisplayName = 'razumovskiy';
 
-  registerResponse!: IRegisterResponse;
   verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
   constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
@@ -32,17 +31,17 @@ export class RegisterComponent implements OnInit {
       this.DisplayName,
       this.Password,
       Number(this.verificationMethod),
-      this.TermsAccepted)
-    ).subscribe((data: IRegisterResponse) => {
-        this.registerResponse = data;
+      this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
+      this.authService.writeAccessToken(data.accessToken);
+      this.authService.writeRefreshToken(data.refreshToken);
 
-        if (this.verificationMethod === VerificationMethod.Email) {
-          alert(this.registerResponse.message.toLowerCase().replace("_", " "));
-          return;
-        }
+      if (this.verificationMethod === VerificationMethod.Email) {
+        alert(data.message.toLowerCase().replace("_", " "));
+        return;
+      }
 
-        this.router.navigateByUrl('verify-phone').then(r => r);
-      }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")) );
+      this.router.navigateByUrl('verify-phone').then(r => r);
+    }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")));
   }
 
 
