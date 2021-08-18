@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {SessionService} from "./session.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Domain, SessionRoutes, UserRoutes} from "../../consts/Routes";
+import {ApiRoute} from "../../consts/Routes";
 import {IUserService} from "../../types/interfaces/IUserService";
 import {IGetUserResponse} from "../../types/responses/IGetUserResponse";
 import {RegisterCommand} from "../../types/requests/RegisterCommand";
@@ -15,6 +15,7 @@ import {IVerifyPhoneCodeResponse} from "../../types/responses/IVerifyPhoneCodeRe
   providedIn: 'root'
 })
 export class UsersService implements IUserService {
+  private usersRoute = 'api/users/'
 
   constructor(private authService: SessionService, private httpClient: HttpClient) {
   }
@@ -26,7 +27,7 @@ export class UsersService implements IUserService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.get<IGetUserResponse>(Domain.route + UserRoutes.route, header);
+    return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute, header);
   }
 
   getUserById(userId: string): Observable<IGetUserResponse> {
@@ -36,11 +37,11 @@ export class UsersService implements IUserService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.get<IGetUserResponse>(Domain.route + UserRoutes.route + userId, header);
+    return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute + userId, header);
   }
 
   postUser(command: RegisterCommand): Observable<IRegisterResponse> {
-    return this.httpClient.post<IRegisterResponse>(Domain.route + SessionRoutes.route, command);
+    return this.httpClient.post<IRegisterResponse>(ApiRoute.route + this.usersRoute, command);
   }
 
   putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse> {
@@ -50,7 +51,7 @@ export class UsersService implements IUserService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.put<IVerifyEmailResponse>(Domain.route + UserRoutes.route + 'email-confirmation/',
+    return this.httpClient.put<IVerifyEmailResponse>(ApiRoute.route + this.usersRoute + 'email-confirmation/',
       request, header);
   }
 
@@ -61,7 +62,7 @@ export class UsersService implements IUserService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.put<IVerifyPhoneCodeResponse>(Domain.route + UserRoutes.route + 'phone-confirmation/' +
+    return this.httpClient.put<IVerifyPhoneCodeResponse>(ApiRoute.route + this.usersRoute + 'phone-confirmation/' +
       phoneCode, {}, header);
   }
 }

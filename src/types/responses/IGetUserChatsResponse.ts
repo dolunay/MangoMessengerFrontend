@@ -1,5 +1,5 @@
-﻿import {IChat} from "../Models/IChat";
-import {IBaseResponse} from "./IBaseResponse";
+﻿import {IBaseResponse} from "./IBaseResponse";
+import {IChat} from "../models/IChat";
 
 export interface IGetUserChatsResponse extends IBaseResponse {
     chats: IChat[];

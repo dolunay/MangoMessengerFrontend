@@ -3,6 +3,7 @@ import {SessionService} from "../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {VerifyEmailCommand} from "../../../types/requests/VerifyEmailCommand";
 import {IVerifyEmailResponse} from "../../../types/responses/IVerifyEmailResponse";
+import {UsersService} from "../../services/users.service";
 
 @Component({
   selector: 'app-verify-email',
@@ -13,13 +14,14 @@ export class VerifyEmailComponent implements OnInit {
   userId: string | null = '';
   email: string | null = '';
 
-  constructor(private authService: SessionService, private route: ActivatedRoute, private router: Router) {
+  constructor(private sessionService: SessionService, private route: ActivatedRoute,
+              private router: Router, private usersService: UsersService) {
   }
 
   ngOnInit(): void {
     this.email = this.route.snapshot.paramMap.get('id');
     this.userId = this.route.snapshot.paramMap.get('id2');
-    this.authService.putEmailConfirmation(new VerifyEmailCommand(this.email, this.userId))
+    this.usersService.putEmailConfirmation(new VerifyEmailCommand(this.email, this.userId))
       .subscribe((data: IVerifyEmailResponse) => {
         let response = data;
         this.router.navigateByUrl('login').then(r => alert(response.message));

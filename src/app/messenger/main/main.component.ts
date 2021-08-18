@@ -7,8 +7,8 @@ import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsRespo
 import {IGetChatMessagesResponse} from "../../../types/responses/IGetChatMessagesResponse";
 import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
 import {ISendMessageResponse} from "../../../types/responses/ISendMessageResponse";
-import {IChat} from 'src/types/Models/IChat';
 import {IMessage} from "../../../types/models/IMessage";
+import {IChat} from "../../../types/models/IChat";
 
 @Component({
   selector: 'app-main',

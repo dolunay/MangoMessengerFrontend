@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Domain, SessionRoutes} from "../../consts/Routes";
+import {ApiRoute} from "../../consts/Routes";
 import {Tokens} from "../../consts/Tokens";
 import {ISessionService} from "../../types/interfaces/ISessionService";
 import {ILoginResponse} from "../../types/responses/ILoginResponse";
@@ -13,17 +13,18 @@ import {ILogoutResponse} from "../../types/responses/ILogoutResponse";
   providedIn: 'root'
 })
 export class SessionService implements ISessionService {
+  private sessionsRoute = 'api/sessions/'
 
   constructor(private httpClient: HttpClient) {
   }
 
   postSession(command: LoginCommand): Observable<ILoginResponse> {
-    return this.httpClient.post<ILoginResponse>(Domain.route + SessionRoutes.route, command,
+    return this.httpClient.post<ILoginResponse>(ApiRoute.route + this.sessionsRoute, command,
       {withCredentials: true});
   }
 
   postRefreshSession(refreshToken: string | null): Observable<IRefreshTokenResponse> {
-    return this.httpClient.post<IRefreshTokenResponse>(Domain.route + SessionRoutes.route + '/' + refreshToken, {});
+    return this.httpClient.post<IRefreshTokenResponse>(ApiRoute.route + this.sessionsRoute + refreshToken, {});
   }
 
   deleteSession(refreshToken: string | null): Observable<ILogoutResponse> {
@@ -33,7 +34,7 @@ export class SessionService implements ISessionService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.delete<ILogoutResponse>(Domain.route + SessionRoutes.route + '/' + refreshToken, header);
+    return this.httpClient.delete<ILogoutResponse>(ApiRoute.route + this.sessionsRoute + refreshToken, header);
   }
 
   deleteAllSessions(refreshToken: string | null): Observable<ILogoutResponse> {
@@ -43,7 +44,7 @@ export class SessionService implements ISessionService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.delete<ILogoutResponse>(Domain.route + SessionRoutes.route, header);
+    return this.httpClient.delete<ILogoutResponse>(ApiRoute.route + this.sessionsRoute, header);
   }
 
   getAccessToken(): string | null {
