@@ -10,6 +10,9 @@ import {IRegisterResponse} from "../../types/responses/IRegisterResponse";
 import {IVerifyEmailResponse} from "../../types/responses/IVerifyEmailResponse";
 import {VerifyEmailCommand} from "../../types/requests/VerifyEmailCommand";
 import {IVerifyPhoneCodeResponse} from "../../types/responses/IVerifyPhoneCodeResponse";
+import {ISearchResponse} from "../../types/responses/ISearchResponse";
+import {UpdateUserInformationCommand} from "../../types/requests/UpdateUserInformationCommand";
+import {IUpdateUserInformationResponse} from "../../types/responses/IUpdateUserInformationResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -64,5 +67,25 @@ export class UsersService implements IUserService {
 
     return this.httpClient.put<IVerifyPhoneCodeResponse>(ApiRoute.route + this.usersRoute + 'phone-confirmation/' +
       phoneCode, {}, header);
+  }
+
+  postSearch(displayName: string): Observable<ISearchResponse> {
+    const accessToken = this.authService.getAccessToken();
+
+    const header = {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
+    };
+
+    return this.httpClient.post<ISearchResponse>(ApiRoute.route + this.usersRoute + displayName, {}, header);
+  }
+
+  putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IUpdateUserInformationResponse> {
+    const accessToken = this.authService.getAccessToken();
+
+    const header = {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
+    };
+
+    return this.httpClient.put<ISearchResponse>(ApiRoute.route + this.usersRoute + 'information/', request, header);
   }
 }

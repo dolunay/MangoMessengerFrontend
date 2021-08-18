@@ -5,6 +5,9 @@ import {IRegisterResponse} from "../responses/IRegisterResponse";
 import {IVerifyPhoneCodeResponse} from "../responses/IVerifyPhoneCodeResponse";
 import {VerifyEmailCommand} from "../requests/VerifyEmailCommand";
 import {IVerifyEmailResponse} from "../responses/IVerifyEmailResponse";
+import {UpdateUserInformationCommand} from "../requests/UpdateUserInformationCommand";
+import {IUpdateUserInformationResponse} from "../responses/IUpdateUserInformationResponse";
+import {ISearchResponse} from "../responses/ISearchResponse";
 
 export interface IUserService {
   postUser(command: RegisterCommand): Observable<IRegisterResponse>;
@@ -16,4 +19,8 @@ export interface IUserService {
   getCurrentUser(): Observable<IGetUserResponse>;
 
   putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse>;
+
+  putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IUpdateUserInformationResponse>;
+
+  postSearch(displayName: string): Observable<ISearchResponse>;
 }
