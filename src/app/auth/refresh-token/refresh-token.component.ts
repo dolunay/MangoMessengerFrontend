@@ -19,15 +19,14 @@ export class RefreshTokenComponent implements OnInit {
   }
 
   refreshToken(): void {
-    let refreshToken = localStorage.getItem(Tokens.refreshTokenId);
+    let refreshToken = localStorage.getItem(Tokens.refreshToken);
     console.log(refreshToken);
     let command = new RefreshTokenCommand(refreshToken);
     console.log(command);
-    this.authService.refreshToken(new RefreshTokenCommand(refreshToken)).subscribe(
-      (data: IRefreshTokenResponse) => {
+    this.authService.postRefreshSession(refreshToken).subscribe((data: IRefreshTokenResponse) => {
         if (data.success) {
           localStorage.setItem(Tokens.accessToken, data.accessToken);
-          localStorage.setItem(Tokens.refreshTokenId, data.refreshTokenId);
+          localStorage.setItem(Tokens.refreshToken, data.refreshToken);
           return;
         }
         this.router.navigateByUrl('login').then(r => r);

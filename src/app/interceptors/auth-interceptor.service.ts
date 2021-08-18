@@ -9,7 +9,6 @@ import {Observable, of, throwError} from 'rxjs';
 import {AuthService} from "../services/auth.service";
 import {catchError, switchMap} from "rxjs/operators";
 import {Router} from "@angular/router";
-import {RefreshTokenCommand} from "../../types/Auth/Requests/RefreshTokenCommand";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -23,11 +22,11 @@ export class AuthInterceptor implements HttpInterceptor {
       request.headers.get('Authorization')?.startsWith('Bearer');
 
     if (shouldHandle) {
-      let refreshTokenId = this.authService.getRefreshTokenId();
-      const refreshTokenResponse = this.authService.refreshToken(new RefreshTokenCommand(refreshTokenId));
+      let refreshToken = this.authService.getRefreshToken();
+      const refreshTokenResponse = this.authService.postRefreshSession(refreshToken);
       return refreshTokenResponse.pipe(switchMap((loginData) => {
         this.authService.writeAccessToken(loginData.accessToken);
-        this.authService.writeRefreshTokenId(loginData.refreshTokenId);
+        this.authService.writeRefreshToken(loginData.refreshToken);
         return next.handle(request.clone({
           setHeaders: {
             Authorization: 'Bearer ' + loginData.accessToken

@@ -1,37 +1,37 @@
 ﻿import {RegisterCommand} from "../Auth/Requests/RegisterCommand";
 import {Observable} from "rxjs";
 import {IRegisterResponse} from "../Auth/Responses/IRegisterResponse";
-import {VerifyPhoneCommand} from "../Auth/Requests/VerifyPhoneCommand";
 import {IVerifyPhoneCodeResponse} from "../Auth/Responses/IVerifyPhoneCodeResponse";
 import {LoginCommand} from "../Auth/Requests/LoginCommand";
 import {ILoginResponse} from "../Auth/Responses/ILoginResponse";
-import {RefreshTokenCommand} from "../Auth/Requests/RefreshTokenCommand";
 import {IRefreshTokenResponse} from "../Auth/Responses/IRefreshTokenResponse";
 import {IVerifyEmailResponse} from "../Auth/Responses/IVerifyEmailResponse";
-import {LogoutCommand} from "../Auth/Requests/LogoutCommand";
 import {ILogoutResponse} from "../Auth/Responses/ILogoutResponse";
-import {LogoutAllCommand} from "../Auth/Requests/LogoutAllCommand";
+import {VerifyEmailCommand} from "../Auth/Requests/VerifyEmailCommand";
+import {HttpHeaders} from "@angular/common/http";
 
 export interface IAuthService {
-  register(command: RegisterCommand): Observable<IRegisterResponse>;
+  postUser(command: RegisterCommand): Observable<IRegisterResponse>;
 
-  verifyPhone(command: VerifyPhoneCommand): Observable<IVerifyPhoneCodeResponse>;
+  putPhoneConfirmation(phoneCode: number): Observable<IVerifyPhoneCodeResponse>;
 
-  login(command: LoginCommand): Observable<ILoginResponse>;
+  postSession(command: LoginCommand): Observable<ILoginResponse>;
 
-  refreshToken(request: RefreshTokenCommand): Observable<IRefreshTokenResponse>;
+  postRefreshSession(refreshToken: string | null): Observable<IRefreshTokenResponse>;
 
-  verifyEmail(email: string, userId: string): Observable<IVerifyEmailResponse>;
+  putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse>;
 
-  logout(request: LogoutCommand): Observable<ILogoutResponse>;
+  deleteSession(refreshToken: string | null): Observable<ILogoutResponse>;
 
-  logoutAll(request: LogoutAllCommand): Observable<ILogoutResponse>;
+  deleteAllSessions(refreshToken: string | null): Observable<ILogoutResponse>;
 
-  getRefreshTokenId(): string | null;
+  getRefreshToken(): string | null;
 
   getAccessToken(): string | null;
 
   writeAccessToken(token: string): void;
 
-  writeRefreshTokenId(tokenId: string): void;
+  writeRefreshToken(tokenId: string): void;
+
+  getHeader(): HttpHeaders;
 }

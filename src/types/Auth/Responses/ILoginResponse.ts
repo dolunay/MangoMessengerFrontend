@@ -2,5 +2,5 @@
 
 export interface ILoginResponse extends IBaseResponse {
   accessToken: string;
-  refreshTokenId: string;
+  refreshToken: string;
 }

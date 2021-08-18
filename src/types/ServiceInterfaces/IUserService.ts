@@ -2,6 +2,6 @@
 import {IGetUserResponse} from "../Users/Responses/IGetUserResponse";
 
 export interface IUserService {
-  getUserById(userId: number): Observable<IGetUserResponse>;
+  getUserById(userId: string): Observable<IGetUserResponse>;
   getCurrentUser() : Observable<IGetUserResponse>;
 }
