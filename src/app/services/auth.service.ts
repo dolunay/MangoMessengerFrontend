@@ -1,18 +1,18 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {RegisterCommand} from "../../types/Auth/Requests/RegisterCommand";
 import {Observable} from "rxjs";
-import {IRegisterResponse} from "../../types/Auth/Responses/IRegisterResponse";
 import {Domain, SessionRoutes, UserRoutes} from "../../consts/Routes";
-import {IVerifyPhoneCodeResponse} from "../../types/Auth/Responses/IVerifyPhoneCodeResponse";
-import {LoginCommand} from "../../types/Auth/Requests/LoginCommand";
-import {ILoginResponse} from "../../types/Auth/Responses/ILoginResponse";
-import {IRefreshTokenResponse} from "../../types/Auth/Responses/IRefreshTokenResponse";
-import {IAuthService} from "../../types/ServiceInterfaces/IAuthService";
-import {ILogoutResponse} from "../../types/Auth/Responses/ILogoutResponse";
-import {IVerifyEmailResponse} from "../../types/Auth/Responses/IVerifyEmailResponse";
 import {Tokens} from "../../consts/Tokens";
-import {VerifyEmailCommand} from "../../types/Auth/Requests/VerifyEmailCommand";
+import {IAuthService} from "../../types/interfaces/IAuthService";
+import {RegisterCommand} from "../../types/requests/RegisterCommand";
+import {IRegisterResponse} from "../../types/responses/IRegisterResponse";
+import {IVerifyPhoneCodeResponse} from "../../types/responses/IVerifyPhoneCodeResponse";
+import {ILoginResponse} from "../../types/responses/ILoginResponse";
+import {LoginCommand} from "../../types/requests/LoginCommand";
+import {IRefreshTokenResponse} from "../../types/responses/IRefreshTokenResponse";
+import {ILogoutResponse} from "../../types/responses/ILogoutResponse";
+import {IVerifyEmailResponse} from "../../types/responses/IVerifyEmailResponse";
+import {VerifyEmailCommand} from "../../types/requests/VerifyEmailCommand";
 
 @Injectable({
   providedIn: 'root'

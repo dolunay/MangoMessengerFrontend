@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {IVerifyEmailResponse} from "../../../types/Auth/Responses/IVerifyEmailResponse";
-import {VerifyEmailCommand} from "../../../types/Auth/Requests/VerifyEmailCommand";
+import {VerifyEmailCommand} from "../../../types/requests/VerifyEmailCommand";
+import {IVerifyEmailResponse} from "../../../types/responses/IVerifyEmailResponse";
 
 @Component({
   selector: 'app-verify-email',

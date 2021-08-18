@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Domain, ChatsRoutes, UserChats} from "../../consts/Routes";
-import {IGetUserChatsResponse} from "../../types/Chats/Responses/IGetUserChatsResponse";
-import {IChatsService} from "../../types/ServiceInterfaces/IChatsService";
-import {ICreateDirectChatResponse} from "../../types/Chats/Responses/ICreateDirectChatResponse";
-import {CreateGroupCommand} from "../../types/Chats/Requests/CreateGroupCommand";
-import {ICreateGroupResponse} from "../../types/Chats/Responses/ICreateGroupResponse";
-import {IJoinGroupResponse} from "../../types/Chats/Responses/IJoinGroupResponse";
 import {AuthService} from "./auth.service";
+import {IChatsService} from "../../types/interfaces/IChatsService";
+import {IGetUserChatsResponse} from "../../types/responses/IGetUserChatsResponse";
+import {ICreateDirectChatResponse} from "../../types/responses/ICreateDirectChatResponse";
+import {ICreateGroupResponse} from "../../types/responses/ICreateGroupResponse";
+import {CreateGroupCommand} from "../../types/requests/CreateGroupCommand";
+import {IJoinGroupResponse} from "../../types/responses/IJoinGroupResponse";
 
 @Injectable({
   providedIn: 'root'

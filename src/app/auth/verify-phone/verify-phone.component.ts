@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {IVerifyPhoneCodeResponse} from "../../../types/Auth/Responses/IVerifyPhoneCodeResponse";
 import {AuthService} from "../../services/auth.service";
+import {IVerifyPhoneCodeResponse} from "../../../types/responses/IVerifyPhoneCodeResponse";
 
 @Component({
   selector: 'app-verify-phone',

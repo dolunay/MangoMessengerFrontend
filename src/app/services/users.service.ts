@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {IUserService} from "../../types/ServiceInterfaces/IUserService";
 import {Observable} from "rxjs";
-import {IGetUserResponse} from "../../types/Users/Responses/IGetUserResponse";
 import {AuthService} from "./auth.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Domain, UserRoutes} from "../../consts/Routes";
+import {IUserService} from "../../types/interfaces/IUserService";
+import {IGetUserResponse} from "../../types/responses/IGetUserResponse";
 
 @Injectable({
   providedIn: 'root'

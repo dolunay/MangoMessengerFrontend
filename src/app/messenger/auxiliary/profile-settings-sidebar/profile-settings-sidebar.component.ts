@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ILogoutResponse} from "../../../../types/Auth/Responses/ILogoutResponse";
+import {ILogoutResponse} from "../../../../types/responses/ILogoutResponse";
 
 @Component({
   selector: 'app-profile-settings-sidebar',

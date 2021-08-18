@@ -2,14 +2,14 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Domain, MessagesRoutes} from "../../consts/Routes";
-import {IGetChatMessagesResponse} from "../../types/Messages/Responses/IGetChatMessagesResponse";
-import {SendMessageCommand} from "../../types/Messages/Requests/SendMessageCommand";
-import {ISendMessageResponse} from "../../types/Messages/Responses/ISendMessageResponse";
-import {IMessagesService} from "../../types/ServiceInterfaces/IMessagesService";
-import {IDeleteMessageResponse} from "../../types/Messages/Responses/IDeleteMessageResponse";
-import {EditMessageCommand} from "../../types/Messages/Requests/EditMessageCommand";
-import {IEditMessageResponse} from "../../types/Messages/Responses/IEditMessageResponse";
 import {AuthService} from "./auth.service";
+import {IMessagesService} from "../../types/interfaces/IMessagesService";
+import {IGetChatMessagesResponse} from "../../types/responses/IGetChatMessagesResponse";
+import {SendMessageCommand} from "../../types/requests/SendMessageCommand";
+import {ISendMessageResponse} from "../../types/responses/ISendMessageResponse";
+import {IDeleteMessageResponse} from "../../types/responses/IDeleteMessageResponse";
+import {IEditMessageResponse} from "../../types/responses/IEditMessageResponse";
+import {EditMessageCommand} from "../../types/requests/EditMessageCommand";
 
 @Injectable({
   providedIn: 'root'

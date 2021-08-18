@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {ILoginResponse} from "../../../types/Auth/Responses/ILoginResponse";
-import {LoginCommand} from "../../../types/Auth/Requests/LoginCommand";
 import {AuthService} from "../../services/auth.service";
+import {LoginCommand} from "../../../types/requests/LoginCommand";
+import {ILoginResponse} from "../../../types/responses/ILoginResponse";
 
 @Component({
   selector: 'app-login',

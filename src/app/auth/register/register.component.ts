@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {VerificationMethod} from 'src/types/Auth/Enums/VerificationMethod';
-import {IRegisterResponse} from "../../../types/Auth/Responses/IRegisterResponse";
-import {RegisterCommand} from "../../../types/Auth/Requests/RegisterCommand";
 import {AuthService} from "../../services/auth.service";
+import {RegisterCommand} from "../../../types/requests/RegisterCommand";
+import {IRegisterResponse} from "../../../types/responses/IRegisterResponse";
+import {VerificationMethod} from "../../../types/enums/VerificationMethod";
 
 @Component({
   selector: 'app-register',

@@ -1,15 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {IGetUserChatsResponse} from "../../../types/Chats/Responses/IGetUserChatsResponse";
 import {ActivatedRoute, Router} from "@angular/router";
-import {IGetChatMessagesResponse} from "../../../types/Messages/Responses/IGetChatMessagesResponse";
-import {IMessage} from "../../../types/Messages/Models/IMessage";
-import {SendMessageCommand} from "../../../types/Messages/Requests/SendMessageCommand";
-import {ISendMessageResponse} from "../../../types/Messages/Responses/ISendMessageResponse";
-import {IRefreshTokenResponse} from "../../../types/Auth/Responses/IRefreshTokenResponse";
 import {AuthService} from "../../services/auth.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
-import {IChat} from "../../../types/Chats/Models/IChat";
+import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
+import {IGetChatMessagesResponse} from "../../../types/responses/IGetChatMessagesResponse";
+import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
+import {ISendMessageResponse} from "../../../types/responses/ISendMessageResponse";
+import {IChat} from 'src/types/Models/IChat';
+import {IMessage} from "../../../types/models/IMessage";
 
 @Component({
   selector: 'app-main',
@@ -20,10 +19,6 @@ export class MainComponent implements OnInit {
 
   // @ts-ignore
   getUserChatsResponse: IGetUserChatsResponse;
-  // @ts-ignore
-  refreshTokenResponse: IRefreshTokenResponse;
-
-  hui = document.getElementsByClassName('message-day');
 
   messages: IMessage[] = [];
   chats: IChat[] = [];
