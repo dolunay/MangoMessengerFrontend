@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {IVerifyPhoneCodeResponse} from "../../../types/Auth/Responses/IVerifyPhoneCodeResponse";
-import {AuthService} from "../../services/auth.service";
+import {IVerifyPhoneCodeResponse} from "../../../types/responses/IVerifyPhoneCodeResponse";
+import {UsersService} from "../../services/users.service";
 
 @Component({
   selector: 'app-verify-phone',
@@ -12,11 +12,11 @@ export class VerifyPhoneComponent {
 
   phoneCode!: number;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
+  constructor(private usersService: UsersService, private route: ActivatedRoute, private router: Router) {
   }
 
   verifyPhone(): void {
-    this.authService.putPhoneConfirmation(this.phoneCode).subscribe((data: IVerifyPhoneCodeResponse) => {
+    this.usersService.putPhoneConfirmation(this.phoneCode).subscribe((data: IVerifyPhoneCodeResponse) => {
         this.router.navigateByUrl('login').then(r => alert(data.message));
       }, error => {
         alert(error.error.ErrorMessage);

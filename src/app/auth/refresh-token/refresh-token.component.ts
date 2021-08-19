@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Tokens} from "../../../consts/Tokens";
-import {RefreshTokenCommand} from "../../../types/Auth/Requests/RefreshTokenCommand";
-import {IRefreshTokenResponse} from "../../../types/Auth/Responses/IRefreshTokenResponse";
-import {AuthService} from "../../services/auth.service";
+import {SessionService} from "../../services/session.service";
+import {RefreshTokenCommand} from "../../../types/requests/RefreshTokenCommand";
+import {IRefreshTokenResponse} from "../../../types/responses/IRefreshTokenResponse";
 
 @Component({
   selector: 'app-refresh-token',
@@ -12,7 +12,7 @@ import {AuthService} from "../../services/auth.service";
 })
 export class RefreshTokenComponent implements OnInit {
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
+  constructor(private authService: SessionService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {

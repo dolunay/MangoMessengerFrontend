@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {ILoginResponse} from "../../../types/Auth/Responses/ILoginResponse";
-import {LoginCommand} from "../../../types/Auth/Requests/LoginCommand";
-import {AuthService} from "../../services/auth.service";
+import {SessionService} from "../../services/session.service";
+import {LoginCommand} from "../../../types/requests/LoginCommand";
+import {ILoginResponse} from "../../../types/responses/ILoginResponse";
 
 @Component({
   selector: 'app-login',
@@ -14,7 +14,7 @@ export class LoginComponent {
   email = '';
   password = '';
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {
+  constructor(private authService: SessionService, private route: ActivatedRoute, private router: Router) {
   }
 
   login(): void {

@@ -1,22 +1,23 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Domain, MessagesRoutes} from "../../consts/Routes";
-import {IGetChatMessagesResponse} from "../../types/Messages/Responses/IGetChatMessagesResponse";
-import {SendMessageCommand} from "../../types/Messages/Requests/SendMessageCommand";
-import {ISendMessageResponse} from "../../types/Messages/Responses/ISendMessageResponse";
-import {IMessagesService} from "../../types/ServiceInterfaces/IMessagesService";
-import {IDeleteMessageResponse} from "../../types/Messages/Responses/IDeleteMessageResponse";
-import {EditMessageCommand} from "../../types/Messages/Requests/EditMessageCommand";
-import {IEditMessageResponse} from "../../types/Messages/Responses/IEditMessageResponse";
-import {AuthService} from "./auth.service";
+import {ApiRoute} from "../../consts/Routes";
+import {SessionService} from "./session.service";
+import {IMessagesService} from "../../types/interfaces/IMessagesService";
+import {IGetChatMessagesResponse} from "../../types/responses/IGetChatMessagesResponse";
+import {SendMessageCommand} from "../../types/requests/SendMessageCommand";
+import {ISendMessageResponse} from "../../types/responses/ISendMessageResponse";
+import {IDeleteMessageResponse} from "../../types/responses/IDeleteMessageResponse";
+import {IEditMessageResponse} from "../../types/responses/IEditMessageResponse";
+import {EditMessageCommand} from "../../types/requests/EditMessageCommand";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagesService implements IMessagesService {
+  private messagesRoute = 'api/messages/'
 
-  constructor(private httpClient: HttpClient, private authService: AuthService) {
+  constructor(private httpClient: HttpClient, private authService: SessionService) {
   }
 
   getChatMessages(chatId: string): Observable<IGetChatMessagesResponse> {
@@ -27,7 +28,8 @@ export class MessagesService implements IMessagesService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.get<IGetChatMessagesResponse>(Domain.route + MessagesRoutes.route + chatId, header);
+    return this.httpClient.get<IGetChatMessagesResponse>(ApiRoute.route + this.messagesRoute + chatId,
+      header);
   }
 
   sendMessage(request: SendMessageCommand): Observable<ISendMessageResponse> {
@@ -38,7 +40,8 @@ export class MessagesService implements IMessagesService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.post<ISendMessageResponse>(Domain.route + MessagesRoutes.route, request, header);
+    return this.httpClient.post<ISendMessageResponse>(ApiRoute.route + this.messagesRoute,
+      request, header);
   }
 
   deleteMessage(messageId: number): Observable<IDeleteMessageResponse> {
@@ -49,7 +52,8 @@ export class MessagesService implements IMessagesService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.delete<IDeleteMessageResponse>(Domain.route + MessagesRoutes.route + messageId, header);
+    return this.httpClient.delete<IDeleteMessageResponse>(ApiRoute.route + this.messagesRoute + messageId,
+      header);
   }
 
   editMessage(request: EditMessageCommand): Observable<IEditMessageResponse> {
@@ -60,6 +64,6 @@ export class MessagesService implements IMessagesService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.put<IEditMessageResponse>(Domain.route + MessagesRoutes.route, request, header);
+    return this.httpClient.put<IEditMessageResponse>(ApiRoute.route + this.messagesRoute, request, header);
   }
 }

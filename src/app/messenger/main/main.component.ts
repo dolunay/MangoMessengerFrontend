@@ -1,15 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {IGetUserChatsResponse} from "../../../types/Chats/Responses/IGetUserChatsResponse";
 import {ActivatedRoute, Router} from "@angular/router";
-import {IGetChatMessagesResponse} from "../../../types/Messages/Responses/IGetChatMessagesResponse";
-import {IMessage} from "../../../types/Messages/Models/IMessage";
-import {SendMessageCommand} from "../../../types/Messages/Requests/SendMessageCommand";
-import {ISendMessageResponse} from "../../../types/Messages/Responses/ISendMessageResponse";
-import {IRefreshTokenResponse} from "../../../types/Auth/Responses/IRefreshTokenResponse";
-import {AuthService} from "../../services/auth.service";
+import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
-import {IChat} from "../../../types/Chats/Models/IChat";
+import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
+import {IGetChatMessagesResponse} from "../../../types/responses/IGetChatMessagesResponse";
+import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
+import {ISendMessageResponse} from "../../../types/responses/ISendMessageResponse";
+import {IMessage} from "../../../types/models/IMessage";
+import {IChat} from "../../../types/models/IChat";
 
 @Component({
   selector: 'app-main',
@@ -20,10 +19,6 @@ export class MainComponent implements OnInit {
 
   // @ts-ignore
   getUserChatsResponse: IGetUserChatsResponse;
-  // @ts-ignore
-  refreshTokenResponse: IRefreshTokenResponse;
-
-  hui = document.getElementsByClassName('message-day');
 
   messages: IMessage[] = [];
   chats: IChat[] = [];
@@ -35,7 +30,7 @@ export class MainComponent implements OnInit {
   activeChatTitle: string = '';
   activeChatMembersCount: number = 0;
 
-  constructor(private authService: AuthService,
+  constructor(private authService: SessionService,
               private chatService: ChatsService,
               private messageService: MessagesService,
               private route: ActivatedRoute,

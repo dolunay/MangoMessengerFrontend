@@ -1,21 +1,22 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Domain, ChatsRoutes, UserChats} from "../../consts/Routes";
-import {IGetUserChatsResponse} from "../../types/Chats/Responses/IGetUserChatsResponse";
-import {IChatsService} from "../../types/ServiceInterfaces/IChatsService";
-import {ICreateDirectChatResponse} from "../../types/Chats/Responses/ICreateDirectChatResponse";
-import {CreateGroupCommand} from "../../types/Chats/Requests/CreateGroupCommand";
-import {ICreateGroupResponse} from "../../types/Chats/Responses/ICreateGroupResponse";
-import {IJoinGroupResponse} from "../../types/Chats/Responses/IJoinGroupResponse";
-import {AuthService} from "./auth.service";
+import {ApiRoute} from "../../consts/Routes";
+import {SessionService} from "./session.service";
+import {IChatsService} from "../../types/interfaces/IChatsService";
+import {IGetUserChatsResponse} from "../../types/responses/IGetUserChatsResponse";
+import {ICreateDirectChatResponse} from "../../types/responses/ICreateDirectChatResponse";
+import {ICreateGroupResponse} from "../../types/responses/ICreateGroupResponse";
+import {CreateGroupCommand} from "../../types/requests/CreateGroupCommand";
+import {IJoinGroupResponse} from "../../types/responses/IJoinGroupResponse";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatsService implements IChatsService {
+  private chatsRoute = 'api/chats/'
 
-  constructor(private httpClient: HttpClient, private authService: AuthService) {
+  constructor(private httpClient: HttpClient, private authService: SessionService) {
   }
 
   getUserChats(): Observable<IGetUserChatsResponse> {
@@ -26,7 +27,7 @@ export class ChatsService implements IChatsService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.get<IGetUserChatsResponse>(Domain.route + ChatsRoutes.route, header);
+    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute, header);
   }
 
   createDirectChat(userId: string): Observable<ICreateDirectChatResponse> {
@@ -37,7 +38,7 @@ export class ChatsService implements IChatsService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.post<ICreateDirectChatResponse>(Domain.route + ChatsRoutes.route + '/' + userId,
+    return this.httpClient.post<ICreateDirectChatResponse>(ApiRoute.route + this.chatsRoute + userId,
       {}, header);
   }
 
@@ -49,7 +50,7 @@ export class ChatsService implements IChatsService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.post<ICreateGroupResponse>(Domain.route + ChatsRoutes.route, request, header);
+    return this.httpClient.post<ICreateGroupResponse>(ApiRoute.route + this.chatsRoute, request, header);
   }
 
   joinGroup(groupId: number): Observable<IJoinGroupResponse> {
@@ -60,6 +61,7 @@ export class ChatsService implements IChatsService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.post<IJoinGroupResponse>(Domain.route + UserChats.route + '/' + groupId, {}, header);
+    return this.httpClient.post<IJoinGroupResponse>(ApiRoute.route + this.chatsRoute + groupId,
+      {}, header);
   }
 }
