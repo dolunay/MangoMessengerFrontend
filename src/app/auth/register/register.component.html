@@ -31,10 +31,9 @@
           </div>
           <div>
             Verification method:
-            <select>
-              <option [(ngModel)]="VerificationMethod" name="VerificationMethod" ngDefaultControl="VerificationMethod"
-                      *ngFor="let key of keys" [value]="key"
-                      [label]="verificationMethod[key]"></option>
+            <select [(ngModel)]="verificationMethod" name="verificationMethod" [value]="verificationMethod">
+              <option *ngFor="let method of verificationMethods" [value]="method"
+                      [label]="method"></option>
             </select>
           </div>
           <div class="form-group">

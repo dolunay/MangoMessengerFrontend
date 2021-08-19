@@ -4,15 +4,26 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {RegisterComponent} from './auth/register/register.component';
 import {LoginComponent} from './auth/login/login.component';
 import {VerifyEmailComponent} from './auth/verify-email/verify-email.component';
 import {VerifyPhoneComponent} from './auth/verify-phone/verify-phone.component';
 import {RefreshTokenComponent} from './auth/refresh-token/refresh-token.component';
-import {LogoutComponent} from './auth/logout/logout.component';
-import {LogoutAllComponent} from './auth/logout-all/logout-all.component';
-import { MainComponent } from './messenger/main/main.component';
+import {MainComponent} from './messenger/main/main.component';
+import {ProfileSettingsComponent} from './messenger/profile-settings/profile-settings.component';
+import {ContactsComponent} from './messenger/contacts/contacts.component';
+import {NavigationBarComponent} from './messenger/auxiliary/navigation-bar/navigation-bar.component';
+import {ReceivedMessageComponent} from './messenger/auxiliary/received-message/received-message.component';
+import {SelfMessageComponent} from './messenger/auxiliary/self-message/self-message.component';
+import {ChatFooterComponent} from './messenger/auxiliary/chat-footer/chat-footer.component';
+import {ChatHeaderComponent} from './messenger/auxiliary/chat-header/chat-header.component';
+import {ChatSidebarHeaderComponent} from './messenger/auxiliary/chat-sidebar-header/chat-sidebar-header.component';
+import {ChatItemActiveComponent} from './messenger/auxiliary/chat-item-active/chat-item-active.component';
+import {GroupItemComponent} from './messenger/auxiliary/group-item/group-item.component';
+import {ProfileSettingsSidebarComponent} from "./messenger/auxiliary/profile-settings-sidebar/profile-settings-sidebar.component";
+import {ProfileLogoutButtonComponent} from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
+import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -22,9 +33,19 @@ import { MainComponent } from './messenger/main/main.component';
     VerifyEmailComponent,
     VerifyPhoneComponent,
     RefreshTokenComponent,
-    LogoutComponent,
-    LogoutAllComponent,
-    MainComponent
+    MainComponent,
+    ProfileSettingsComponent,
+    ContactsComponent,
+    NavigationBarComponent,
+    ReceivedMessageComponent,
+    SelfMessageComponent,
+    ChatFooterComponent,
+    ChatHeaderComponent,
+    ChatSidebarHeaderComponent,
+    ChatItemActiveComponent,
+    GroupItemComponent,
+    ProfileSettingsSidebarComponent,
+    ProfileLogoutButtonComponent,
   ],
   imports: [
     HttpClientModule,
@@ -33,15 +54,22 @@ import { MainComponent } from './messenger/main/main.component';
       {path: 'register', component: RegisterComponent},
       {path: 'login', component: LoginComponent},
       {path: 'verify-phone', component: VerifyPhoneComponent},
-      {path: 'verify-email', component: VerifyEmailComponent},
+      {path: 'verify-email/:id/:id2', component: VerifyEmailComponent},
       {path: 'main', component: MainComponent},
+      {path: 'contacts', component: ContactsComponent},
+      {path: 'profile-settings', component: ProfileSettingsComponent},
+      {path: 'refresh-token', component: RefreshTokenComponent},
       {path: '', redirectTo: '/login', pathMatch: 'full'},
     ]),
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

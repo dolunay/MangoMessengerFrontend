@@ -1,58 +1,48 @@
-import {Component, OnInit} from '@angular/core';
-import {VerificationMethod} from 'src/app/models/enums/VerificationMethod';
-import {IRegisterResponse} from "../../models/responses/auth/IRegisterResponse";
-import {MangoService} from "../../mango.service";
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {RegisterCommand} from "../../models/commands/auth/RegisterCommand";
+import {SessionService} from "../../services/session.service";
+import {RegisterCommand} from "../../../types/requests/RegisterCommand";
+import {IRegisterResponse} from "../../../types/responses/IRegisterResponse";
+import {VerificationMethod} from "../../../types/enums/VerificationMethod";
+import {UsersService} from "../../services/users.service";
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
 
-  PhoneNumber = '+380974913858';
-  Email = 'maintester@gmail.com';
-  Password = 'z[?6dMR#xmp=nr6q';
-  VerificationMethod: VerificationMethod = 1;
+  PhoneNumber = '';
+  Email = '';
+  Password = '';
+  verificationMethod = VerificationMethod.Email;
   TermsAccepted = false;
-  DisplayName = 'Main tester';
+  DisplayName = '';
 
-  registerResponse!: IRegisterResponse;
+  verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
-  keys!: any[];
-  verificationMethod = VerificationMethod;
-
-  constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) {
-    this.keys = Object.keys(this.verificationMethod).filter(k => !isNaN(Number(k)));
+  constructor(private usersService: UsersService, private sessionService: SessionService,
+              private route: ActivatedRoute, private router: Router) {
   }
 
   register(): void {
-    this.service.register(new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName, this.Password,
-      this.VerificationMethod, this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
-        this.registerResponse = data;
+    this.usersService.postUser(new RegisterCommand(
+      this.PhoneNumber,
+      this.Email,
+      this.DisplayName,
+      this.Password,
+      Number(this.verificationMethod),
+      this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
+      this.sessionService.writeAccessToken(data.accessToken);
+      this.sessionService.writeRefreshToken(data.refreshToken);
 
-        console.log(this.registerResponse);
-        console.log(this.registerResponse.success)
+      if (this.verificationMethod === VerificationMethod.Email) {
+        alert(data.message.toLowerCase().replace("_", " "));
+        return;
+      }
 
-        if (!this.registerResponse.success) {
-          // to implement
-          console.log(this.registerResponse.message);
-          return;
-        }
-
-        if (this.VerificationMethod === VerificationMethod.Email) {
-          this.router.navigateByUrl('verify-email').then(r => r);
-          return;
-        }
-
-        this.router.navigateByUrl('verify-phone').then(r => r);
-      });
+      this.router.navigateByUrl('verify-phone').then(r => r);
+    }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")));
   }
-
-
-  ngOnInit(): void {
-  }
-
 }

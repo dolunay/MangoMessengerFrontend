@@ -1,7 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {MangoService} from "../../mango.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {IGetUserChatsResponse} from "../../models/responses/chats/IGetUserChatsResponse";
+import {SessionService} from "../../services/session.service";
+import {ChatsService} from "../../services/chats.service";
+import {MessagesService} from "../../services/messages.service";
+import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
+import {IGetChatMessagesResponse} from "../../../types/responses/IGetChatMessagesResponse";
+import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
+import {ISendMessageResponse} from "../../../types/responses/ISendMessageResponse";
+import {IMessage} from "../../../types/models/IMessage";
+import {IChat} from "../../../types/models/IChat";
 
 @Component({
   selector: 'app-main',
@@ -10,16 +17,86 @@ import {IGetUserChatsResponse} from "../../models/responses/chats/IGetUserChatsR
 })
 export class MainComponent implements OnInit {
 
-  userChatsResponse!: IGetUserChatsResponse;
+  // @ts-ignore
+  getUserChatsResponse: IGetUserChatsResponse;
 
-  constructor(private service: MangoService, private route: ActivatedRoute, private router: Router) {
+  messages: IMessage[] = [];
+  chats: IChat[] = [];
+
+  activeChatId = '';
+  // @ts-ignore
+  activeMessageText: string = '';
+
+  activeChatTitle: string = '';
+  activeChatMembersCount: number = 0;
+
+  constructor(private authService: SessionService,
+              private chatService: ChatsService,
+              private messageService: MessagesService,
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
   ngOnInit(): void {
-    this.service.getUserChats().subscribe((data: IGetUserChatsResponse) => {
-      this.userChatsResponse = data;
-      console.log(this.userChatsResponse);
-    })
-  };
+    this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+        this.getUserChatsResponse = data;
+        this.chats = data.chats;
+      },
+      error => {
+        if (error && error.status) {
+          switch (error.status) {
+            case 409:
+              alert(error.message);
+              break;
+          }
+        }
+      });
+  }
 
+  reloadComponent(component: string): void {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate([component]).then(r => r);
+  }
+
+  getChatMessages(chatId: string): void {
+    this.messageService.getChatMessages(chatId).subscribe((data: IGetChatMessagesResponse) => {
+        this.messages = data.messages;
+        this.activeChatId = chatId;
+        let chat = this.getUserChatsResponse.chats.filter(x => x.chatId === chatId)[0];
+        this.activeChatTitle = chat.title;
+        this.activeChatMembersCount = chat.membersCount;
+        this.scrollToEnd();
+      },
+      error => {
+        if (error && error.response) {
+          switch (error.response.status) {
+            case 400:
+              alert(error.message);
+              break;
+          }
+        }
+      });
+  }
+
+  scrollToEnd(): void {
+    setTimeout(() => {
+      let element = document.getElementById('messageList');
+      element?.scrollIntoView({block: "end"});
+    }, 0);
+  }
+
+  sendMessage(): void {
+    this.messageService.sendMessage(new SendMessageCommand(this.activeMessageText, this.activeChatId))
+      .subscribe((data: ISendMessageResponse) => {
+      }, error => {
+        if (error && error.response) {
+          switch (error.response.status) {
+            case 400:
+              alert(error.message);
+              break;
+          }
+        }
+      });
+  }
 }
