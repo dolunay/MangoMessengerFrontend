@@ -41,6 +41,10 @@ export class MainComponent implements OnInit {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
         this.getUserChatsResponse = data;
         this.chats = data.chats;
+        const lastChat = data.chats[0];
+        if (lastChat) {
+          this.getChatMessages(lastChat.chatId);
+        }
       },
       error => {
         if (error && error.status) {
@@ -63,7 +67,7 @@ export class MainComponent implements OnInit {
     this.messageService.getChatMessages(chatId).subscribe((data: IGetChatMessagesResponse) => {
         this.messages = data.messages;
         this.activeChatId = chatId;
-        let chat = this.getUserChatsResponse.chats.filter(x => x.chatId === chatId)[0];
+        const chat = this.getUserChatsResponse.chats.filter(x => x.chatId === chatId)[0];
         this.activeChatTitle = chat.title;
         this.activeChatMembersCount = chat.membersCount;
         this.scrollToEnd();
