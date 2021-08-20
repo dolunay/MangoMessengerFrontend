@@ -26,7 +26,9 @@ export class ProfileSettingsSidebarComponent implements OnInit {
         this.sessionService.writeRefreshToken('');
         this.router.navigateByUrl('login').then(r => r);
       }, error => {
-        alert(error.message);
+        this.sessionService.writeAccessToken('');
+        this.sessionService.writeRefreshToken('');
+        this.router.navigateByUrl('login').then(r => r);
       })
   }
 
@@ -38,7 +40,9 @@ export class ProfileSettingsSidebarComponent implements OnInit {
         this.sessionService.writeRefreshToken('');
         this.router.navigateByUrl('login').then(r => r);
       }, error => {
-        alert(error.message);
+        this.sessionService.writeAccessToken('');
+        this.sessionService.writeRefreshToken('');
+        this.router.navigateByUrl('login').then(r => r);
       })
   }
 

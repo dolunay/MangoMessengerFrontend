@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="d-flex flex-column align-items-center">
-                  <h5 class="mb-1">Catherine Richardson</h5>
+                  <h5 class="mb-1">{{currentUser.firstName}} {{currentUser.lastName}}</h5>
                   <!-- <p class="text-white rounded px-2 bg-primary">+01-202-265462</p> -->
                   <div class="d-flex mt-2">
                     <div class="btn btn-primary btn-icon rounded-circle text-light mx-2">
@@ -109,7 +109,7 @@
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Birthdate</p>
-                      <p class="mb-0">20/11/1992</p>
+                      <p class="mb-0">{{currentUser.birthdayDate}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -124,7 +124,7 @@
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Phone</p>
-                      <p class="mb-0">+01-222-364522</p>
+                      <p class="mb-0">{{currentUser.phoneNumber}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -138,7 +138,7 @@
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Email</p>
-                      <p class="mb-0">catherine.richardson@gmail.com</p>
+                      <p class="mb-0">{{currentUser.email}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -152,7 +152,7 @@
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Website</p>
-                      <p class="mb-0">www.catherichardson.com</p>
+                      <p class="mb-0">{{currentUser.webSite}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -166,7 +166,7 @@
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Address</p>
-                      <p class="mb-0">1134 Ridder Park Road, San Fransisco, CA 94851</p>
+                      <p class="mb-0">{{currentUser.address}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -186,7 +186,7 @@
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Facebook</p>
-                      <a class="font-size-sm font-weight-medium" href="#">@cathe.richardson</a>
+                      <a class="font-size-sm font-weight-medium" href="#">{{currentUser.facebook}}</a>
                     </div>
                     <svg class="text-muted hw-20" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -200,7 +200,7 @@
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Twitter</p>
-                      <a class="font-size-sm font-weight-medium" href="#">@cathe.richardson</a>
+                      <a class="font-size-sm font-weight-medium" href="#">{{currentUser.twitter}}</a>
                     </div>
                     <svg class="text-muted hw-20" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -215,7 +215,7 @@
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Instagram</p>
-                      <a class="font-size-sm font-weight-medium" href="#">@cathe.richardson</a>
+                      <a class="font-size-sm font-weight-medium" href="#">{{currentUser.instagram}}</a>
                     </div>
                     <svg class="text-muted hw-20" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -231,7 +231,7 @@
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Linkedin</p>
-                      <a class="font-size-sm font-weight-medium" href="#">@cathe.richardson</a>
+                      <a class="font-size-sm font-weight-medium" href="#">{{currentUser.linkedIn}}</a>
                     </div>
                     <svg class="text-muted hw-20" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
