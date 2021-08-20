@@ -12,7 +12,7 @@
       <div class="d-flex flex-column h-100">
         <div class="hide-scrollbar" id="friendsList">
           <!-- Chat Header Start -->
-          <app-chat-sidebar-header></app-chat-sidebar-header>
+          <app-chat-sidebar-header [headerTitle]="'Contacts'"></app-chat-sidebar-header>
           <!-- Chat Header End -->
 
           <!-- Friends Contact List Start -->
@@ -129,8 +129,8 @@
                     <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/dots-vertical.svg" alt=""> -->
                   </button>
                   <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Remove</a>
-                    <a class="dropdown-item" href="#">Block</a>
+                    <div class="dropdown-item">Remove</div>
+                    <div class="dropdown-item">Block</div>
                   </div>
                 </div>
               </div>

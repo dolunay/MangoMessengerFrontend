@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ChatsService} from "../../../services/chats.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Tokens} from "../../../../consts/Tokens";
@@ -23,6 +23,8 @@ export class ChatSidebarHeaderComponent implements OnInit {
 
   chatTypes = [GroupType.PrivateChannel, GroupType.PublicChannel, GroupType.ReadOnlyChannel];
   groupType = GroupType.PublicChannel;
+
+  @Input() headerTitle = '';
 
   // @ts-ignore
   groupName: string;
