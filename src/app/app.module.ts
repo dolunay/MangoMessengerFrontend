@@ -24,6 +24,7 @@ import {GroupItemComponent} from './messenger/auxiliary/group-item/group-item.co
 import {ProfileSettingsSidebarComponent} from "./messenger/auxiliary/profile-settings-sidebar/profile-settings-sidebar.component";
 import {ProfileLogoutButtonComponent} from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
 import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
+import { ContactItemComponent } from './messenger/auxiliary/contact-item/contact-item.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
     GroupItemComponent,
     ProfileSettingsSidebarComponent,
     ProfileLogoutButtonComponent,
+    ContactItemComponent,
   ],
   imports: [
     HttpClientModule,
