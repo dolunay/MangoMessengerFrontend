@@ -93,6 +93,11 @@ export class MainComponent implements OnInit {
   sendMessage(): void {
     this.messageService.sendMessage(new SendMessageCommand(this.activeMessageText, this.activeChatId))
       .subscribe((data: ISendMessageResponse) => {
+        this.activeMessageText = '';
+        this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+          this.chats = data.chats;
+          this.getChatMessages(this.activeChatId);
+        })
       }, error => {
         if (error && error.response) {
           switch (error.response.status) {
