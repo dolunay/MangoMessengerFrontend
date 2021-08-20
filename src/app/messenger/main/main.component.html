@@ -3,7 +3,7 @@
 <!-- Main Layout Start -->
 <div class="main-layout">
   <!-- Navigation Start -->
-  <app-navigation-bar></app-navigation-bar>
+  <app-navigation-bar [activeRoute]="'chats'"></app-navigation-bar>
   <!-- Navigation End -->
 
   <!-- Sidebar Start -->
@@ -16,7 +16,7 @@
           <div class="hide-scrollbar h-100" id="chatContactsList">
 
             <!-- Chat Header Start -->
-            <app-chat-sidebar-header></app-chat-sidebar-header>
+            <app-chat-sidebar-header [headerTitle]="'Chats'"></app-chat-sidebar-header>
             <!-- Chat Header End -->
 
             <!-- Chat Contact List Start -->
@@ -33,7 +33,7 @@
                 </app-chat-item-active>
               </li>
               <!-- Chat Item End -->
-              
+
             </ul>
             <!-- Chat Contact List End -->
           </div>
@@ -245,8 +245,6 @@
                         d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>
 
-                <!-- Alternate :: External File link -->
-                <!-- <img src="./../assets/media/heroicons/outline/arrow-right.svg" alt="" class="injectable hw-24"> -->
               </div>
             </div>
             <!-- Submit Button End-->

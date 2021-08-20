@@ -15,7 +15,6 @@ import {ProfileSettingsComponent} from './messenger/profile-settings/profile-set
 import {ContactsComponent} from './messenger/contacts/contacts.component';
 import {NavigationBarComponent} from './messenger/auxiliary/navigation-bar/navigation-bar.component';
 import {ReceivedMessageComponent} from './messenger/auxiliary/received-message/received-message.component';
-import {SelfMessageComponent} from './messenger/auxiliary/self-message/self-message.component';
 import {ChatFooterComponent} from './messenger/auxiliary/chat-footer/chat-footer.component';
 import {ChatHeaderComponent} from './messenger/auxiliary/chat-header/chat-header.component';
 import {ChatSidebarHeaderComponent} from './messenger/auxiliary/chat-sidebar-header/chat-sidebar-header.component';
@@ -24,6 +23,7 @@ import {GroupItemComponent} from './messenger/auxiliary/group-item/group-item.co
 import {ProfileSettingsSidebarComponent} from "./messenger/auxiliary/profile-settings-sidebar/profile-settings-sidebar.component";
 import {ProfileLogoutButtonComponent} from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
 import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
+import { ContactItemComponent } from './messenger/auxiliary/contact-item/contact-item.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +38,6 @@ import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
     ContactsComponent,
     NavigationBarComponent,
     ReceivedMessageComponent,
-    SelfMessageComponent,
     ChatFooterComponent,
     ChatHeaderComponent,
     ChatSidebarHeaderComponent,
@@ -46,6 +45,7 @@ import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
     GroupItemComponent,
     ProfileSettingsSidebarComponent,
     ProfileLogoutButtonComponent,
+    ContactItemComponent,
   ],
   imports: [
     HttpClientModule,

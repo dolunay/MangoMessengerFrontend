@@ -4,7 +4,7 @@
 <div class="main-layout">
 
   <!-- Navigation Start -->
-  <app-navigation-bar></app-navigation-bar>
+  <app-navigation-bar [activeRoute]="'profile-settings'"></app-navigation-bar>
   <!-- Navigation End -->
 
   <!-- Sidebar Start -->
@@ -195,126 +195,6 @@
 
             <div class="card mb-3">
               <div class="card-header">
-                <h6 class="mb-1">Privacy</h6>
-                <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
-              </div>
-
-              <div class="card-body p-0">
-                <ul class="list-group list-group-flush list-group-sm-column">
-
-                  <li class="list-group-item py-2">
-                    <div class="media align-items-center">
-                      <div class="media-body">
-                        <p class="mb-0">Profile Picture</p>
-                        <p class="small text-muted mb-0">Select who can see my profile
-                          picture</p>
-                      </div>
-                      <div class="dropdown mr-2">
-                        <button class="btn btn-outline-default dropdown-toggle" type="button"
-                                data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                          Public
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                          <a class="dropdown-item" href="#">Public</a>
-                          <a class="dropdown-item" href="#">Friends</a>
-                          <a class="dropdown-item" href="#">Selected Friends</a>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-
-                  <li class="list-group-item py-2">
-                    <div class="media align-items-center">
-                      <div class="media-body">
-                        <p class="mb-0">Last Seen</p>
-                        <p class="small text-muted mb-0">Select who can see my last seen</p>
-                      </div>
-                      <div class="dropdown mr-2">
-                        <button class="btn btn-outline-default dropdown-toggle" type="button"
-                                data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                          Public
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                          <a class="dropdown-item" href="#">Public</a>
-                          <a class="dropdown-item" href="#">Friends</a>
-                          <a class="dropdown-item" href="#">Selected Friends</a>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-
-                  <li class="list-group-item py-2">
-                    <div class="media align-items-center">
-                      <div class="media-body">
-                        <p class="mb-0">Groups</p>
-                        <p class="small text-muted mb-0">Select who can add you in groups</p>
-                      </div>
-                      <div class="dropdown mr-2">
-                        <button class="btn btn-outline-default dropdown-toggle" type="button"
-                                data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                          Public
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                          <a class="dropdown-item" href="#">Public</a>
-                          <a class="dropdown-item" href="#">Friends</a>
-                          <a class="dropdown-item" href="#">Selected Friends</a>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-
-                  <li class="list-group-item py-2">
-                    <div class="media align-items-center">
-                      <div class="media-body">
-                        <p class="mb-0">Status</p>
-                        <p class="small text-muted mb-0">Select who can see my status
-                          updates</p>
-                      </div>
-                      <div class="dropdown mr-2">
-                        <button class="btn btn-outline-default dropdown-toggle" type="button"
-                                data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                          Public
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                          <a class="dropdown-item" href="#">Public</a>
-                          <a class="dropdown-item" href="#">Friends</a>
-                          <a class="dropdown-item" href="#">Selected Friends</a>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-
-                  <li class="list-group-item py-2">
-                    <div class="media align-items-center">
-                      <div class="media-body">
-                        <p class="mb-0">Read receipts</p>
-                        <p class="small text-muted mb-0">If turn off this option you won't be
-                          able to see read recipts</p>
-                      </div>
-                      <div class="custom-control custom-switch mr-2">
-                        <input type="checkbox" class="custom-control-input"
-                               id="readReceiptsSwitch" checked="">
-                        <label class="custom-control-label"
-                               for="readReceiptsSwitch">&nbsp;</label>
-                      </div>
-                    </div>
-                  </li>
-
-                </ul>
-              </div>
-
-              <div class="card-footer d-flex justify-content-end">
-                <button type="button" class="btn btn-link text-muted mx-1">Reset</button>
-                <button type="button" class="btn btn-primary">Save Changes</button>
-              </div>
-            </div>
-
-            <div class="card mb-3">
-              <div class="card-header">
                 <h6 class="mb-1">Security</h6>
                 <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
               </div>
@@ -335,22 +215,6 @@
                       </div>
                     </div>
                   </li>
-                  <li class="list-group-item py-2">
-                    <div class="media align-items-center">
-                      <div class="media-body">
-                        <p class="mb-0">Get alerts about unrecognised logins</p>
-                        <p class="small text-muted mb-0">You will be notified if anyone logs in
-                          from a device or browser you don't usually use</p>
-                      </div>
-                      <div class="custom-control custom-switch mr-2">
-                        <input type="checkbox" class="custom-control-input"
-                               id="unrecognisedSwitch" checked="">
-                        <label class="custom-control-label"
-                               for="unrecognisedSwitch">&nbsp;</label>
-                      </div>
-                    </div>
-                  </li>
-
                 </ul>
               </div>
 
