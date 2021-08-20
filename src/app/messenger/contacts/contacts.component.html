@@ -12,122 +12,14 @@
       <div class="d-flex flex-column h-100">
         <div class="hide-scrollbar" id="friendsList">
           <!-- Chat Header Start -->
-          <div class="sidebar-header sticky-top p-2">
-
-            <div class="d-flex justify-content-between align-items-center">
-              <!-- Chat Tab Pane Title Start -->
-              <h5 class="font-weight-semibold mb-0">Friends</h5>
-              <!-- Chat Tab Pane Title End -->
-
-              <ul class="nav flex-nowrap">
-
-                <li class="nav-item list-inline-item mr-1">
-                  <a class="nav-link text-muted px-1" href="#" title="Notifications" role="button"
-                     data-toggle="modal" data-target="#notificationModal">
-                    <!-- Default :: Inline SVG -->
-                    <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                    </svg>
-
-                    <!-- Alternate :: External File link -->
-                    <!-- <img src="./../assets/media/heroicons/outline/bell.svg" alt="" class="injectable hw-20"> -->
-                  </a>
-                </li>
-
-                <li class="nav-item list-inline-item mr-0">
-                  <div class="dropdown">
-                    <a class="nav-link text-muted px-1" href="#" role="button" title="Details"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <!-- Default :: Inline SVG -->
-                      <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-                      </svg>
-
-                      <!-- Alternate :: External File link -->
-                      <!-- <img src="./../assets/media/heroicons/outline/dots-vertical.svg" alt="" class="injectable hw-20"> -->
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <a class="dropdown-item" href="#" role="button" data-toggle="modal"
-                         data-target="#startConversation">New Chat</a>
-                      <a class="dropdown-item" href="#" role="button" data-toggle="modal"
-                         data-target="#createGroup">Create Group</a>
-                      <a class="dropdown-item" href="#" role="button" data-toggle="modal"
-                         data-target="#inviteOthers">Invite Others</a>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-
-            <!-- Sidebar Header Start -->
-            <div class="sidebar-sub-header">
-              <!-- Sidebar Header Dropdown Start -->
-              <div class="dropdown mr-2">
-                <!-- Dropdown Button Start -->
-                <button class="btn btn-outline-default dropdown-toggle" type="button"
-                        data-chat-filter-list="" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                  All Chats
-                </button>
-                <!-- Dropdown Button End -->
-
-                <!-- Dropdown Menu Start -->
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" data-chat-filter="" data-select="all-chats" href="#">All
-                    Chats</a>
-                  <a class="dropdown-item" data-chat-filter="" data-select="friends"
-                     href="#">Friends</a>
-                  <a class="dropdown-item" data-chat-filter="" data-select="groups"
-                     href="#">Groups</a>
-                  <a class="dropdown-item" data-chat-filter="" data-select="unread"
-                     href="#">Unread</a>
-                  <a class="dropdown-item" data-chat-filter="" data-select="archived" href="#">Archived</a>
-                </div>
-                <!-- Dropdown Menu End -->
-              </div>
-              <!-- Sidebar Header Dropdown End -->
-
-              <!-- Sidebar Search Start -->
-              <form class="form-inline">
-                <div class="input-group">
-                  <input type="text" class="form-control search border-right-0 transparent-bg pr-0"
-                         placeholder="Search users...">
-                  <div class="input-group-append">
-                    <div class="input-group-text transparent-bg border-left-0" role="button">
-                      <!-- Default :: Inline SVG -->
-                      <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
-                           stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                      </svg>
-
-                      <!-- Alternate :: External File link -->
-                      <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/search.svg" alt=""> -->
-                    </div>
-                  </div>
-                </div>
-              </form>
-              <!-- Sidebar Search End -->
-            </div>
-            <!-- Sidebar Header End -->
-          </div>
+          <app-chat-sidebar-header></app-chat-sidebar-header>
           <!-- Chat Header End -->
 
           <!-- Friends Contact List Start -->
           <ul class="contacts-list" id="friendsTab" data-friends-list="">
-            <!-- Item Series Start -->
-            <li>
-              <small class="font-weight-medium text-uppercase text-muted">A</small>
-            </li>
-            <!-- Item Series End -->
-
             <!-- friends Item Start -->
             <li class="contacts-item active">
-              <a class="contacts-link" href="#">
+              <div class="contacts-link">
                 <div class="avatar">
                   <img src="../../assets/media/avatar/3.png" alt="">
                 </div>
@@ -148,13 +40,13 @@
                     <p class="text-muted mb-0">San Fransisco, CA</p>
                   </div>
                 </div>
-              </a>
+              </div>
             </li>
             <!-- friends Item End -->
 
             <!-- friends Item Start -->
             <li class="contacts-item">
-              <a class="contacts-link" href="#">
+              <div class="contacts-link">
                 <div class="avatar">
                   <img src="../../assets/media/avatar/3.png" alt="">
                 </div>
@@ -175,7 +67,7 @@
                     <p class="text-muted mb-0">Brentwood, NY</p>
                   </div>
                 </div>
-              </a>
+              </div>
             </li>
             <!-- friends Item End -->
 
