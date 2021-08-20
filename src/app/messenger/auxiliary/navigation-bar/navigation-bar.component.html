@@ -19,7 +19,9 @@
 
     <!-- Chats Tab Start -->
     <li class="nav-item">
-      <div class="nav-link p-0 py-xl-3 active" title="Chats" (click)="navigateToChats()">
+      <div [ngClass]="activeRoute === 'chats' ? 'nav-link p-0 py-xl-3 active' : 'nav-link p-0 py-xl-3'"
+           title="Chats"
+           (click)="navigateToChats()">
         <!-- Default :: Inline SVG -->
         <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -31,7 +33,9 @@
 
     <!-- Friends Tab Start -->
     <li class="nav-item">
-      <div class="nav-link p-0 py-xl-3" id="friends-tab" title="Friends" (click)="navigateToContacts()">
+      <div [ngClass]="activeRoute === 'contacts' ? 'nav-link p-0 py-xl-3 active' : 'nav-link p-0 py-xl-3'"
+           title="Friends"
+           (click)="navigateToContacts()">
         <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
@@ -42,15 +46,14 @@
 
     <!-- Profile Tab Start -->
     <li class="nav-item">
-      <div class="nav-link p-0 py-xl-3" id="profile-tab" title="Profile" (click)="navigateToSettings()">
+      <div [ngClass]="activeRoute === 'profile-settings' ? 'nav-link p-0 py-xl-3 active' : 'nav-link p-0 py-xl-3'"
+        title="Profile"
+        (click)="navigateToSettings()">
         <!-- Default :: Inline SVG -->
         <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-
-        <!-- Alternate :: External File link -->
-        <!-- <img class="injectable hw-24" src="./../assets/media/heroicons/outline/user-circle.svg" alt="Profile icon"> -->
       </div>
     </li>
     <!-- Profile Tab End -->

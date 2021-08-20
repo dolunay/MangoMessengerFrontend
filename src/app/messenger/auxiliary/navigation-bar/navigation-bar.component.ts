@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
@@ -10,6 +10,8 @@ export class NavigationBarComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router) {
   }
+
+  @Input() activeRoute = '';
 
   ngOnInit(): void {
   }

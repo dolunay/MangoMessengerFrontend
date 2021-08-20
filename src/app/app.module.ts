@@ -15,7 +15,6 @@ import {ProfileSettingsComponent} from './messenger/profile-settings/profile-set
 import {ContactsComponent} from './messenger/contacts/contacts.component';
 import {NavigationBarComponent} from './messenger/auxiliary/navigation-bar/navigation-bar.component';
 import {ReceivedMessageComponent} from './messenger/auxiliary/received-message/received-message.component';
-import {SelfMessageComponent} from './messenger/auxiliary/self-message/self-message.component';
 import {ChatFooterComponent} from './messenger/auxiliary/chat-footer/chat-footer.component';
 import {ChatHeaderComponent} from './messenger/auxiliary/chat-header/chat-header.component';
 import {ChatSidebarHeaderComponent} from './messenger/auxiliary/chat-sidebar-header/chat-sidebar-header.component';
@@ -39,7 +38,6 @@ import { ContactItemComponent } from './messenger/auxiliary/contact-item/contact
     ContactsComponent,
     NavigationBarComponent,
     ReceivedMessageComponent,
-    SelfMessageComponent,
     ChatFooterComponent,
     ChatHeaderComponent,
     ChatSidebarHeaderComponent,
