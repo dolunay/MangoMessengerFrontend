@@ -16,7 +16,7 @@
           <!-- Chat Header End -->
 
           <!-- Friends Contact List Start -->
-          <ul class="contacts-list" id="friendsTab" data-friends-list="">
+          <div class="contacts-list" id="friendsTab">
             <!-- friends Item Start -->
             <app-contact-item [contactName]="'Razumovskiy'" [contactAddress]="'Ukraine'"></app-contact-item>
             <!-- friends Item End -->
@@ -24,8 +24,11 @@
             <!-- friends Item Start -->
             <app-contact-item [contactName]="'Ivan Ivanov'" [contactAddress]="'Russia'"></app-contact-item>
             <!-- friends Item End -->
-
-          </ul>
+            <div *ngFor="let contact of userContacts">
+              <app-contact-item [contactName]="contact.displayName"
+                                [contactAddress]="contact.address"></app-contact-item>
+            </div>
+          </div>
           <!-- Friends Contact List End -->
         </div>
       </div>
