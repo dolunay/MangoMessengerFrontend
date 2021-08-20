@@ -10,7 +10,7 @@ import {ILogoutResponse} from "../../../../types/responses/ILogoutResponse";
 })
 export class ProfileSettingsSidebarComponent implements OnInit {
 
-  constructor(private authService: SessionService,
+  constructor(private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router) {
   }
@@ -19,24 +19,26 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   }
 
   logout(): void {
-    let refreshToken = this.authService.getRefreshToken();
-    this.authService.deleteSession(refreshToken)
+    let refreshToken = this.sessionService.getRefreshToken();
+    this.sessionService.deleteSession(refreshToken)
       .subscribe((data: ILogoutResponse) => {
+        this.sessionService.writeAccessToken('');
+        this.sessionService.writeRefreshToken('');
         this.router.navigateByUrl('login').then(r => r);
       }, error => {
-        console.log(error);
-        this.router.navigateByUrl('login').then(r => r);
+        alert(error.message);
       })
   }
 
   logoutAll(): void {
-    let refreshToken = this.authService.getRefreshToken();
-    this.authService.deleteAllSessions(refreshToken)
+    let refreshToken = this.sessionService.getRefreshToken();
+    this.sessionService.deleteAllSessions(refreshToken)
       .subscribe((data: ILogoutResponse) => {
+        this.sessionService.writeAccessToken('');
+        this.sessionService.writeRefreshToken('');
         this.router.navigateByUrl('login').then(r => r);
       }, error => {
-        console.log(error);
-        this.router.navigateByUrl('login').then(r => r);
+        alert(error.message);
       })
   }
 

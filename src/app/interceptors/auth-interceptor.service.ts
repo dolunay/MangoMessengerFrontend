@@ -34,7 +34,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }));
       })).pipe(catchError((error: HttpErrorResponse) => {
         if (error.url?.endsWith('refresh-token')) {
-          this.router.navigate(['sign-in']).then(r => r);
+          this.router.navigate(['login']).then(r => r);
         }
         return of<never>();
       }));

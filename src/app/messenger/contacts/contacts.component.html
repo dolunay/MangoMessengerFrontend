@@ -17,13 +17,6 @@
 
           <!-- Friends Contact List Start -->
           <div class="contacts-list" id="friendsTab">
-            <!-- friends Item Start -->
-            <app-contact-item [contactName]="'Razumovskiy'" [contactAddress]="'Ukraine'"></app-contact-item>
-            <!-- friends Item End -->
-
-            <!-- friends Item Start -->
-            <app-contact-item [contactName]="'Ivan Ivanov'" [contactAddress]="'Russia'"></app-contact-item>
-            <!-- friends Item End -->
             <div *ngFor="let contact of userContacts">
               <app-contact-item [contactName]="contact.displayName"
                                 [contactAddress]="contact.address"></app-contact-item>
