@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
-import {RegisterCommand} from "../../../types/requests/RegisterCommand";
 import {IRegisterResponse} from "../../../types/responses/IRegisterResponse";
-import {VerificationMethod} from "../../../types/enums/VerificationMethod";
 import {UsersService} from "../../services/users.service";
+import {VerificationMethod} from "../../../types/enums/VerificationMethod";
+import {RegisterCommand} from "../../../types/requests/RegisterCommand";
 
 @Component({
   selector: 'app-register',
@@ -13,12 +13,12 @@ import {UsersService} from "../../services/users.service";
 })
 export class RegisterComponent {
 
-  PhoneNumber = '';
-  Email = '';
-  Password = '';
+  PhoneNumber = '+38097491385194';
+  Email = 'kolosovp94@gmail.com';
+  Password = 'z[?6dMR#xmp=nr6q';
   verificationMethod = VerificationMethod.Email;
   TermsAccepted = false;
-  DisplayName = '';
+  DisplayName = 'TestUser228';
 
   verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
@@ -27,22 +27,15 @@ export class RegisterComponent {
   }
 
   register(): void {
-    this.usersService.postUser(new RegisterCommand(
-      this.PhoneNumber,
-      this.Email,
-      this.DisplayName,
-      this.Password,
-      Number(this.verificationMethod),
-      this.TermsAccepted)).subscribe((data: IRegisterResponse) => {
+    const command = new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName,
+      this.Password, Number(this.verificationMethod), this.TermsAccepted);
+
+    this.usersService.postUser(command).subscribe((data: IRegisterResponse) => {
       this.sessionService.writeAccessToken(data.accessToken);
       this.sessionService.writeRefreshToken(data.refreshToken);
-
-      if (this.verificationMethod === VerificationMethod.Email) {
-        alert(data.message.toLowerCase().replace("_", " "));
-        return;
-      }
-
-      this.router.navigateByUrl('verify-phone').then(r => r);
-    }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")));
+      this.router.navigateByUrl('verify-phone').then(r => alert(data.message));
+    }, error => {
+      alert(error.error.ErrorMessage);
+    });
   }
 }
