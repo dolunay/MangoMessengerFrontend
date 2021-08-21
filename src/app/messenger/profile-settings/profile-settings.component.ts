@@ -15,8 +15,6 @@ export class ProfileSettingsComponent implements OnInit {
   constructor(private userService: UsersService) {
   }
 
-  // @ts-ignore
-  currentUser: IUser;
   firstName: string = '';
   lastName: string = '';
   displayName: string = '';
@@ -34,7 +32,6 @@ export class ProfileSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe((data: IGetUserResponse) => {
-      this.currentUser = data.user;
       this.firstName = data.user.firstName;
       this.lastName = data.user.lastName;
       this.displayName = data.user.displayName;
