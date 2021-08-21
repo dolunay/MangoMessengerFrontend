@@ -11,5 +11,7 @@
   facebook: string;
   twitter: string;
   instagram: string;
-  linkedIn: string
+  linkedIn: string;
+  username: string;
+  bio: string;
 }

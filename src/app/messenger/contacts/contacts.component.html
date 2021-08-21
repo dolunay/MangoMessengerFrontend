@@ -45,6 +45,7 @@
 
                 <div class="d-flex flex-column align-items-center">
                   <h5 class="mb-1">{{currentUser.firstName}} {{currentUser.lastName}}</h5>
+                  <h6 class="mb-1">{{currentUser.bio}}</h6>
                   <!-- <p class="text-white rounded px-2 bg-primary">+01-202-265462</p> -->
                   <div class="d-flex mt-2">
                     <div class="btn btn-primary btn-icon rounded-circle text-light mx-2">
@@ -139,6 +140,20 @@
                     <div class="media-body">
                       <p class="small text-muted mb-0">Email</p>
                       <p class="mb-0">{{currentUser.email}}</p>
+                    </div>
+                    <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <!-- <img class="injectable text-muted hw-20" src="./../assets/media/heroicons/outline/mail.svg" alt=""> -->
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <p class="small text-muted mb-0">Username</p>
+                      <p class="mb-0">{{currentUser.username}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
