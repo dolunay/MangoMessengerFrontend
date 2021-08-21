@@ -16,6 +16,9 @@ export class VerifyEmailComponent implements OnInit {
               private router: Router, private usersService: UsersService) {
   }
 
+  success = false;
+  message = '';
+
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const userId = params['userId'];
@@ -25,8 +28,10 @@ export class VerifyEmailComponent implements OnInit {
       this.usersService.putEmailConfirmation(new VerifyEmailCommand(email, userId))
         .subscribe((data: IVerifyEmailResponse) => {
           let response = data;
+          this.success = true;
           //this.router.navigateByUrl('login').then(r => alert(response.message));
         }, error => {
+          this.message = error.error.ErrorMessage;
           alert(error.error.ErrorMessage);
         });
     });
