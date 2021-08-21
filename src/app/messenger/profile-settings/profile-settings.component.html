@@ -52,76 +52,77 @@
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="firstName">First Name</label>
-                      <input type="text" class="form-control form-control-md" id="firstName"
-                             placeholder="Type your first name" value="{{currentUser.firstName}}">
+                      <input [(ngModel)]="firstName" type="text" class="form-control form-control-md" id="firstName"
+                             placeholder="Type your first name" value="{{firstName}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="lastName">Last Name</label>
-                      <input type="text" class="form-control form-control-md" id="lastName"
-                             placeholder="Type your last name" value="{{currentUser.lastName}}">
+                      <input [(ngModel)]="lastName" type="text" class="form-control form-control-md" id="lastName"
+                             placeholder="Type your last name" value="{{lastName}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="mobileNumber">Mobile number</label>
-                      <input type="text" class="form-control form-control-md" id="mobileNumber"
-                             placeholder="Type your mobile number" value="{{currentUser.phoneNumber}}">
+                      <input [(ngModel)]="mobileNumber" type="text" class="form-control form-control-md"
+                             id="mobileNumber"
+                             placeholder="Type your mobile number" value="{{mobileNumber}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="birthDate">Birth date</label>
-                      <input type="text" class="form-control form-control-md" id="birthDate"
-                             placeholder="dd/mm/yyyy" value="{{currentUser.birthdayDate}}">
+                      <input [(ngModel)]="birthdayDate" type="text" class="form-control form-control-md" id="birthDate"
+                             placeholder="dd/mm/yyyy" value="{{birthdayDate}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="emailAddress">Email address</label>
-                      <input type="email" class="form-control form-control-md" id="emailAddress"
+                      <input [(ngModel)]="email" type="email" class="form-control form-control-md" id="emailAddress"
                              placeholder="Type your email address"
-                             value="{{currentUser.email}}">
+                             value="{{email}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="webSite">Website</label>
-                      <input type="text" class="form-control form-control-md" id="webSite"
-                             placeholder="Type your website" value="{{currentUser.webSite}}">
+                      <input [(ngModel)]="website" type="text" class="form-control form-control-md" id="webSite"
+                             placeholder="Type your website" value="{{website}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="webSite">Username</label>
-                      <input type="text" class="form-control form-control-md" id="username"
-                             placeholder="Type your website" value="{{currentUser.username}}">
+                      <input [(ngModel)]="username" type="text" class="form-control form-control-md" id="username"
+                             placeholder="Type your website" value="{{username}}">
                     </div>
                   </div>
 
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="webSite">Username</label>
-                      <input type="text" class="form-control form-control-md" id="displayName"
-                             placeholder="Type your website" value="{{currentUser.displayName}}">
+                      <input [(ngModel)]="displayName" type="text" class="form-control form-control-md" id="displayName"
+                             placeholder="Type your website" value="{{displayName}}">
                     </div>
                   </div>
 
                   <div class="col-12">
                     <div class="form-group">
                       <label for="Address">Bio</label>
-                      <input type="text" class="form-control form-control-md" id="bio"
+                      <input [(ngModel)]="bio" type="text" class="form-control form-control-md" id="bio"
                              placeholder="Type your address"
-                             value="{{currentUser.bio}}">
+                             value="{{bio}}">
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="form-group">
                       <label for="Address">Address</label>
-                      <input type="text" class="form-control form-control-md" id="Address"
+                      <input [(ngModel)]="address" type="text" class="form-control form-control-md" id="Address"
                              placeholder="Type your address"
-                             value="{{currentUser.address}}">
+                             value="{{address}}">
                     </div>
                   </div>
                 </div>
@@ -144,29 +145,29 @@
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="facebookId">Facebook</label>
-                      <input type="text" class="form-control form-control-md" id="facebookId"
-                             placeholder="Username" value="{{currentUser.facebook}}">
+                      <input [(ngModel)]="facebook" type="text" class="form-control form-control-md" id="facebookId"
+                             placeholder="Username" value="{{facebook}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="twitterId">Twitter</label>
-                      <input type="text" class="form-control form-control-md" id="twitterId"
-                             placeholder="Username" value="{{currentUser.twitter}}">
+                      <input [(ngModel)]="twitter" type="text" class="form-control form-control-md" id="twitterId"
+                             placeholder="Username" value="{{twitter}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="instagramId">Instagram</label>
-                      <input type="text" class="form-control form-control-md" id="instagramId"
-                             placeholder="Username" value="{{currentUser.instagram}}">
+                      <input [(ngModel)]="instagram" type="text" class="form-control form-control-md" id="instagramId"
+                             placeholder="Username" value="{{instagram}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="linkedinId">Linkedin</label>
-                      <input type="text" class="form-control form-control-md" id="linkedinId"
-                             placeholder="Username" value="{{currentUser.linkedIn}}">
+                      <input [(ngModel)]="linkedIn" type="text" class="form-control form-control-md" id="linkedinId"
+                             placeholder="Username" value="{{linkedIn}}">
                     </div>
                   </div>
                 </div>
