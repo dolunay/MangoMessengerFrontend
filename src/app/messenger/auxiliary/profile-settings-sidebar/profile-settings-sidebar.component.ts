@@ -1,7 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SessionService} from "../../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ILogoutResponse} from "../../../../types/responses/ILogoutResponse";
+import {UsersService} from "../../../services/users.service";
+import {IGetUserResponse} from "../../../../types/responses/IGetUserResponse";
 
 @Component({
   selector: 'app-profile-settings-sidebar',
@@ -11,23 +13,38 @@ import {ILogoutResponse} from "../../../../types/responses/ILogoutResponse";
 export class ProfileSettingsSidebarComponent implements OnInit {
 
   constructor(private sessionService: SessionService,
+              private userService: UsersService,
               private route: ActivatedRoute,
               private router: Router) {
   }
 
-  @Input() birthDate = '';
-  @Input() phone = '';
-  @Input() email = '';
-  @Input() webSite = '';
-  @Input() address = '';
-  @Input() facebook = '';
-  @Input() twitter = '';
-  @Input() instagram = '';
-  @Input() linkedIn = '';
-  @Input() firstName = '';
-  @Input() lastName = '';
+  birthdayDate = '';
+  phoneNumber = '';
+  email = '';
+  website = '';
+  address = '';
+  facebook = '';
+  twitter = '';
+  instagram = '';
+  linkedIn = '';
+  firstName = '';
+  lastName = '';
 
   ngOnInit(): void {
+    this.userService.getCurrentUser().subscribe((data: IGetUserResponse) => {
+      this.birthdayDate = data.user.birthdayDate;
+      this.phoneNumber = data.user.phoneNumber;
+      this.email = data.user.email;
+      this.website = data.user.website;
+      this.address = data.user.address;
+      this.twitter = data.user.twitter;
+      this.instagram = data.user.instagram;
+      this.linkedIn = data.user.linkedIn;
+      this.firstName = data.user.firstName;
+      this.lastName = data.user.lastName;
+    }, error => {
+      alert(error.message);
+    })
   }
 
   logout(): void {
