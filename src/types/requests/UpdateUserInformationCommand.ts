@@ -16,7 +16,8 @@
 
   static CreateEmptyCommand(): UpdateUserInformationCommand {
     return new UpdateUserInformationCommand(
-      null, null, null, null, null, null, null);
+      null, null, null, null, null,
+      null, null, null, null);
   }
 
   constructor(firstName: string | null,
@@ -25,7 +26,9 @@
               phoneNumber: string | null,
               birthdayDate: string | null,
               email: string | null,
-              username: string | null) {
+              username: string | null,
+              bio: string | null,
+              address: string | null) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.displayName = displayName;
@@ -33,5 +36,7 @@
     this.birthdayDate = birthdayDate;
     this.email = email;
     this.username = username;
+    this.bio = bio;
+    this.address = address;
   }
 }

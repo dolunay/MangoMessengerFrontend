@@ -61,7 +61,9 @@ export class ProfileSettingsComponent implements OnInit {
       this.phoneNumber,
       this.birthdayDate,
       this.email,
-      this.username);
+      this.username,
+      this.bio,
+      this.address);
 
     this.userService.putUpdateUserInformation(command).subscribe((data: IUpdateUserInformationResponse) => {
 
