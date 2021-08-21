@@ -24,6 +24,8 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   @Input() twitter = '';
   @Input() instagram = '';
   @Input() linkedIn = '';
+  @Input() firstName = '';
+  @Input() lastName = '';
 
   ngOnInit(): void {
   }
