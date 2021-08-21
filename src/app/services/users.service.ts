@@ -65,8 +65,8 @@ export class UsersService implements IUserService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.put<IVerifyPhoneCodeResponse>(ApiRoute.route + this.usersRoute + 'phone-confirmation/' +
-      phoneCode, {}, header);
+    return this.httpClient.put<IVerifyPhoneCodeResponse>(ApiRoute.route + this.usersRoute + phoneCode,
+      {}, header);
   }
 
   postSearch(displayName: string): Observable<ISearchResponse> {

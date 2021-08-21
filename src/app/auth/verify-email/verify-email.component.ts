@@ -11,23 +11,25 @@ import {UsersService} from "../../services/users.service";
   styleUrls: ['./verify-email.component.scss']
 })
 export class VerifyEmailComponent implements OnInit {
-  userId: string | null = '';
-  email: string | null = '';
 
   constructor(private sessionService: SessionService, private route: ActivatedRoute,
               private router: Router, private usersService: UsersService) {
   }
 
-  ngOnInit(): void {
-    this.email = this.route.snapshot.paramMap.get('id');
-    this.userId = this.route.snapshot.paramMap.get('id2');
-    this.usersService.putEmailConfirmation(new VerifyEmailCommand(this.email, this.userId))
-      .subscribe((data: IVerifyEmailResponse) => {
-        let response = data;
-        this.router.navigateByUrl('login').then(r => alert(response.message));
-      }, error => {
-        this.router.navigateByUrl('login').then(r => alert(error.message));
-      })
-  }
+  success = false;
+  message = '';
 
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const userId = params['userId'];
+      const email = params['email'];
+      this.usersService.putEmailConfirmation(new VerifyEmailCommand(email, userId))
+        .subscribe((data: IVerifyEmailResponse) => {
+          this.success = true;
+        }, error => {
+          this.message = error.error.ErrorMessage;
+          alert(error.error.ErrorMessage);
+        });
+    });
+  }
 }
