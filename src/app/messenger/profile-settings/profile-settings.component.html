@@ -66,9 +66,9 @@
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="mobileNumber">Mobile number</label>
-                      <input [(ngModel)]="mobileNumber" type="text" class="form-control form-control-md"
+                      <input [(ngModel)]="phoneNumber" type="text" class="form-control form-control-md"
                              id="mobileNumber"
-                             placeholder="Type your mobile number" value="{{mobileNumber}}">
+                             placeholder="Type your mobile number" value="{{phoneNumber}}">
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
@@ -130,7 +130,7 @@
 
               <div class="card-footer d-flex justify-content-end">
                 <button type="button" class="btn btn-link text-muted mx-1">Reset</button>
-                <button type="button" class="btn btn-primary">Save Changes</button>
+                <button (click)="saveAccountInfo()" type="button" class="btn btn-primary">Save Changes</button>
               </div>
             </div>
 

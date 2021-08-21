@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
+import {UpdateUserInformationCommand} from "../../../types/requests/UpdateUserInformationCommand";
+import {IUpdateUserInformationResponse} from "../../../types/responses/IUpdateUserInformationResponse";
 
 @Component({
   selector: 'app-profile-settings',
@@ -18,7 +20,7 @@ export class ProfileSettingsComponent implements OnInit {
   firstName: string = '';
   lastName: string = '';
   displayName: string = '';
-  mobileNumber: string = '';
+  phoneNumber: string = '';
   birthdayDate: string = '';
   email: string = '';
   website: string = '';
@@ -36,7 +38,7 @@ export class ProfileSettingsComponent implements OnInit {
       this.firstName = data.user.firstName;
       this.lastName = data.user.lastName;
       this.displayName = data.user.displayName;
-      this.mobileNumber = data.user.phoneNumber;
+      this.phoneNumber = data.user.phoneNumber;
       this.birthdayDate = data.user.birthdayDate;
       this.email = data.user.email;
       this.website = data.user.website;
@@ -47,6 +49,22 @@ export class ProfileSettingsComponent implements OnInit {
       this.twitter = data.user.twitter;
       this.instagram = data.user.instagram;
       this.linkedIn = data.user.linkedIn;
+    }, error => {
+      alert(error.message);
+    })
+  };
+
+  saveAccountInfo(): void {
+    const command = new UpdateUserInformationCommand(this.firstName,
+      this.lastName,
+      this.displayName,
+      this.phoneNumber,
+      this.birthdayDate,
+      this.email,
+      this.username);
+
+    this.userService.putUpdateUserInformation(command).subscribe((data: IUpdateUserInformationResponse) => {
+
     }, error => {
       alert(error.message);
     })
