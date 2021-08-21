@@ -39,7 +39,7 @@ export class ProfileSettingsComponent implements OnInit {
       this.mobileNumber = data.user.phoneNumber;
       this.birthdayDate = data.user.birthdayDate;
       this.email = data.user.email;
-      this.website = data.user.webSite;
+      this.website = data.user.website;
       this.username = data.user.username;
       this.bio = data.user.bio;
       this.address = data.user.address;
