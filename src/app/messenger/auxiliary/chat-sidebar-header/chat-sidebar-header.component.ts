@@ -25,6 +25,7 @@ export class ChatSidebarHeaderComponent implements OnInit {
   groupType = GroupType.PublicChannel;
 
   @Input() headerTitle = '';
+  @Input() placeHolder = '';
 
   // @ts-ignore
   groupName: string;

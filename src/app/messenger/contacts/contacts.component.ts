@@ -20,6 +20,8 @@ export class ContactsComponent implements OnInit {
   // @ts-ignore
   currentUser: IUser;
 
+  currentUserId = '';
+
   ngOnInit(): void {
     this.contactsService.getContacts().subscribe((data: IGetContactsResponse) => {
       this.userContacts = data.contacts;
