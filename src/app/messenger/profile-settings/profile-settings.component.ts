@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
-import {IUser} from "../../../types/models/IUser";
 import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
 import {UpdateUserInformationCommand} from "../../../types/requests/UpdateUserInformationCommand";
 import {IUpdateUserInformationResponse} from "../../../types/responses/IUpdateUserInformationResponse";
@@ -31,6 +30,10 @@ export class ProfileSettingsComponent implements OnInit {
   linkedIn: string = '';
 
   ngOnInit(): void {
+    this.initializeView();
+  };
+
+  initializeView() : void {
     this.userService.getCurrentUser().subscribe((data: IGetUserResponse) => {
       this.firstName = data.user.firstName;
       this.lastName = data.user.lastName;
@@ -49,7 +52,7 @@ export class ProfileSettingsComponent implements OnInit {
     }, error => {
       alert(error.message);
     })
-  };
+  }
 
   saveAccountInfo(): void {
     const command = new UpdateUserInformationCommand(this.firstName,
@@ -61,6 +64,20 @@ export class ProfileSettingsComponent implements OnInit {
       this.username,
       this.bio,
       this.address);
+
+    this.userService.putUpdateUserInformation(command).subscribe((data: IUpdateUserInformationResponse) => {
+
+    }, error => {
+      alert(error.message);
+    })
+  };
+
+  saveSocialMediaInfo(): void {
+    const command = UpdateUserInformationCommand.CreateEmptyCommand();
+    command.facebook = this.facebook;
+    command.twitter = this.twitter;
+    command.instagram = this.instagram;
+    command.linkedIn = this.linkedIn;
 
     this.userService.putUpdateUserInformation(command).subscribe((data: IUpdateUserInformationResponse) => {
 
