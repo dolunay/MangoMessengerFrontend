@@ -33,7 +33,12 @@ export class RegisterComponent {
     this.usersService.postUser(command).subscribe((data: IRegisterResponse) => {
       this.sessionService.writeAccessToken(data.accessToken);
       this.sessionService.writeRefreshToken(data.refreshToken);
-      this.router.navigateByUrl('verify-phone').then(r => alert(data.message));
+      if (this.verificationMethod === VerificationMethod.Phone){
+        this.router.navigateByUrl('verify-phone').then(r => alert(data.message));
+        return;
+      }
+
+      alert('Confirm your email');
     }, error => {
       alert(error.error.ErrorMessage);
     });
