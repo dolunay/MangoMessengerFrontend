@@ -5,9 +5,9 @@
     <div class="row no-gutters text-center align-items-center justify-content-center min-vh-100">
       <div class="col-12 col-md-6 col-lg-5 col-xl-4">
         <h4 class="font-weight-bold">Email Verification Result</h4>
-<!--        <p class="text-dark mb-3">We are Different, We Make You Different.</p>-->
-<!--        <p>Already have an account? <a class="font-weight-semibold" routerLink="/login">Log in</a>.</p>-->
-        <div *ngIf="success; else elseBlock">Account activated successfully. Now you can <a class="font-weight-semibold" routerLink="/login">Log in</a>.</div>
+        <div *ngIf="success; else elseBlock">Account activated successfully.
+          Now you can <a class="font-weight-semibold" routerLink="/login">Log in</a>.
+        </div>
         <ng-template #elseBlock>Error {{message}}</ng-template>
       </div>
     </div>

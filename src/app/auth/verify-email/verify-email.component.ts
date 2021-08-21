@@ -23,13 +23,9 @@ export class VerifyEmailComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       const userId = params['userId'];
       const email = params['email'];
-      console.log(userId);
-      console.log(email);
       this.usersService.putEmailConfirmation(new VerifyEmailCommand(email, userId))
         .subscribe((data: IVerifyEmailResponse) => {
-          let response = data;
           this.success = true;
-          //this.router.navigateByUrl('login').then(r => alert(response.message));
         }, error => {
           this.message = error.error.ErrorMessage;
           alert(error.error.ErrorMessage);

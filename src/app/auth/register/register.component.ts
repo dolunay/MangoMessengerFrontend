@@ -14,11 +14,11 @@ import {RegisterCommand} from "../../../types/requests/RegisterCommand";
 export class RegisterComponent {
 
   PhoneNumber = '+38097491385194';
-  Email = 'kolosovp94@gmail.com';
+  Email = 'bo4a.eburit@gmail.com';
   Password = 'z[?6dMR#xmp=nr6q';
   verificationMethod = VerificationMethod.Email;
   TermsAccepted = false;
-  DisplayName = 'TestUser228';
+  DisplayName = 'Bo4a Account';
 
   verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
