@@ -186,8 +186,13 @@
                     <div class="col-md-6 col-12">
                       <div class="form-group">
                         <label for="current-password">Current Password</label>
-                        <input type="password" class="form-control form-control-md"
-                               id="current-password" placeholder="Current password"
+                        <input [(ngModel)]="currentPassword"
+                               type="password"
+                               class="form-control form-control-md"
+                               id="current-password"
+                               placeholder="Current password"
+                               value="{{currentPassword}}"
+                               name="current-password"
                                autocomplete="on">
                       </div>
                     </div>
@@ -196,15 +201,26 @@
                     <div class="col-md-6 col-12">
                       <div class="form-group">
                         <label for="new-password">New Password</label>
-                        <input type="password" class="form-control form-control-md"
-                               id="new-password" placeholder="New password" autocomplete="off">
+                        <input [(ngModel)]="newPassword"
+                               type="password"
+                               class="form-control form-control-md"
+                               id="new-password"
+                               placeholder="New password"
+                               autocomplete="off"
+                               name="new-password"
+                               value="{{newPassword}}">
                       </div>
                     </div>
                     <div class="col-md-6 col-12">
                       <div class="form-group">
                         <label for="repeat-password">Repeat Password</label>
-                        <input type="password" class="form-control form-control-md"
-                               id="repeat-password" placeholder="Repeat password"
+                        <input [(ngModel)]="repeatNewPassword"
+                               type="password"
+                               class="form-control form-control-md"
+                               id="repeat-password"
+                               placeholder="Repeat password"
+                               value="{{repeatNewPassword}}"
+                               name="repeat-password"
                                autocomplete="off">
                       </div>
                     </div>
@@ -213,8 +229,8 @@
               </div>
 
               <div class="card-footer d-flex justify-content-end">
-                <button type="button" class="btn btn-link text-muted mx-1">Reset</button>
-                <button type="button" class="btn btn-primary">Save Changes</button>
+                <button (click)="initializeView()" type="button" class="btn btn-link text-muted mx-1">Reset</button>
+                <button (click)="changePassword()" type="button" class="btn btn-primary">Save Changes</button>
               </div>
             </div>
 

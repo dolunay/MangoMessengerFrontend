@@ -3,6 +3,8 @@ import {UsersService} from "../../services/users.service";
 import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
 import {UpdateUserInformationCommand} from "../../../types/requests/UpdateUserInformationCommand";
 import {IUpdateUserInformationResponse} from "../../../types/responses/IUpdateUserInformationResponse";
+import {ChangePasswordCommand} from "../../../types/requests/ChangePasswordCommand";
+import {IChangePasswordResponse} from "../../../types/responses/IChangePasswordResponse";
 
 @Component({
   selector: 'app-profile-settings',
@@ -28,12 +30,15 @@ export class ProfileSettingsComponent implements OnInit {
   twitter: string = '';
   instagram: string = '';
   linkedIn: string = '';
+  currentPassword = '';
+  newPassword = '';
+  repeatNewPassword = '';
 
   ngOnInit(): void {
     this.initializeView();
   };
 
-  initializeView() : void {
+  initializeView(): void {
     this.userService.getCurrentUser().subscribe((data: IGetUserResponse) => {
       this.firstName = data.user.firstName;
       this.lastName = data.user.lastName;
@@ -49,6 +54,9 @@ export class ProfileSettingsComponent implements OnInit {
       this.twitter = data.user.twitter;
       this.instagram = data.user.instagram;
       this.linkedIn = data.user.linkedIn;
+      this.currentPassword = '';
+      this.newPassword = '';
+      this.repeatNewPassword = '';
     }, error => {
       alert(error.message);
     })
@@ -83,6 +91,20 @@ export class ProfileSettingsComponent implements OnInit {
 
     }, error => {
       alert(error.message);
+    })
+  }
+
+  changePassword(): void {
+    if (this.newPassword !== this.repeatNewPassword) {
+      alert('Passwords are different.');
+      return;
+    }
+
+    const command = new ChangePasswordCommand(this.currentPassword, this.newPassword);
+    this.userService.putChangePassword(command).subscribe((data: IChangePasswordResponse) => {
+      alert('Password changed OK.');
+    }, error => {
+      alert(error.error.ErrorMessage);
     })
   }
 
