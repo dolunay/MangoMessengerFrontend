@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {SessionService} from "../../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ILogoutResponse} from "../../../../types/responses/ILogoutResponse";
@@ -14,6 +14,16 @@ export class ProfileSettingsSidebarComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router) {
   }
+
+  @Input() birthDate = '';
+  @Input() phone = '';
+  @Input() email = '';
+  @Input() webSite = '';
+  @Input() address = '';
+  @Input() facebook = '';
+  @Input() twitter = '';
+  @Input() instagram = '';
+  @Input() linkedIn = '';
 
   ngOnInit(): void {
   }

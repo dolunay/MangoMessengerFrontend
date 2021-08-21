@@ -8,7 +8,11 @@
   <!-- Navigation End -->
 
   <!-- Sidebar Start -->
-  <app-profile-settings-sidebar></app-profile-settings-sidebar>
+  <app-profile-settings-sidebar
+    [birthDate]="currentUser.birthdayDate" [phone]="currentUser.phoneNumber" [email]="currentUser.email"
+    [address]="currentUser.address" [facebook]="currentUser.facebook" [instagram]="currentUser.instagram"
+    [linkedIn]="currentUser.linkedIn" [twitter]="currentUser.twitter"
+    [webSite]="currentUser.webSite"></app-profile-settings-sidebar>
   <!-- Sidebar End -->
 
   <!-- Main Start-->
