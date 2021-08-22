@@ -13,12 +13,12 @@ import {RegisterCommand} from "../../../types/requests/RegisterCommand";
 })
 export class RegisterComponent {
 
-  PhoneNumber = '+38097491385194';
-  Email = 'bo4a.eburit@gmail.com';
-  Password = 'z[?6dMR#xmp=nr6q';
+  PhoneNumber = '';
+  Email = '';
+  Password = '';
   verificationMethod = VerificationMethod.Email;
   TermsAccepted = false;
-  DisplayName = 'Bo4a Account';
+  DisplayName = '';
 
   verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
