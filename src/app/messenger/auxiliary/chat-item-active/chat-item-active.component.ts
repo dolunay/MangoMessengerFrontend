@@ -23,4 +23,8 @@ export class ChatItemActiveComponent implements OnInit {
   @Input() chatId: string;
   // @ts-ignore
   @Input() lastMessageAuthor: string;
+
+  validate(): boolean {
+    return this.lastMessageAuthor != null && this.lastMessage != null && this.lastMessageDateTime != null;
+  }
 }

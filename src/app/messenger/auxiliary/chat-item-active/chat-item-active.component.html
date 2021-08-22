@@ -9,7 +9,8 @@
         <div class="chat-time">{{lastMessageDateTime}}</div>
       </div>
       <div class="contacts-texts">
-        <p class="text-truncate"><b>{{lastMessageAuthor}}: </b>{{lastMessage}}</p>
+        <p class="text-truncate" *ngIf="validate(); else elseBlock"><b>{{lastMessageAuthor}}: </b>{{lastMessage}}</p>
+        <ng-template #elseBlock class="text-truncate">Chat is currently empty.</ng-template>
       </div>
     </div>
   </a>
