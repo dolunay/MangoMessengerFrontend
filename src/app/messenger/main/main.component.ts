@@ -10,8 +10,6 @@ import {ISendMessageResponse} from "../../../types/responses/ISendMessageRespons
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
 import {GroupType} from "../../../types/enums/GroupType";
-import {VerifyEmailCommand} from "../../../types/requests/VerifyEmailCommand";
-import {IVerifyEmailResponse} from "../../../types/responses/IVerifyEmailResponse";
 
 @Component({
   selector: 'app-main',
@@ -41,28 +39,23 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const chatId = params['chatId'];
-      const t = this.route.snapshot.paramMap.get('chatId');
-      const email = params['email'];
-      console.log(t);
-    });
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+        const routeChatId = this.route.snapshot.paramMap.get('chatId');
         this.getUserChatsResponse = data;
         this.chats = data.chats;
-        const lastChat = data.chats[0];
-        if (lastChat) {
-          this.getChatMessages(lastChat.chatId);
+
+        if (routeChatId) {
+          this.getChatMessages(routeChatId);
+          return;
+        }
+
+        const firstChat = data.chats[0];
+        if (firstChat) {
+          this.getChatMessages(firstChat.chatId);
         }
       },
       error => {
-        if (error && error.status) {
-          switch (error.status) {
-            case 409:
-              alert(error.message);
-              break;
-          }
-        }
+        alert(error.error.ErrorMessage);
       });
   }
 
@@ -82,13 +75,7 @@ export class MainComponent implements OnInit {
         this.scrollToEnd();
       },
       error => {
-        if (error && error.response) {
-          switch (error.response.status) {
-            case 400:
-              alert(error.message);
-              break;
-          }
-        }
+        alert(error.error.ErrorMessage);
       });
   }
 
@@ -108,13 +95,7 @@ export class MainComponent implements OnInit {
           this.getChatMessages(this.activeChatId);
         })
       }, error => {
-        if (error && error.response) {
-          switch (error.response.status) {
-            case 400:
-              alert(error.message);
-              break;
-          }
-        }
+        alert(error.error.ErrorMessage);
       });
   }
 

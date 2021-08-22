@@ -82,9 +82,7 @@ export class ContactsComponent implements OnInit {
     this.chatsService.createDirectChat(this.activeContactId).subscribe((data: ICreateDirectChatResponse) => {
       this.router.navigate(['main', {chatId: data.chatId}]).then(r => r);
     }, error => {
-      if (error.error.ErrorMessage === 'DIRECT_CHAT_ALREADY_EXISTS') {
-        this.router.navigate(['main', {chatId: 10}]).then(r => r);
-      }
+      alert(error.error.ErrorMessage);
     })
   }
 
