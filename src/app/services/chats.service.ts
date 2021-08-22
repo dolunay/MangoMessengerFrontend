@@ -64,4 +64,15 @@ export class ChatsService implements IChatsService {
     return this.httpClient.post<IJoinGroupResponse>(ApiRoute.route + this.chatsRoute + groupId,
       {}, header);
   }
+
+  searchChat(displayName: string): Observable<IGetUserChatsResponse> {
+    const accessToken = this.authService.getAccessToken();
+
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${accessToken}`)
+    };
+
+    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + displayName, header);
+  }
 }

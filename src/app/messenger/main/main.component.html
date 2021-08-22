@@ -89,11 +89,11 @@
                 <!-- Sidebar Search Start -->
                 <form class="form-inline">
                   <div class="input-group">
-                    <input type="text"
+                    <input [(ngModel)]="searchQuery" name="searchQuery" type="text"
                            class="form-control search border-right-0 transparent-bg pr-0"
-                           placeholder="Search chats...">
+                           placeholder="Search chats..." value="{{searchQuery}}">
                     <div class="input-group-append">
-                      <div class="input-group-text transparent-bg border-left-0" role="button">
+                      <div class="input-group-text transparent-bg border-left-0" role="button" (click)="onSearchClick()">
                         <!-- Default :: Inline SVG -->
                         <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                              stroke="currentColor">
