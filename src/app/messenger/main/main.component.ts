@@ -9,6 +9,7 @@ import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
 import {ISendMessageResponse} from "../../../types/responses/ISendMessageResponse";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
+import {GroupType} from "../../../types/enums/GroupType";
 
 @Component({
   selector: 'app-main',
@@ -24,11 +25,10 @@ export class MainComponent implements OnInit {
   chats: IChat[] = [];
 
   activeChatId = '';
-  // @ts-ignore
   activeMessageText: string = '';
-
   activeChatTitle: string = '';
   activeChatMembersCount: number = 0;
+  chatFilter = 'All Chats';
 
   constructor(private authService: SessionService,
               private chatService: ChatsService,
@@ -107,5 +107,25 @@ export class MainComponent implements OnInit {
           }
         }
       });
+  }
+
+  onChatFilerClick(filer: string): void {
+    this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+      this.getUserChatsResponse = data;
+      switch (filer) {
+        case 'All Chats':
+          this.chats = data.chats;
+          break;
+        case 'Groups':
+          this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel || x.chatType === GroupType.PublicChannel);
+          break;
+        case 'Direct Chats':
+          this.chats = data.chats.filter(x => x.chatType === GroupType.DirectChat);
+          break;
+        default:
+          break;
+      }
+      this.chatFilter = filer;
+    });
   }
 }
