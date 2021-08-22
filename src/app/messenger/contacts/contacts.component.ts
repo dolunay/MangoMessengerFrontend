@@ -5,6 +5,7 @@ import {IGetContactsResponse} from "../../../types/responses/IGetContactsRespons
 import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
+import {ISearchResponse} from "../../../types/responses/ISearchResponse";
 
 @Component({
   selector: 'app-contacts',
@@ -21,6 +22,8 @@ export class ContactsComponent implements OnInit {
   currentUser: IUser;
 
   currentUserId = '';
+  userSearchQuery = '';
+  contactsFilter = 'All Contacts';
 
   ngOnInit(): void {
     this.contactsService.getContacts().subscribe((data: IGetContactsResponse) => {
@@ -29,8 +32,25 @@ export class ContactsComponent implements OnInit {
         this.currentUser = data.user;
       })
     }, error => {
-      alert(error.message);
+      alert(error.error.ErrorMessage);
+    })
+  };
+
+  onFilterClick(filter: string) {
+    this.contactsFilter = filter;
+    this.contactsService.getContacts().subscribe((data: IGetContactsResponse) => {
+      this.userContacts = data.contacts;
+    }, error => {
+      alert(error.error.ErrorMessage);
     })
   }
 
+  onUserSearchClick(): void {
+    this.userService.postSearch(this.userSearchQuery).subscribe((data: ISearchResponse) => {
+      this.userContacts = data.users.map(({displayName, address}) => ({displayName, address})) as IContact[];
+      this.contactsFilter = 'Search Results';
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
 }
