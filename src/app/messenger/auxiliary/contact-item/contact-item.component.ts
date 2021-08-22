@@ -12,6 +12,7 @@ export class ContactItemComponent implements OnInit {
 
   @Input() contactName = '';
   @Input() contactAddress = '';
+  @Input() contactBio = '';
 
   ngOnInit(): void {
   }

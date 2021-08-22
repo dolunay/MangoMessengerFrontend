@@ -113,7 +113,8 @@
           <div class="contacts-list" id="friendsTab">
             <div *ngFor="let contact of userContacts">
               <app-contact-item [contactName]="contact.displayName"
-                                [contactAddress]="contact.address"></app-contact-item>
+                                [contactAddress]="contact.address"
+                                [contactBio]="contact.bio"></app-contact-item>
             </div>
           </div>
           <!-- Friends Contact List End -->
