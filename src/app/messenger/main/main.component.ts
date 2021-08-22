@@ -24,11 +24,10 @@ export class MainComponent implements OnInit {
   chats: IChat[] = [];
 
   activeChatId = '';
-  // @ts-ignore
   activeMessageText: string = '';
-
   activeChatTitle: string = '';
   activeChatMembersCount: number = 0;
+  chatFilter = 'All Chats';
 
   constructor(private authService: SessionService,
               private chatService: ChatsService,
@@ -107,5 +106,9 @@ export class MainComponent implements OnInit {
           }
         }
       });
+  }
+
+  onChatFilerClick(filer: string): void {
+    this.chatFilter = filer;
   }
 }
