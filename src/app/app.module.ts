@@ -24,6 +24,10 @@ import {ProfileSettingsSidebarComponent} from "./messenger/auxiliary/profile-set
 import {ProfileLogoutButtonComponent} from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
 import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
 import {ContactItemComponent} from "./messenger/auxiliary/contact-item/contact-item.component";
+import { CreateGroupComponent } from './messenger/modals/create-group/create-group.component';
+import { InviteOthersComponent } from './messenger/modals/invite-others/invite-others.component';
+import { NotificationsComponent } from './messenger/modals/notifications/notifications.component';
+import { ChatInfoComponent } from './messenger/auxiliary/chat-info/chat-info.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +50,10 @@ import {ContactItemComponent} from "./messenger/auxiliary/contact-item/contact-i
     ProfileSettingsSidebarComponent,
     ProfileLogoutButtonComponent,
     ContactItemComponent,
+    CreateGroupComponent,
+    InviteOthersComponent,
+    NotificationsComponent,
+    ChatInfoComponent,
   ],
   imports: [
     HttpClientModule,
