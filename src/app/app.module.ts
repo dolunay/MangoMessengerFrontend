@@ -27,6 +27,7 @@ import {ContactItemComponent} from "./messenger/auxiliary/contact-item/contact-i
 import { CreateGroupComponent } from './messenger/modals/create-group/create-group.component';
 import { InviteOthersComponent } from './messenger/modals/invite-others/invite-others.component';
 import { NotificationsComponent } from './messenger/modals/notifications/notifications.component';
+import { ChatInfoComponent } from './messenger/auxiliary/chat-info/chat-info.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { NotificationsComponent } from './messenger/modals/notifications/notific
     CreateGroupComponent,
     InviteOthersComponent,
     NotificationsComponent,
+    ChatInfoComponent,
   ],
   imports: [
     HttpClientModule,
