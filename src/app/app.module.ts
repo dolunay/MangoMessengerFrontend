@@ -64,6 +64,7 @@ import { ChatInfoComponent } from './messenger/auxiliary/chat-info/chat-info.com
       {path: 'verify-phone', component: VerifyPhoneComponent},
       {path: 'verify-email', component: VerifyEmailComponent},
       {path: 'main', component: MainComponent},
+      {path: 'main/:chatId', component: MainComponent},
       {path: 'contacts', component: ContactsComponent},
       {path: 'profile-settings', component: ProfileSettingsComponent},
       {path: 'refresh-token', component: RefreshTokenComponent},

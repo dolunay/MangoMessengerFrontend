@@ -7,6 +7,9 @@ import {IUser} from "../../../types/models/IUser";
 import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
 import {ISearchResponse} from "../../../types/responses/ISearchResponse";
 import {IAddContactResponse} from "../../../types/responses/IAddContactResponse";
+import {ChatsService} from "../../services/chats.service";
+import {ICreateDirectChatResponse} from "../../../types/responses/ICreateDirectChatResponse";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-contacts',
@@ -15,7 +18,9 @@ import {IAddContactResponse} from "../../../types/responses/IAddContactResponse"
 })
 export class ContactsComponent implements OnInit {
 
-  constructor(private contactsService: ContactsService, private userService: UsersService) {
+  constructor(private contactsService: ContactsService, private userService: UsersService,
+              private chatsService: ChatsService, private route: ActivatedRoute,
+              private router: Router) {
   }
 
   userContacts: IContact[] = [];
@@ -74,6 +79,16 @@ export class ContactsComponent implements OnInit {
   }
 
   onSendMessageClick() {
+    this.chatsService.createDirectChat(this.activeContactId).subscribe((data: ICreateDirectChatResponse) => {
+      this.router.navigate(['main', {chatId: data.chatId}]).then(r => r);
+    }, error => {
+      if (error.error.ErrorMessage === 'DIRECT_CHAT_ALREADY_EXISTS') {
+        this.router.navigate(['main', {chatId: 10}]).then(r => r);
+      }
+    })
+  }
+
+  onRemoveContactClick() {
 
   }
 }

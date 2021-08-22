@@ -10,6 +10,8 @@ import {ISendMessageResponse} from "../../../types/responses/ISendMessageRespons
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
 import {GroupType} from "../../../types/enums/GroupType";
+import {VerifyEmailCommand} from "../../../types/requests/VerifyEmailCommand";
+import {IVerifyEmailResponse} from "../../../types/responses/IVerifyEmailResponse";
 
 @Component({
   selector: 'app-main',
@@ -39,6 +41,12 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const chatId = params['chatId'];
+      const t = this.route.snapshot.paramMap.get('chatId');
+      const email = params['email'];
+      console.log(t);
+    });
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
         this.getUserChatsResponse = data;
         this.chats = data.chats;
