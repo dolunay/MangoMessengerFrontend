@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {IVerifyPhoneCodeResponse} from "../../../types/responses/IVerifyPhoneCodeResponse";
 import {UsersService} from "../../services/users.service";
+import {SessionService} from "../../services/session.service";
+import {IRefreshTokenResponse} from "../../../types/responses/IRefreshTokenResponse";
 
 @Component({
   selector: 'app-verify-phone',
@@ -12,14 +14,22 @@ export class VerifyPhoneComponent {
 
   phoneCode!: number;
 
-  constructor(private usersService: UsersService, private route: ActivatedRoute, private router: Router) {
+  constructor(private usersService: UsersService, private route: ActivatedRoute, private router: Router,
+              private sessionService: SessionService) {
   }
 
   verifyPhone(): void {
     this.usersService.putPhoneConfirmation(this.phoneCode).subscribe((data: IVerifyPhoneCodeResponse) => {
-        this.router.navigateByUrl('login').then(r => alert(data.message));
+      const refreshToken = this.sessionService.getRefreshToken();
+      this.sessionService.postRefreshSession(refreshToken).subscribe((data: IRefreshTokenResponse) => {
+        this.sessionService.writeAccessToken(data.accessToken);
+        this.sessionService.writeRefreshToken(data.refreshToken);
       }, error => {
-        alert(error.error.ErrorMessage);
-      });
+        alert(error.message);
+      })
+      this.router.navigateByUrl('login').then(r => alert(data.message));
+    }, error => {
+      alert(error.error.ErrorMessage);
+    });
   }
 }

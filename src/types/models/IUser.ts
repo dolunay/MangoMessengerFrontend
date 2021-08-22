@@ -1,15 +1,17 @@
 ﻿export interface IUser {
   userId: string;
-  displayName: string;
-  address: string;
   firstName: string;
   lastName: string;
-  birthdayDate: string;
+  displayName: string;
   phoneNumber: string;
+  birthdayDate: string;
   email: string;
-  webSite: string;
+  website: string;
+  username: string;
+  bio: string;
+  address: string;
   facebook: string;
   twitter: string;
   instagram: string;
-  linkedIn: string
+  linkedIn: string;
 }

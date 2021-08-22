@@ -25,7 +25,7 @@
                   </div>
 
                   <div class="d-flex flex-column align-items-center">
-                    <h5>Catherine Richardson</h5>
+                    <h5>{{firstName}} {{lastName}}</h5>
                   </div>
 
                   <div class="d-flex">
@@ -73,7 +73,7 @@
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Birthdate</p>
-                        <p class="mb-0">20/11/1992</p>
+                        <p class="mb-0">{{birthdayDate}}</p>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" fill="none" viewBox="0 0 24 24"
@@ -94,7 +94,7 @@
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Phone</p>
-                        <p class="mb-0">+01-222-364522</p>
+                        <p class="mb-0">{{phoneNumber}}</p>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" fill="none" viewBox="0 0 24 24"
@@ -115,7 +115,7 @@
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Email</p>
-                        <p class="mb-0">catherine.richardson@gmail.com</p>
+                        <a class="mb-0" href="mailto:{{email}}">{{email}}</a>
                       </div>
 
                       <!-- Default :: Inline SVG -->
@@ -137,7 +137,7 @@
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Website</p>
-                        <p class="mb-0">www.catherichardson.com</p>
+                        <a class="mb-0" href="https://{{website}}" target="_blank">{{website}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" fill="none" viewBox="0 0 24 24"
@@ -158,7 +158,7 @@
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Address</p>
-                        <p class="mb-0">1134 Ridder Park Road, San Fransisco, CA 94851</p>
+                        <p class="mb-0">{{address}}</p>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" fill="none" viewBox="0 0 24 24"
@@ -191,7 +191,8 @@
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Facebook</p>
-                        <a class="font-size-sm font-weight-medium" href="#">@cathe.richardson</a>
+                        <a class="font-size-sm font-weight-medium"
+                           href="https://www.facebook.com/{{facebook}}" target="_blank">@{{facebook}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" viewBox="0 0 24 24" fill="none"
@@ -211,7 +212,8 @@
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Twitter</p>
-                        <a class="font-size-sm font-weight-medium" href="#">@cathe.richardson</a>
+                        <a class="font-size-sm font-weight-medium"
+                           href="https://twitter.com/{{twitter}}" target="_blank">@{{twitter}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" viewBox="0 0 24 24" fill="none"
@@ -232,7 +234,8 @@
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Instagram</p>
-                        <a class="font-size-sm font-weight-medium" href="#">@cathe.richardson</a>
+                        <a class="font-size-sm font-weight-medium"
+                           href="https://www.instagram.com/{{instagram}}" target="_blank">@{{instagram}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" viewBox="0 0 24 24" fill="none"
@@ -254,7 +257,8 @@
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Linkedin</p>
-                        <a class="font-size-sm font-weight-medium" href="#">@cathe.richardson</a>
+                        <a class="font-size-sm font-weight-medium"
+                           href="https://www.linkedin.com/{{linkedIn}}" target="_blank">@{{linkedIn}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" viewBox="0 0 24 24" fill="none"

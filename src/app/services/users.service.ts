@@ -13,6 +13,8 @@ import {IVerifyPhoneCodeResponse} from "../../types/responses/IVerifyPhoneCodeRe
 import {ISearchResponse} from "../../types/responses/ISearchResponse";
 import {UpdateUserInformationCommand} from "../../types/requests/UpdateUserInformationCommand";
 import {IUpdateUserInformationResponse} from "../../types/responses/IUpdateUserInformationResponse";
+import {ChangePasswordCommand} from "../../types/requests/ChangePasswordCommand";
+import {IChangePasswordResponse} from "../../types/responses/IChangePasswordResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -65,8 +67,8 @@ export class UsersService implements IUserService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.put<IVerifyPhoneCodeResponse>(ApiRoute.route + this.usersRoute + 'phone-confirmation/' +
-      phoneCode, {}, header);
+    return this.httpClient.put<IVerifyPhoneCodeResponse>(ApiRoute.route + this.usersRoute + phoneCode,
+      {}, header);
   }
 
   postSearch(displayName: string): Observable<ISearchResponse> {
@@ -87,5 +89,15 @@ export class UsersService implements IUserService {
     };
 
     return this.httpClient.put<ISearchResponse>(ApiRoute.route + this.usersRoute + 'information/', request, header);
+  }
+
+  putChangePassword(request: ChangePasswordCommand): Observable<IChangePasswordResponse> {
+    const accessToken = this.authService.getAccessToken();
+
+    const header = {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
+    };
+
+    return this.httpClient.put<IChangePasswordResponse>(ApiRoute.route + this.usersRoute + 'password/', request, header);
   }
 }

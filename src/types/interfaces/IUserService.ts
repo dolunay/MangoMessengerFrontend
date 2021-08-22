@@ -8,6 +8,8 @@ import {IVerifyEmailResponse} from "../responses/IVerifyEmailResponse";
 import {UpdateUserInformationCommand} from "../requests/UpdateUserInformationCommand";
 import {IUpdateUserInformationResponse} from "../responses/IUpdateUserInformationResponse";
 import {ISearchResponse} from "../responses/ISearchResponse";
+import {ChangePasswordCommand} from "../requests/ChangePasswordCommand";
+import {IChangePasswordResponse} from "../responses/IChangePasswordResponse";
 
 export interface IUserService {
   postUser(command: RegisterCommand): Observable<IRegisterResponse>;
@@ -23,4 +25,6 @@ export interface IUserService {
   putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IUpdateUserInformationResponse>;
 
   postSearch(displayName: string): Observable<ISearchResponse>;
+
+  putChangePassword(request: ChangePasswordCommand): Observable<IChangePasswordResponse>;
 }
