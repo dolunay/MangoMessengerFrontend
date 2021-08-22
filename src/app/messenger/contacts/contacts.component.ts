@@ -24,6 +24,7 @@ export class ContactsComponent implements OnInit {
   currentUserId = '';
   userSearchQuery = '';
   contactsFilter = 'All Contacts';
+  activeContactId = '';
 
   ngOnInit(): void {
     this.contactsService.getContacts().subscribe((data: IGetContactsResponse) => {
@@ -47,8 +48,18 @@ export class ContactsComponent implements OnInit {
 
   onUserSearchClick(): void {
     this.userService.postSearch(this.userSearchQuery).subscribe((data: ISearchResponse) => {
-      this.userContacts = data.users.map(({displayName, address}) => ({displayName, address})) as IContact[];
+      this.userContacts = data.users
+        .map(({userId, displayName, address, bio}) => ({userId, displayName, address, bio})) as IContact[];
       this.contactsFilter = 'Search Results';
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  onContactClick(userId: string): void {
+    this.userService.getUserById(userId).subscribe((data: IGetUserResponse) => {
+      this.activeContactId = userId;
+      this.currentUser = data.user;
     }, error => {
       alert(error.error.ErrorMessage);
     })
