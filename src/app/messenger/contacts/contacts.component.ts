@@ -57,6 +57,11 @@ export class ContactsComponent implements OnInit {
   }
 
   onContactClick(userId: string): void {
-
+    this.userService.getUserById(userId).subscribe((data: IGetUserResponse) => {
+      this.activeContactId = userId;
+      this.currentUser = data.user;
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
   }
 }
