@@ -29,6 +29,7 @@ export class MainComponent implements OnInit {
   activeChatTitle: string = '';
   activeChatMembersCount: number = 0;
   chatFilter = 'All Chats';
+  searchQuery = '';
 
   constructor(private authService: SessionService,
               private chatService: ChatsService,
@@ -127,5 +128,15 @@ export class MainComponent implements OnInit {
       }
       this.chatFilter = filer;
     });
+  }
+
+  onSearchClick(): void {
+    this.chatService.searchChat(this.searchQuery).subscribe((data: IGetUserChatsResponse) => {
+      this.chats = data.chats;
+      this.searchQuery = '';
+      this.chatFilter = 'Search Results';
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
   }
 }

@@ -13,4 +13,6 @@ export interface IChatsService {
   createDirectChat(userId: string): Observable<ICreateDirectChatResponse>;
 
   joinGroup(groupId: number): Observable<IJoinGroupResponse>;
+
+  searchChat(displayName: string): Observable<IGetUserChatsResponse>;
 }
