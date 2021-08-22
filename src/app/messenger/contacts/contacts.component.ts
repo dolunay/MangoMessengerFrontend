@@ -6,6 +6,7 @@ import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
 import {ISearchResponse} from "../../../types/responses/ISearchResponse";
+import {IAddContactResponse} from "../../../types/responses/IAddContactResponse";
 
 @Component({
   selector: 'app-contacts',
@@ -20,8 +21,6 @@ export class ContactsComponent implements OnInit {
   userContacts: IContact[] = [];
   // @ts-ignore
   currentUser: IUser;
-
-  currentUserId = '';
   userSearchQuery = '';
   contactsFilter = 'All Contacts';
   activeContactId = '';
@@ -31,10 +30,11 @@ export class ContactsComponent implements OnInit {
       this.userContacts = data.contacts;
       this.userService.getCurrentUser().subscribe((data: IGetUserResponse) => {
         this.currentUser = data.user;
+        this.activeContactId = data.user.userId;
       })
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
   };
 
   onFilterClick(filter: string) {
@@ -43,7 +43,7 @@ export class ContactsComponent implements OnInit {
       this.userContacts = data.contacts;
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
   }
 
   onUserSearchClick(): void {
@@ -53,7 +53,7 @@ export class ContactsComponent implements OnInit {
       this.contactsFilter = 'Search Results';
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
   }
 
   onContactClick(userId: string): void {
@@ -62,6 +62,18 @@ export class ContactsComponent implements OnInit {
       this.currentUser = data.user;
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+  }
+
+  onAddContactClick() {
+    this.contactsService.postAddContact(this.activeContactId).subscribe((data: IAddContactResponse) => {
+      alert(data.message);
+    }, error => {
+      alert(error.error.ErrorMessage);
+    });
+  }
+
+  onSendMessageClick() {
+
   }
 }
