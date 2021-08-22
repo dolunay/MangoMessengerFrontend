@@ -40,21 +40,22 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+        const routeChatId = this.route.snapshot.paramMap.get('chatId');
         this.getUserChatsResponse = data;
         this.chats = data.chats;
-        const lastChat = data.chats[0];
-        if (lastChat) {
-          this.getChatMessages(lastChat.chatId);
+
+        if (routeChatId) {
+          this.getChatMessages(routeChatId);
+          return;
+        }
+
+        const firstChat = data.chats[0];
+        if (firstChat) {
+          this.getChatMessages(firstChat.chatId);
         }
       },
       error => {
-        if (error && error.status) {
-          switch (error.status) {
-            case 409:
-              alert(error.message);
-              break;
-          }
-        }
+        alert(error.error.ErrorMessage);
       });
   }
 
@@ -74,13 +75,7 @@ export class MainComponent implements OnInit {
         this.scrollToEnd();
       },
       error => {
-        if (error && error.response) {
-          switch (error.response.status) {
-            case 400:
-              alert(error.message);
-              break;
-          }
-        }
+        alert(error.error.ErrorMessage);
       });
   }
 
@@ -100,13 +95,7 @@ export class MainComponent implements OnInit {
           this.getChatMessages(this.activeChatId);
         })
       }, error => {
-        if (error && error.response) {
-          switch (error.response.status) {
-            case 400:
-              alert(error.message);
-              break;
-          }
-        }
+        alert(error.error.ErrorMessage);
       });
   }
 
