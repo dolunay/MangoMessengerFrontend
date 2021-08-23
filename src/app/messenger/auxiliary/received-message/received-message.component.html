@@ -1,14 +1,14 @@
-<div [ngClass]="self ? 'message self' : 'message'">
+<div [ngClass]="message.self ? 'message self' : 'message'">
   <div class="message-wrapper">
     <div class="message-content">
-      <div><b>{{messageAuthor}}</b></div>
-      <div>{{message}}</div>
+      <div><b>{{message.userDisplayName}}</b></div>
+      <div>{{message.messageText}}</div>
     </div>
   </div>
   <div class="message-options">
     <div class="avatar avatar-sm"><img alt="" src="./../assets/media/avatar/2.png">
     </div>
-    <span class="message-date">{{sentDateTime}}</span>
+    <span class="message-date">{{message.sentAt}}</span>
     <div class="dropdown">
       <a class="text-muted" href="#" data-toggle="dropdown" aria-haspopup="true"
          aria-expanded="false">

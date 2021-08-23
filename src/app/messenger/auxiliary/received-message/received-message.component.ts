@@ -1,28 +1,22 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {IMessage} from "../../../../types/models/IMessage";
 
 @Component({
   selector: 'app-received-message',
   templateUrl: './received-message.component.html',
   styleUrls: ['./received-message.component.scss']
 })
-export class ReceivedMessageComponent implements OnInit {
+export class ReceivedMessageComponent {
 
   constructor() {
   }
 
-  ngOnInit(): void {
-
-  }
-
-  // @ts-ignore
-  @Input() message: string;
-  // @ts-ignore
-  @Input() sentDateTime: string;
-  // @ts-ignore
-  @Input() status: string;
-  // @ts-ignore
-  @Input() messageAuthor: string;
-
-  // @ts-ignore
-  @Input() self: boolean;
+  @Input() message: IMessage = {
+    editedAt: "",
+    messageId: "",
+    messageText: "",
+    self: false,
+    sentAt: "",
+    userDisplayName: ""
+  };
 }
