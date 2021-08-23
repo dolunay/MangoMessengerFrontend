@@ -8,7 +8,7 @@ import {IGetChatMessagesResponse} from "../../../types/responses/IGetChatMessage
 import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
-import {GroupType} from "../../../types/enums/GroupType";
+import {ChatType} from "../../../types/enums/ChatType";
 import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 
@@ -109,10 +109,10 @@ export class MainComponent implements OnInit {
           this.chats = data.chats.filter(x => !x.isArchived);
           break;
         case 'Groups':
-          this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel || x.chatType === GroupType.PublicChannel);
+          this.chats = data.chats.filter(x => x.chatType === ChatType.ReadOnlyChannel || x.chatType === ChatType.PublicChannel);
           break;
         case 'Direct Chats':
-          this.chats = data.chats.filter(x => x.chatType === GroupType.DirectChat);
+          this.chats = data.chats.filter(x => x.chatType === ChatType.DirectChat);
           break;
         case 'Archived':
           this.chats = data.chats.filter(x => x.isArchived);
@@ -154,5 +154,9 @@ export class MainComponent implements OnInit {
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  getMessageComponentClass(chat: IChat): string {
+    return chat.chatId === this.activeChatId ? 'contacts-item friends active' : 'contacts-item friends';
   }
 }

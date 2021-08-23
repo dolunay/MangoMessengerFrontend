@@ -120,13 +120,8 @@
             <ul class="contacts-list" id="chatContactTab" data-chat-list="">
               <!-- Chat Item Start -->
               <li *ngFor="let chat of chats">
-                <app-chat-item-active [chatName]="chat.title"
-                                      [lastMessageAuthor]="chat.lastMessageAuthor"
-                                      [lastMessage]="chat.lastMessage"
-                                      [lastMessageDateTime]="chat.lastMessageAt"
-                                      [chatId]="chat.chatId"
-                                      (click)="getChatMessages(chat.chatId)"
-                                      [ngClass]="chat.chatId === activeChatId ? 'contacts-item friends active' : 'contacts-item friends'">
+                <app-chat-item-active [chat]="chat" (click)="getChatMessages(chat.chatId)"
+                                      [ngClass]="getMessageComponentClass(chat)">
                 </app-chat-item-active>
               </li>
               <!-- Chat Item End -->

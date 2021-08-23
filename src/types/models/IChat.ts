@@ -1,4 +1,4 @@
-﻿import {GroupType} from "../enums/GroupType";
+﻿import {ChatType} from "../enums/ChatType";
 
 export interface IChat {
   chatId: string;
@@ -8,6 +8,6 @@ export interface IChat {
   lastMessage: string;
   lastMessageAt: string;
   membersCount: number;
-  chatType: GroupType;
+  chatType: ChatType;
   isArchived: boolean;
 }
