@@ -1,6 +1,6 @@
 ﻿import {IBaseResponse} from "./IBaseResponse";
 
-export interface ILoginResponse extends IBaseResponse {
+export interface ITokensResponse extends IBaseResponse {
   accessToken: string;
   refreshToken: string;
 }

@@ -1,19 +1,17 @@
 ﻿import {Observable} from "rxjs";
-import {HttpHeaders} from "@angular/common/http";
-import {ILoginResponse} from "../responses/ILoginResponse";
 import {LoginCommand} from "../requests/LoginCommand";
-import {IRefreshTokenResponse} from "../responses/IRefreshTokenResponse";
-import {ILogoutResponse} from "../responses/ILogoutResponse";
+import {ITokensResponse} from "../responses/ITokensResponse";
+import {IBaseResponse} from "../responses/IBaseResponse";
 
 export interface ISessionService {
 
-  postSession(command: LoginCommand): Observable<ILoginResponse>;
+  postSession(command: LoginCommand): Observable<ITokensResponse>;
 
-  postRefreshSession(refreshToken: string | null): Observable<IRefreshTokenResponse>;
+  postRefreshSession(refreshToken: string | null): Observable<ITokensResponse>;
 
-  deleteSession(refreshToken: string | null): Observable<ILogoutResponse>;
+  deleteSession(refreshToken: string | null): Observable<IBaseResponse>;
 
-  deleteAllSessions(refreshToken: string | null): Observable<ILogoutResponse>;
+  deleteAllSessions(refreshToken: string | null): Observable<IBaseResponse>;
 
   getRefreshToken(): string | null;
 
@@ -22,6 +20,4 @@ export interface ISessionService {
   writeAccessToken(token: string): void;
 
   writeRefreshToken(tokenId: string): void;
-
-  getHeader(): HttpHeaders;
 }

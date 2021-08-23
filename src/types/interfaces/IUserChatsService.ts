@@ -1,13 +1,11 @@
 ﻿import {ArchiveChatCommand} from "../requests/ArchiveChatCommand";
 import {Observable} from "rxjs";
-import {IArchiveChatResponse} from "../responses/IArchiveChatResponse";
-import {IJoinGroupResponse} from "../responses/IJoinGroupResponse";
 import {IBaseResponse} from "../responses/IBaseResponse";
 
 export interface IUserChatsService {
-  postJoinChat(chatId: string): Observable<IJoinGroupResponse>;
+  postJoinChat(chatId: string): Observable<IBaseResponse>;
 
-  putArchiveChat(request: ArchiveChatCommand): Observable<IArchiveChatResponse>;
+  putArchiveChat(request: ArchiveChatCommand): Observable<IBaseResponse>;
 
   deleteLeaveChat(chatId: string): Observable<IBaseResponse>;
 }

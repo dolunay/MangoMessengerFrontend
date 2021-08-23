@@ -1,12 +1,11 @@
 import {Observable} from "rxjs";
 import {IGetContactsResponse} from "../responses/IGetContactsResponse";
-import {IAddContactResponse} from "../responses/IAddContactResponse";
-import {IDeleteContactResponse} from "../responses/IDeleteContactResponse";
+import {IBaseResponse} from "../responses/IBaseResponse";
 
 export interface IContactsService {
   getContacts(): Observable<IGetContactsResponse>;
 
-  postAddContact(userId: string): Observable<IAddContactResponse>;
+  postAddContact(userId: string): Observable<IBaseResponse>;
 
-  deleteContact(userId: string): Observable<IDeleteContactResponse>;
+  deleteContact(userId: string): Observable<IBaseResponse>;
 }

@@ -6,14 +6,11 @@ import {MessagesService} from "../../services/messages.service";
 import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
 import {IGetChatMessagesResponse} from "../../../types/responses/IGetChatMessagesResponse";
 import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
-import {ISendMessageResponse} from "../../../types/responses/ISendMessageResponse";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
-import {GroupType} from "../../../types/enums/GroupType";
+import {ChatType} from "../../../types/enums/ChatType";
 import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
-import {IArchiveChatResponse} from "../../../types/responses/IArchiveChatResponse";
-import {IBaseResponse} from "../../../types/responses/IBaseResponse";
 
 @Component({
   selector: 'app-main',
@@ -22,8 +19,7 @@ import {IBaseResponse} from "../../../types/responses/IBaseResponse";
 })
 export class MainComponent implements OnInit {
 
-  // @ts-ignore
-  getUserChatsResponse: IGetUserChatsResponse;
+  getUserChatsResponse: IGetUserChatsResponse = {chats: [], message: "", success: false};
 
   messages: IMessage[] = [];
   chats: IChat[] = [];
@@ -44,7 +40,7 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+    this.chatService.getUserChats().subscribe((data) => {
         const routeChatId = this.route.snapshot.paramMap.get('chatId');
         this.getUserChatsResponse = data;
         this.chats = data.chats;
@@ -93,7 +89,7 @@ export class MainComponent implements OnInit {
 
   sendMessage(): void {
     this.messageService.sendMessage(new SendMessageCommand(this.activeMessageText, this.activeChatId))
-      .subscribe((data: ISendMessageResponse) => {
+      .subscribe((_) => {
         this.activeMessageText = '';
         this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
           this.chats = data.chats;
@@ -112,10 +108,10 @@ export class MainComponent implements OnInit {
           this.chats = data.chats.filter(x => !x.isArchived);
           break;
         case 'Groups':
-          this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel || x.chatType === GroupType.PublicChannel);
+          this.chats = data.chats.filter(x => x.chatType === ChatType.ReadOnlyChannel || x.chatType === ChatType.PublicChannel);
           break;
         case 'Direct Chats':
-          this.chats = data.chats.filter(x => x.chatType === GroupType.DirectChat);
+          this.chats = data.chats.filter(x => x.chatType === ChatType.DirectChat);
           break;
         case 'Archived':
           this.chats = data.chats.filter(x => x.isArchived);
@@ -141,7 +137,7 @@ export class MainComponent implements OnInit {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
       const chat = data.chats.filter(x => x.chatId === this.activeChatId)[0];
       const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
-      this.userChatsService.putArchiveChat(command).subscribe((data: IArchiveChatResponse) => {
+      this.userChatsService.putArchiveChat(command).subscribe((_) => {
         this.onChatFilerClick('All Chats');
       }, error => {
         alert(error.error.ErrorMessage);
@@ -152,10 +148,14 @@ export class MainComponent implements OnInit {
   }
 
   onLeaveChatClick(): void {
-    this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe((data: IBaseResponse) => {
+    this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe((_) => {
       this.onChatFilerClick('All Chats');
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  getMessageComponentClass(chat: IChat): string {
+    return chat.chatId === this.activeChatId ? 'contacts-item friends active' : 'contacts-item friends';
   }
 }

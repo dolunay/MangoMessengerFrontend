@@ -1,5 +1,5 @@
 ﻿import { IBaseResponse } from "./IBaseResponse";
 
-export interface ICreateDirectChatResponse extends IBaseResponse {
+export interface ICreateChatResponse extends IBaseResponse {
   chatId: string;
 }

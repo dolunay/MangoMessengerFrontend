@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
 import {LoginCommand} from "../../../types/requests/LoginCommand";
-import {ILoginResponse} from "../../../types/responses/ILoginResponse";
 
 @Component({
   selector: 'app-login',
@@ -18,7 +17,7 @@ export class LoginComponent {
   }
 
   login(): void {
-    this.authService.postSession(new LoginCommand(this.email, this.password)).subscribe((data: ILoginResponse) => {
+    this.authService.postSession(new LoginCommand(this.email, this.password)).subscribe((data) => {
       this.authService.writeAccessToken(data.accessToken);
       this.authService.writeRefreshToken(data.refreshToken);
       this.router.navigateByUrl('main').then(r => r);

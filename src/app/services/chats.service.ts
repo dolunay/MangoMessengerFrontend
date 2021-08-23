@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {SessionService} from "./session.service";
 import {IChatsService} from "../../types/interfaces/IChatsService";
 import {IGetUserChatsResponse} from "../../types/responses/IGetUserChatsResponse";
-import {ICreateDirectChatResponse} from "../../types/responses/ICreateDirectChatResponse";
-import {ICreateGroupResponse} from "../../types/responses/ICreateGroupResponse";
+import {ICreateChatResponse} from "../../types/responses/ICreateChatResponse";
 import {CreateGroupCommand} from "../../types/requests/CreateGroupCommand";
 import {ApiRoute} from "../../consts/ApiRoute";
 
@@ -15,51 +13,22 @@ import {ApiRoute} from "../../consts/ApiRoute";
 export class ChatsService implements IChatsService {
   private chatsRoute = 'api/chats/'
 
-  constructor(private httpClient: HttpClient, private authService: SessionService) {
+  constructor(private httpClient: HttpClient) {
   }
 
   getUserChats(): Observable<IGetUserChatsResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute, header);
+    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute);
   }
 
-  createDirectChat(userId: string): Observable<ICreateDirectChatResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.post<ICreateDirectChatResponse>(ApiRoute.route + this.chatsRoute + userId,
-      {}, header);
+  createDirectChat(userId: string): Observable<ICreateChatResponse> {
+    return this.httpClient.post<ICreateChatResponse>(ApiRoute.route + this.chatsRoute + userId, {});
   }
 
-  createGroup(request: CreateGroupCommand): Observable<ICreateGroupResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.post<ICreateGroupResponse>(ApiRoute.route + this.chatsRoute, request, header);
+  createGroup(request: CreateGroupCommand): Observable<ICreateChatResponse> {
+    return this.httpClient.post<ICreateChatResponse>(ApiRoute.route + this.chatsRoute, request);
   }
 
   searchChat(displayName: string): Observable<IGetUserChatsResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + displayName, header);
+    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + displayName);
   }
 }

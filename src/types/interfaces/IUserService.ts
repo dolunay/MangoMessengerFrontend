@@ -1,30 +1,27 @@
 ﻿import {Observable} from "rxjs";
 import {IGetUserResponse} from "../responses/IGetUserResponse";
 import {RegisterCommand} from "../requests/RegisterCommand";
-import {IRegisterResponse} from "../responses/IRegisterResponse";
-import {IVerifyPhoneCodeResponse} from "../responses/IVerifyPhoneCodeResponse";
 import {VerifyEmailCommand} from "../requests/VerifyEmailCommand";
-import {IVerifyEmailResponse} from "../responses/IVerifyEmailResponse";
 import {UpdateUserInformationCommand} from "../requests/UpdateUserInformationCommand";
-import {IUpdateUserInformationResponse} from "../responses/IUpdateUserInformationResponse";
 import {ISearchResponse} from "../responses/ISearchResponse";
 import {ChangePasswordCommand} from "../requests/ChangePasswordCommand";
-import {IChangePasswordResponse} from "../responses/IChangePasswordResponse";
+import {ITokensResponse} from "../responses/ITokensResponse";
+import {IBaseResponse} from "../responses/IBaseResponse";
 
 export interface IUserService {
-  postUser(command: RegisterCommand): Observable<IRegisterResponse>;
+  postUser(command: RegisterCommand): Observable<ITokensResponse>;
 
-  putPhoneConfirmation(phoneCode: number): Observable<IVerifyPhoneCodeResponse>;
+  putPhoneConfirmation(phoneCode: number): Observable<IBaseResponse>;
 
   getUserById(userId: string): Observable<IGetUserResponse>;
 
   getCurrentUser(): Observable<IGetUserResponse>;
 
-  putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse>;
+  putEmailConfirmation(request: VerifyEmailCommand): Observable<IBaseResponse>;
 
-  putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IUpdateUserInformationResponse>;
+  putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IBaseResponse>;
 
   postSearch(displayName: string): Observable<ISearchResponse>;
 
-  putChangePassword(request: ChangePasswordCommand): Observable<IChangePasswordResponse>;
+  putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse>;
 }
