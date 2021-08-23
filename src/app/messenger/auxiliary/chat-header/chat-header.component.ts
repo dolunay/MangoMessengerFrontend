@@ -13,9 +13,16 @@ export class ChatHeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  // @ts-ignore
-  @Input() chatTitle: string;
-  // @ts-ignore
-  @Input() membersCount: number;
+  @Input() chatTitle: string = '';
+  @Input() membersCount: number = 0;
+  @Input() chatId: string = '';
+
+  onArchiveClick(): void {
+    console.log(this.chatId);
+  }
+
+  onDeleteClick(): void {
+    console.log(this.chatId);
+  }
 
 }

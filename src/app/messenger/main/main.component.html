@@ -94,7 +94,8 @@
                            class="form-control search border-right-0 transparent-bg pr-0"
                            placeholder="Search chats..." value="{{searchQuery}}">
                     <div class="input-group-append">
-                      <div class="input-group-text transparent-bg border-left-0" role="button" (click)="onSearchClick()">
+                      <div class="input-group-text transparent-bg border-left-0" role="button"
+                           (click)="onSearchClick()">
                         <!-- Default :: Inline SVG -->
                         <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                              stroke="currentColor">
@@ -148,7 +149,8 @@
     <div class="chats">
       <div class="chat-body">
         <!-- Chat Header Start-->
-        <app-chat-header [chatTitle]="activeChatTitle" [membersCount]="activeChatMembersCount"></app-chat-header>
+        <app-chat-header [chatTitle]="activeChatTitle" [membersCount]="activeChatMembersCount"
+                         [chatId]="activeChatId"></app-chat-header>
         <!-- Chat Header End-->
 
         <!-- Search Start -->

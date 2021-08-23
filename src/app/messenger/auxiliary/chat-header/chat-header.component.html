@@ -42,7 +42,7 @@
     <li class="nav-item list-inline-item d-none d-sm-block mr-0">
       <div class="dropdown">
         <div class="nav-link text-muted px-1" role="button" title="Details"
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <!-- Default :: Inline SVG -->
           <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -51,7 +51,7 @@
         </div>
 
         <div class="dropdown-menu dropdown-menu-right">
-          <div class="dropdown-item align-items-center d-flex">
+          <div class="dropdown-item align-items-center d-flex" (click)="onArchiveClick()">
             <!-- Default :: Inline SVG -->
             <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -62,7 +62,7 @@
             <!-- <img src="./../assets/media/heroicons/outline/archive.svg" alt="" class="injectable hw-20 mr-2"> -->
             <span>Archive</span>
           </div>
-          <div class="dropdown-item align-items-center d-flex">
+          <div class="dropdown-item align-items-center d-flex" (click)="onDeleteClick()">
             <!-- Default :: Inline SVG -->
             <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
