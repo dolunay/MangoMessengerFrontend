@@ -6,6 +6,7 @@ import {SessionService} from "./session.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {IAddContactResponse} from "../../types/responses/IAddContactResponse";
 import {ApiRoute} from "../../consts/ApiRoute";
+import {IDeleteContactResponse} from "../../types/responses/IDeleteContactResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,16 @@ export class ContactsService implements IContactsService {
     };
 
     return this.httpClient.post<IGetContactsResponse>(ApiRoute.route + this.contactsRoute + userId, {}, header);
+  }
+
+  deleteContact(userId: string): Observable<IDeleteContactResponse> {
+    const accessToken = this.sessionService.getAccessToken();
+
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${accessToken}`)
+    };
+
+    return this.httpClient.delete<IGetContactsResponse>(ApiRoute.route + this.contactsRoute + userId, header);
   }
 }
