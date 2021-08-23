@@ -1,4 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {UserChatsService} from "../../../services/user-chats.service";
+import {ChatsService} from "../../../services/chats.service";
+import {IGetUserChatsResponse} from "../../../../types/responses/IGetUserChatsResponse";
+import {ArchiveChatCommand} from "../../../../types/requests/ArchiveChatCommand";
+import {IArchiveChatResponse} from "../../../../types/responses/IArchiveChatResponse";
 
 @Component({
   selector: 'app-chat-header',
@@ -7,7 +12,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ChatHeaderComponent implements OnInit {
 
-  constructor() {
+  constructor(private userChatsService: UserChatsService, private chatService: ChatsService) {
   }
 
   ngOnInit(): void {
@@ -18,7 +23,17 @@ export class ChatHeaderComponent implements OnInit {
   @Input() chatId: string = '';
 
   onArchiveClick(): void {
-    console.log(this.chatId);
+    this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+      const chat = data.chats.filter(x => x.chatId === this.chatId)[0];
+      const command = new ArchiveChatCommand(this.chatId, !chat.isArchived);
+      console.log(command);
+      this.userChatsService.putArchiveChat(command).subscribe((data: IArchiveChatResponse) => {
+      }, error => {
+        alert(error.error.ErrorMessage);
+      })
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
   }
 
   onDeleteClick(): void {

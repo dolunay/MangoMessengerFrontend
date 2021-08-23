@@ -104,7 +104,7 @@ export class MainComponent implements OnInit {
       this.getUserChatsResponse = data;
       switch (filer) {
         case 'All Chats':
-          this.chats = data.chats;
+          this.chats = data.chats.filter(x => !x.isArchived);
           break;
         case 'Groups':
           this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel || x.chatType === GroupType.PublicChannel);
