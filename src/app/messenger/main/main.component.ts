@@ -102,7 +102,7 @@ export class MainComponent implements OnInit {
 
   onChatFilerClick(filer: string): void {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
-      this.getUserChatsResponse = data;
+
       switch (filer) {
         case 'All Chats':
           this.chats = data.chats.filter(x => !x.isArchived);
@@ -117,9 +117,16 @@ export class MainComponent implements OnInit {
           this.chats = data.chats.filter(x => x.isArchived);
           break;
         default:
+          this.chats = data.chats;
+          const firstChat = data.chats[0];
+          if (firstChat) {
+            this.getChatMessages(firstChat.chatId);
+          }
           break;
       }
+
       this.chatFilter = filer;
+
     });
   }
 
@@ -149,7 +156,7 @@ export class MainComponent implements OnInit {
 
   onLeaveChatClick(): void {
     this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe((_) => {
-      this.onChatFilerClick('All Chats');
+      this.onChatFilerClick('');
     }, error => {
       alert(error.error.ErrorMessage);
     })
