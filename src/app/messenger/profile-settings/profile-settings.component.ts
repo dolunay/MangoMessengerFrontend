@@ -71,6 +71,8 @@ export class ProfileSettingsComponent implements OnInit {
       this.bio,
       this.address);
 
+    command.website = this.website;
+
     this.userService.putUpdateUserInformation(command).subscribe((_) => {
 
     }, error => {
