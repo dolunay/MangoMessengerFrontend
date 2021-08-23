@@ -160,6 +160,6 @@ export class MainComponent implements OnInit {
   }
 
   deleteMessageFromMemory(messageId: string) {
-    alert(messageId);
+    this.messages = this.messages.filter(x => x.messageId !== messageId);
   }
 }
