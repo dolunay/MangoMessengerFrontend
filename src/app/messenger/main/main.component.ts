@@ -106,6 +106,10 @@ export class MainComponent implements OnInit {
       switch (filer) {
         case 'All Chats':
           this.chats = data.chats.filter(x => !x.isArchived);
+          const firstChat = data.chats[0];
+          if (firstChat) {
+            this.getChatMessages(firstChat.chatId);
+          }
           break;
         case 'Groups':
           this.chats = data.chats.filter(x => x.chatType === ChatType.ReadOnlyChannel || x.chatType === ChatType.PublicChannel);
@@ -117,11 +121,6 @@ export class MainComponent implements OnInit {
           this.chats = data.chats.filter(x => x.isArchived);
           break;
         default:
-          this.chats = data.chats;
-          const firstChat = data.chats[0];
-          if (firstChat) {
-            this.getChatMessages(firstChat.chatId);
-          }
           break;
       }
 
@@ -156,7 +155,7 @@ export class MainComponent implements OnInit {
 
   onLeaveChatClick(): void {
     this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe((_) => {
-      this.onChatFilerClick('');
+      this.onChatFilerClick('All Chats');
     }, error => {
       alert(error.error.ErrorMessage);
     })
