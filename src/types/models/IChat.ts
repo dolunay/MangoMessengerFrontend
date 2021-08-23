@@ -9,4 +9,5 @@ export interface IChat {
   lastMessageAt: string;
   membersCount: number;
   chatType: GroupType;
+  isArchived: boolean;
 }

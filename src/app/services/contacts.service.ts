@@ -4,8 +4,8 @@ import {Observable} from "rxjs";
 import {IGetContactsResponse} from "../../types/responses/IGetContactsResponse";
 import {SessionService} from "./session.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {ApiRoute} from "../../consts/Routes";
 import {IAddContactResponse} from "../../types/responses/IAddContactResponse";
+import {ApiRoute} from "../../consts/ApiRoute";
 
 @Injectable({
   providedIn: 'root'
