@@ -26,7 +26,6 @@ export class ChatHeaderComponent implements OnInit {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
       const chat = data.chats.filter(x => x.chatId === this.chatId)[0];
       const command = new ArchiveChatCommand(this.chatId, !chat.isArchived);
-      console.log(command);
       this.userChatsService.putArchiveChat(command).subscribe((data: IArchiveChatResponse) => {
       }, error => {
         alert(error.error.ErrorMessage);
