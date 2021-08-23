@@ -24,8 +24,25 @@ export class ContactsComponent implements OnInit {
   }
 
   userContacts: IContact[] = [];
-  // @ts-ignore
-  currentUser: IUser = {};
+
+  currentUser: IUser = {
+    address: "",
+    bio: "",
+    birthdayDate: "",
+    displayName: "",
+    email: "",
+    facebook: "",
+    firstName: "",
+    instagram: "",
+    lastName: "",
+    linkedIn: "",
+    phoneNumber: "",
+    twitter: "",
+    userId: "",
+    username: "",
+    website: ""
+  };
+
   userSearchQuery = '';
   contactsFilter = 'All Contacts';
   activeContactId = '';
