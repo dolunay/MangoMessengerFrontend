@@ -21,9 +21,10 @@ import {ProfileSettingsSidebarComponent} from "./messenger/auxiliary/profile-set
 import {ProfileLogoutButtonComponent} from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
 import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
 import {ContactItemComponent} from "./messenger/auxiliary/contact-item/contact-item.component";
-import { CreateGroupComponent } from './messenger/modals/create-group/create-group.component';
-import { InviteOthersComponent } from './messenger/modals/invite-others/invite-others.component';
-import { NotificationsComponent } from './messenger/modals/notifications/notifications.component';
+import {CreateGroupComponent} from './messenger/modals/create-group/create-group.component';
+import {InviteOthersComponent} from './messenger/modals/invite-others/invite-others.component';
+import {NotificationsComponent} from './messenger/modals/notifications/notifications.component';
+import {RequestHeaderInterceptor} from "./interceptors/request-header.interceptor";
 
 @NgModule({
   declarations: [
@@ -65,11 +66,10 @@ import { NotificationsComponent } from './messenger/modals/notifications/notific
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true
-  }],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: RequestHeaderInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

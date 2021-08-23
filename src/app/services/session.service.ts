@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Tokens} from "../../consts/Tokens";
 import {ISessionService} from "../../types/interfaces/ISessionService";
@@ -27,23 +27,11 @@ export class SessionService implements ISessionService {
   }
 
   deleteSession(refreshToken: string | null): Observable<IBaseResponse> {
-    const accessToken = this.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.sessionsRoute + refreshToken, header);
+    return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.sessionsRoute + refreshToken);
   }
 
   deleteAllSessions(refreshToken: string | null): Observable<IBaseResponse> {
-    const accessToken = this.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.sessionsRoute, header);
+    return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.sessionsRoute);
   }
 
   getAccessToken(): string | null {

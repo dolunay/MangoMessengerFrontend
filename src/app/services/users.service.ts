@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
-import {SessionService} from "./session.service";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {IUserService} from "../../types/interfaces/IUserService";
 import {IGetUserResponse} from "../../types/responses/IGetUserResponse";
 import {RegisterCommand} from "../../types/requests/RegisterCommand";
@@ -19,27 +18,15 @@ import {IBaseResponse} from "../../types/responses/IBaseResponse";
 export class UsersService implements IUserService {
   private usersRoute = 'api/users/'
 
-  constructor(private authService: SessionService, private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) {
   }
 
   getCurrentUser(): Observable<IGetUserResponse> {
-    const accessToken = this.authService.getAccessToken();
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute, header);
+    return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute);
   }
 
   getUserById(userId: string): Observable<IGetUserResponse> {
-    const accessToken = this.authService.getAccessToken();
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute + userId, header);
+    return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute + userId);
   }
 
   postUser(command: RegisterCommand): Observable<ITokensResponse> {
@@ -47,54 +34,23 @@ export class UsersService implements IUserService {
   }
 
   putEmailConfirmation(request: VerifyEmailCommand): Observable<IBaseResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
-    };
-
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'email-confirmation/',
-      request, header);
+      request);
   }
 
   putPhoneConfirmation(phoneCode: number): Observable<IBaseResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + phoneCode,
-      {}, header);
+    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + phoneCode, {});
   }
 
   postSearch(displayName: string): Observable<ISearchResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.post<ISearchResponse>(ApiRoute.route + this.usersRoute + displayName, {}, header);
+    return this.httpClient.post<ISearchResponse>(ApiRoute.route + this.usersRoute + displayName, {});
   }
 
   putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IBaseResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.put<ISearchResponse>(ApiRoute.route + this.usersRoute + 'information/', request, header);
+    return this.httpClient.put<ISearchResponse>(ApiRoute.route + this.usersRoute + 'information/', request);
   }
 
   putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'password/', request, header);
+    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'password/', request);
   }
 }
