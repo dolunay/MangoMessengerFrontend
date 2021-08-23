@@ -136,7 +136,7 @@ export class MainComponent implements OnInit {
     })
   }
 
-  onArchiveClick(): void {
+  onArchiveChatClick(): void {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
       const chat = data.chats.filter(x => x.chatId === this.activeChatId)[0];
       const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
@@ -150,7 +150,7 @@ export class MainComponent implements OnInit {
     })
   }
 
-  onDeleteClick(): void {
+  onLeaveChatClick(): void {
     console.log(this.activeChatId);
   }
 }

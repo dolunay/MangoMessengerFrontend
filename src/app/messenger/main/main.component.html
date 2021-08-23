@@ -56,8 +56,8 @@
                         <div class="dropdown-item" role="button" data-toggle="modal" data-target="#createGroup">Create
                           Group
                         </div>
-                        <div class="dropdown-item" role="button" data-toggle="modal" data-target="#inviteOthers">Invite
-                          Others
+                        <div class="dropdown-item" role="button" data-toggle="modal" data-target="#inviteOthers">
+                          Invite Others
                         </div>
                       </div>
                     </div>
@@ -178,7 +178,8 @@
           <!-- Chat Options -->
           <ul class="nav flex-nowrap">
             <li class="nav-item list-inline-item d-none d-sm-block mr-1">
-              <div class="nav-link text-muted px-1" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false">
+              <div class="nav-link text-muted px-1" data-toggle="collapse" data-target="#searchCollapse"
+                   aria-expanded="false">
                 <!-- Default :: Inline SVG -->
                 <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -202,7 +203,7 @@
                 </div>
 
                 <div class="dropdown-menu dropdown-menu-right">
-                  <div class="dropdown-item align-items-center d-flex" (click)="onArchiveClick()">
+                  <div class="dropdown-item align-items-center d-flex" (click)="onArchiveChatClick()">
                     <!-- Default :: Inline SVG -->
                     <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -211,9 +212,9 @@
 
                     <!-- Alternate :: External File link -->
                     <!-- <img src="./../assets/media/heroicons/outline/archive.svg" alt="" class="injectable hw-20 mr-2"> -->
-                    <span>Archive</span>
+                    <span>Archive Chat</span>
                   </div>
-                  <div class="dropdown-item align-items-center d-flex" (click)="onDeleteClick()">
+                  <div class="dropdown-item align-items-center d-flex" (click)="onLeaveChatClick()">
                     <!-- Default :: Inline SVG -->
                     <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -222,7 +223,7 @@
 
                     <!-- Alternate :: External File link -->
                     <!-- <img src="./../assets/media/heroicons/outline/trash.svg" alt="" class="injectable hw-20 mr-2"> -->
-                    <span>Delete</span>
+                    <span>Leave Chat</span>
                   </div>
                 </div>
               </div>
@@ -238,17 +239,13 @@
               <input type="text" class="form-control form-control-md border-right-0 transparent-bg pr-0"
                      placeholder="Search...">
               <div class="input-group-append">
-                                    <span class="input-group-text transparent-bg border-left-0">
-                                        <!-- Default :: Inline SVG -->
-                                        <svg class="hw-20 text-muted" fill="none" viewBox="0 0 24 24"
-                                             stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                        </svg>
-
-                                      <!-- Alternate :: External File link -->
-                                      <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/search.svg" alt="Search icon"> -->
-                                    </span>
+                <span class="input-group-text transparent-bg border-left-0">
+                  <!-- Default :: Inline SVG -->
+                  <svg class="hw-20 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                  </svg>
+                </span>
               </div>
             </div>
           </div>
@@ -412,10 +409,6 @@
         </div>
         <!-- Chat Footer End-->
       </div>
-
-      <!-- Chat Info Start -->
-      <app-chat-info></app-chat-info>
-      <!-- Chat Info End -->
     </div>
     <!-- Chats Page End -->
 
