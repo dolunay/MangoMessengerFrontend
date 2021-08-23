@@ -10,6 +10,7 @@ import {IAddContactResponse} from "../../../types/responses/IAddContactResponse"
 import {ChatsService} from "../../services/chats.service";
 import {ICreateDirectChatResponse} from "../../../types/responses/ICreateDirectChatResponse";
 import {ActivatedRoute, Router} from "@angular/router";
+import {IDeleteContactResponse} from "../../../types/responses/IDeleteContactResponse";
 
 @Component({
   selector: 'app-contacts',
@@ -72,7 +73,7 @@ export class ContactsComponent implements OnInit {
 
   onAddContactClick() {
     this.contactsService.postAddContact(this.activeContactId).subscribe((data: IAddContactResponse) => {
-      alert(data.message);
+      this.onFilterClick('All Contacts');
     }, error => {
       alert(error.error.ErrorMessage);
     });
@@ -87,6 +88,10 @@ export class ContactsComponent implements OnInit {
   }
 
   onRemoveContactClick() {
-
+    this.contactsService.deleteContact(this.activeContactId).subscribe((data: IDeleteContactResponse) => {
+      this.onFilterClick('All Contacts');
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
   }
 }
