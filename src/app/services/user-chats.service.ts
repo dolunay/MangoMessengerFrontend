@@ -7,6 +7,7 @@ import {IArchiveChatResponse} from "../../types/responses/IArchiveChatResponse";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SessionService} from "./session.service";
 import {ApiRoute} from "../../consts/ApiRoute";
+import {IBaseResponse} from "../../types/responses/IBaseResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,16 @@ export class UserChatsService implements IUserChatsService {
     };
 
     return this.httpClient.put<IArchiveChatResponse>(ApiRoute.route + this.userChatsRoute, request, header);
+  }
+
+  deleteLeaveChat(chatId: string): Observable<IBaseResponse> {
+    const accessToken = this.sessionService.getAccessToken();
+
+    const header = {
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${accessToken}`)
+    };
+
+    return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.userChatsRoute + chatId, header);
   }
 }

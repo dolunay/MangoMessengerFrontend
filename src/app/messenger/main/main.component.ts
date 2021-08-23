@@ -13,6 +13,7 @@ import {GroupType} from "../../../types/enums/GroupType";
 import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {IArchiveChatResponse} from "../../../types/responses/IArchiveChatResponse";
+import {IBaseResponse} from "../../../types/responses/IBaseResponse";
 
 @Component({
   selector: 'app-main',
@@ -151,6 +152,10 @@ export class MainComponent implements OnInit {
   }
 
   onLeaveChatClick(): void {
-    console.log(this.activeChatId);
+    this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe((data: IBaseResponse) => {
+      this.onChatFilerClick('All Chats');
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
   }
 }
