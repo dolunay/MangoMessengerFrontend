@@ -16,7 +16,6 @@ import {NavigationBarComponent} from './messenger/auxiliary/navigation-bar/navig
 import {ReceivedMessageComponent} from './messenger/auxiliary/received-message/received-message.component';
 import {ChatFooterComponent} from './messenger/auxiliary/chat-footer/chat-footer.component';
 import {ChatItemActiveComponent} from './messenger/auxiliary/chat-item-active/chat-item-active.component';
-import {GroupItemComponent} from './messenger/auxiliary/group-item/group-item.component';
 import {ProfileSettingsSidebarComponent} from "./messenger/auxiliary/profile-settings-sidebar/profile-settings-sidebar.component";
 import {ProfileLogoutButtonComponent} from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
 import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
@@ -40,7 +39,6 @@ import {RequestHeaderInterceptor} from "./interceptors/request-header.intercepto
     ReceivedMessageComponent,
     ChatFooterComponent,
     ChatItemActiveComponent,
-    GroupItemComponent,
     ProfileSettingsSidebarComponent,
     ProfileLogoutButtonComponent,
     ContactItemComponent,
