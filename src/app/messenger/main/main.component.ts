@@ -10,6 +10,9 @@ import {ISendMessageResponse} from "../../../types/responses/ISendMessageRespons
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
 import {GroupType} from "../../../types/enums/GroupType";
+import {UserChatsService} from "../../services/user-chats.service";
+import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
+import {IArchiveChatResponse} from "../../../types/responses/IArchiveChatResponse";
 
 @Component({
   selector: 'app-main',
@@ -34,6 +37,7 @@ export class MainComponent implements OnInit {
   constructor(private authService: SessionService,
               private chatService: ChatsService,
               private messageService: MessagesService,
+              private userChatsService: UserChatsService,
               private route: ActivatedRoute,
               private router: Router) {
   }
@@ -130,5 +134,23 @@ export class MainComponent implements OnInit {
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  onArchiveClick(): void {
+    this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+      const chat = data.chats.filter(x => x.chatId === this.activeChatId)[0];
+      const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
+      this.userChatsService.putArchiveChat(command).subscribe((data: IArchiveChatResponse) => {
+        this.onChatFilerClick('All Chats');
+      }, error => {
+        alert(error.error.ErrorMessage);
+      })
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  onDeleteClick(): void {
+    console.log(this.activeChatId);
   }
 }
