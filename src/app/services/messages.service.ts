@@ -8,6 +8,7 @@ import {ISendMessageResponse} from "../../types/responses/ISendMessageResponse";
 import {EditMessageCommand} from "../../types/requests/EditMessageCommand";
 import {ApiRoute} from "../../consts/ApiRoute";
 import {IBaseResponse} from "../../types/responses/IBaseResponse";
+import {IDeleteMessageResponse} from "../../types/responses/IDeleteMessageResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,8 @@ export class MessagesService implements IMessagesService {
     return this.httpClient.post<ISendMessageResponse>(ApiRoute.route + this.messagesRoute, request);
   }
 
-  deleteMessage(messageId: number): Observable<IBaseResponse> {
-    return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.messagesRoute + messageId);
+  deleteMessage(messageId: string): Observable<IDeleteMessageResponse> {
+    return this.httpClient.delete<IDeleteMessageResponse>(ApiRoute.route + this.messagesRoute + messageId);
   }
 
   editMessage(request: EditMessageCommand): Observable<IBaseResponse> {

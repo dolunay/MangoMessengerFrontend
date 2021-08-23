@@ -1,5 +1,6 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {IMessage} from "../../../../types/models/IMessage";
+import {MessagesService} from "../../../services/messages.service";
 
 @Component({
   selector: 'app-received-message',
@@ -8,7 +9,7 @@ import {IMessage} from "../../../../types/models/IMessage";
 })
 export class ReceivedMessageComponent {
 
-  constructor() {
+  constructor(private messageService: MessagesService) {
   }
 
   @Input() message: IMessage = {
@@ -19,4 +20,14 @@ export class ReceivedMessageComponent {
     sentAt: "",
     userDisplayName: ""
   };
+
+  @Output() notifyParentOnDelete = new EventEmitter<string>();
+
+  deleteMessage() : void {
+    this.messageService.deleteMessage(this.message.messageId).subscribe((data) => {
+      this.notifyParentOnDelete.emit(data.messageId);
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
 }
