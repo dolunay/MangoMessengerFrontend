@@ -112,6 +112,9 @@ export class MainComponent implements OnInit {
         case 'Direct Chats':
           this.chats = data.chats.filter(x => x.chatType === GroupType.DirectChat);
           break;
+        case 'Archived':
+          this.chats = data.chats.filter(x => x.isArchived);
+          break;
         default:
           break;
       }
