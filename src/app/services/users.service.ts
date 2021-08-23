@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {SessionService} from "./session.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {ApiRoute} from "../../consts/Routes";
 import {IUserService} from "../../types/interfaces/IUserService";
 import {IGetUserResponse} from "../../types/responses/IGetUserResponse";
 import {RegisterCommand} from "../../types/requests/RegisterCommand";
@@ -15,6 +14,7 @@ import {UpdateUserInformationCommand} from "../../types/requests/UpdateUserInfor
 import {IUpdateUserInformationResponse} from "../../types/responses/IUpdateUserInformationResponse";
 import {ChangePasswordCommand} from "../../types/requests/ChangePasswordCommand";
 import {IChangePasswordResponse} from "../../types/responses/IChangePasswordResponse";
+import {ApiRoute} from "../../consts/ApiRoute";
 
 @Injectable({
   providedIn: 'root'

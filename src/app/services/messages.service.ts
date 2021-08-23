@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ApiRoute} from "../../consts/Routes";
 import {SessionService} from "./session.service";
 import {IMessagesService} from "../../types/interfaces/IMessagesService";
 import {IGetChatMessagesResponse} from "../../types/responses/IGetChatMessagesResponse";
@@ -10,6 +9,7 @@ import {ISendMessageResponse} from "../../types/responses/ISendMessageResponse";
 import {IDeleteMessageResponse} from "../../types/responses/IDeleteMessageResponse";
 import {IEditMessageResponse} from "../../types/responses/IEditMessageResponse";
 import {EditMessageCommand} from "../../types/requests/EditMessageCommand";
+import {ApiRoute} from "../../consts/ApiRoute";
 
 @Injectable({
   providedIn: 'root'

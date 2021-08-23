@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ApiRoute} from "../../consts/Routes";
 import {Tokens} from "../../consts/Tokens";
 import {ISessionService} from "../../types/interfaces/ISessionService";
 import {ILoginResponse} from "../../types/responses/ILoginResponse";
 import {LoginCommand} from "../../types/requests/LoginCommand";
 import {IRefreshTokenResponse} from "../../types/responses/IRefreshTokenResponse";
 import {ILogoutResponse} from "../../types/responses/ILogoutResponse";
+import {ApiRoute} from "../../consts/ApiRoute";
 
 @Injectable({
   providedIn: 'root'
