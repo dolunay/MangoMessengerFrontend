@@ -19,8 +19,7 @@ import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 })
 export class MainComponent implements OnInit {
 
-  // @ts-ignore
-  getUserChatsResponse: IGetUserChatsResponse;
+  getUserChatsResponse: IGetUserChatsResponse = {chats: [], message: "", success: false};
 
   messages: IMessage[] = [];
   chats: IChat[] = [];
