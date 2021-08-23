@@ -2,9 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
 import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
 import {UpdateUserInformationCommand} from "../../../types/requests/UpdateUserInformationCommand";
-import {IUpdateUserInformationResponse} from "../../../types/responses/IUpdateUserInformationResponse";
 import {ChangePasswordCommand} from "../../../types/requests/ChangePasswordCommand";
-import {IChangePasswordResponse} from "../../../types/responses/IChangePasswordResponse";
 
 @Component({
   selector: 'app-profile-settings',
@@ -73,7 +71,7 @@ export class ProfileSettingsComponent implements OnInit {
       this.bio,
       this.address);
 
-    this.userService.putUpdateUserInformation(command).subscribe((data: IUpdateUserInformationResponse) => {
+    this.userService.putUpdateUserInformation(command).subscribe((_) => {
 
     }, error => {
       alert(error.message);
@@ -87,7 +85,7 @@ export class ProfileSettingsComponent implements OnInit {
     command.instagram = this.instagram;
     command.linkedIn = this.linkedIn;
 
-    this.userService.putUpdateUserInformation(command).subscribe((data: IUpdateUserInformationResponse) => {
+    this.userService.putUpdateUserInformation(command).subscribe((_) => {
 
     }, error => {
       alert(error.message);
@@ -101,7 +99,7 @@ export class ProfileSettingsComponent implements OnInit {
     }
 
     const command = new ChangePasswordCommand(this.currentPassword, this.newPassword);
-    this.userService.putChangePassword(command).subscribe((data: IChangePasswordResponse) => {
+    this.userService.putChangePassword(command).subscribe((_) => {
       alert('Password changed OK.');
     }, error => {
       alert(error.error.ErrorMessage);

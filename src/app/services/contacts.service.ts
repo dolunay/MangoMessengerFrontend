@@ -4,9 +4,8 @@ import {Observable} from "rxjs";
 import {IGetContactsResponse} from "../../types/responses/IGetContactsResponse";
 import {SessionService} from "./session.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {IAddContactResponse} from "../../types/responses/IAddContactResponse";
 import {ApiRoute} from "../../consts/ApiRoute";
-import {IDeleteContactResponse} from "../../types/responses/IDeleteContactResponse";
+import {IBaseResponse} from "../../types/responses/IBaseResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +27,7 @@ export class ContactsService implements IContactsService {
     return this.httpClient.get<IGetContactsResponse>(ApiRoute.route + this.contactsRoute, header);
   }
 
-  postAddContact(userId: string): Observable<IAddContactResponse> {
+  postAddContact(userId: string): Observable<IBaseResponse> {
     const accessToken = this.sessionService.getAccessToken();
 
     const header = {
@@ -39,7 +38,7 @@ export class ContactsService implements IContactsService {
     return this.httpClient.post<IGetContactsResponse>(ApiRoute.route + this.contactsRoute + userId, {}, header);
   }
 
-  deleteContact(userId: string): Observable<IDeleteContactResponse> {
+  deleteContact(userId: string): Observable<IBaseResponse> {
     const accessToken = this.sessionService.getAccessToken();
 
     const header = {

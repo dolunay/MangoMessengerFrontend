@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Tokens} from "../../../consts/Tokens";
 import {SessionService} from "../../services/session.service";
 import {RefreshTokenCommand} from "../../../types/requests/RefreshTokenCommand";
-import {IRefreshTokenResponse} from "../../../types/responses/IRefreshTokenResponse";
+import {ITokensResponse} from "../../../types/responses/ITokensResponse";
 
 @Component({
   selector: 'app-refresh-token',
@@ -23,7 +23,7 @@ export class RefreshTokenComponent implements OnInit {
     console.log(refreshToken);
     let command = new RefreshTokenCommand(refreshToken);
     console.log(command);
-    this.authService.postRefreshSession(refreshToken).subscribe((data: IRefreshTokenResponse) => {
+    this.authService.postRefreshSession(refreshToken).subscribe((data: ITokensResponse) => {
         if (data.success) {
           localStorage.setItem(Tokens.accessToken, data.accessToken);
           localStorage.setItem(Tokens.refreshToken, data.refreshToken);

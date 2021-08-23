@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IUserChatsService} from "../../types/interfaces/IUserChatsService";
 import {Observable} from "rxjs";
-import {IJoinGroupResponse} from "../../types/responses/IJoinGroupResponse";
 import {ArchiveChatCommand} from "../../types/requests/ArchiveChatCommand";
-import {IArchiveChatResponse} from "../../types/responses/IArchiveChatResponse";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SessionService} from "./session.service";
 import {ApiRoute} from "../../consts/ApiRoute";
@@ -18,7 +16,7 @@ export class UserChatsService implements IUserChatsService {
   constructor(private httpClient: HttpClient, private sessionService: SessionService) {
   }
 
-  postJoinChat(chatId: string): Observable<IJoinGroupResponse> {
+  postJoinChat(chatId: string): Observable<IBaseResponse> {
     const accessToken = this.sessionService.getAccessToken();
 
     const header = {
@@ -26,10 +24,10 @@ export class UserChatsService implements IUserChatsService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.post<IJoinGroupResponse>(ApiRoute.route + this.userChatsRoute + chatId, {}, header);
+    return this.httpClient.post<IBaseResponse>(ApiRoute.route + this.userChatsRoute + chatId, {}, header);
   }
 
-  putArchiveChat(request: ArchiveChatCommand): Observable<IArchiveChatResponse> {
+  putArchiveChat(request: ArchiveChatCommand): Observable<IBaseResponse> {
     const accessToken = this.sessionService.getAccessToken();
 
     const header = {
@@ -37,7 +35,7 @@ export class UserChatsService implements IUserChatsService {
         .set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.put<IArchiveChatResponse>(ApiRoute.route + this.userChatsRoute, request, header);
+    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.userChatsRoute, request, header);
   }
 
   deleteLeaveChat(chatId: string): Observable<IBaseResponse> {

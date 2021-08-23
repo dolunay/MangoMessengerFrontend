@@ -5,16 +5,13 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {IUserService} from "../../types/interfaces/IUserService";
 import {IGetUserResponse} from "../../types/responses/IGetUserResponse";
 import {RegisterCommand} from "../../types/requests/RegisterCommand";
-import {IRegisterResponse} from "../../types/responses/IRegisterResponse";
-import {IVerifyEmailResponse} from "../../types/responses/IVerifyEmailResponse";
 import {VerifyEmailCommand} from "../../types/requests/VerifyEmailCommand";
-import {IVerifyPhoneCodeResponse} from "../../types/responses/IVerifyPhoneCodeResponse";
 import {ISearchResponse} from "../../types/responses/ISearchResponse";
 import {UpdateUserInformationCommand} from "../../types/requests/UpdateUserInformationCommand";
-import {IUpdateUserInformationResponse} from "../../types/responses/IUpdateUserInformationResponse";
 import {ChangePasswordCommand} from "../../types/requests/ChangePasswordCommand";
-import {IChangePasswordResponse} from "../../types/responses/IChangePasswordResponse";
 import {ApiRoute} from "../../consts/ApiRoute";
+import {ITokensResponse} from "../../types/responses/ITokensResponse";
+import {IBaseResponse} from "../../types/responses/IBaseResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -45,29 +42,29 @@ export class UsersService implements IUserService {
     return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute + userId, header);
   }
 
-  postUser(command: RegisterCommand): Observable<IRegisterResponse> {
-    return this.httpClient.post<IRegisterResponse>(ApiRoute.route + this.usersRoute, command);
+  postUser(command: RegisterCommand): Observable<ITokensResponse> {
+    return this.httpClient.post<ITokensResponse>(ApiRoute.route + this.usersRoute, command);
   }
 
-  putEmailConfirmation(request: VerifyEmailCommand): Observable<IVerifyEmailResponse> {
+  putEmailConfirmation(request: VerifyEmailCommand): Observable<IBaseResponse> {
     const accessToken = this.authService.getAccessToken();
 
     const header = {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.put<IVerifyEmailResponse>(ApiRoute.route + this.usersRoute + 'email-confirmation/',
+    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'email-confirmation/',
       request, header);
   }
 
-  putPhoneConfirmation(phoneCode: number): Observable<IVerifyPhoneCodeResponse> {
+  putPhoneConfirmation(phoneCode: number): Observable<IBaseResponse> {
     const accessToken = this.authService.getAccessToken();
 
     const header = {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.put<IVerifyPhoneCodeResponse>(ApiRoute.route + this.usersRoute + phoneCode,
+    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + phoneCode,
       {}, header);
   }
 
@@ -81,7 +78,7 @@ export class UsersService implements IUserService {
     return this.httpClient.post<ISearchResponse>(ApiRoute.route + this.usersRoute + displayName, {}, header);
   }
 
-  putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IUpdateUserInformationResponse> {
+  putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IBaseResponse> {
     const accessToken = this.authService.getAccessToken();
 
     const header = {
@@ -91,13 +88,13 @@ export class UsersService implements IUserService {
     return this.httpClient.put<ISearchResponse>(ApiRoute.route + this.usersRoute + 'information/', request, header);
   }
 
-  putChangePassword(request: ChangePasswordCommand): Observable<IChangePasswordResponse> {
+  putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse> {
     const accessToken = this.authService.getAccessToken();
 
     const header = {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
 
-    return this.httpClient.put<IChangePasswordResponse>(ApiRoute.route + this.usersRoute + 'password/', request, header);
+    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'password/', request, header);
   }
 }

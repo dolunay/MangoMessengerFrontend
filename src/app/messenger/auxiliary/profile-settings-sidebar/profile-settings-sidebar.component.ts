@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SessionService} from "../../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ILogoutResponse} from "../../../../types/responses/ILogoutResponse";
 import {UsersService} from "../../../services/users.service";
 import {IGetUserResponse} from "../../../../types/responses/IGetUserResponse";
 
@@ -51,11 +50,11 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   logout(): void {
     let refreshToken = this.sessionService.getRefreshToken();
     this.sessionService.deleteSession(refreshToken)
-      .subscribe((data: ILogoutResponse) => {
+      .subscribe((_) => {
         this.sessionService.writeAccessToken('');
         this.sessionService.writeRefreshToken('');
         this.router.navigateByUrl('login').then(r => r);
-      }, error => {
+      }, _ => {
         this.sessionService.writeAccessToken('');
         this.sessionService.writeRefreshToken('');
         this.router.navigateByUrl('login').then(r => r);
@@ -65,7 +64,7 @@ export class ProfileSettingsSidebarComponent implements OnInit {
   logoutAll(): void {
     let refreshToken = this.sessionService.getRefreshToken();
     this.sessionService.deleteAllSessions(refreshToken)
-      .subscribe((data: ILogoutResponse) => {
+      .subscribe((_) => {
         this.sessionService.writeAccessToken('');
         this.sessionService.writeRefreshToken('');
         this.router.navigateByUrl('login').then(r => r);

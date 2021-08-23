@@ -3,7 +3,6 @@ import {UserChatsService} from "../../../services/user-chats.service";
 import {ChatsService} from "../../../services/chats.service";
 import {IGetUserChatsResponse} from "../../../../types/responses/IGetUserChatsResponse";
 import {ArchiveChatCommand} from "../../../../types/requests/ArchiveChatCommand";
-import {IArchiveChatResponse} from "../../../../types/responses/IArchiveChatResponse";
 
 @Component({
   selector: 'app-chat-header',
@@ -26,7 +25,7 @@ export class ChatHeaderComponent implements OnInit {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
       const chat = data.chats.filter(x => x.chatId === this.chatId)[0];
       const command = new ArchiveChatCommand(this.chatId, !chat.isArchived);
-      this.userChatsService.putArchiveChat(command).subscribe((data: IArchiveChatResponse) => {
+      this.userChatsService.putArchiveChat(command).subscribe((_) => {
       }, error => {
         alert(error.error.ErrorMessage);
       })

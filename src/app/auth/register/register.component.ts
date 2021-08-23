@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
-import {IRegisterResponse} from "../../../types/responses/IRegisterResponse";
 import {UsersService} from "../../services/users.service";
 import {VerificationMethod} from "../../../types/enums/VerificationMethod";
 import {RegisterCommand} from "../../../types/requests/RegisterCommand";
@@ -30,10 +29,10 @@ export class RegisterComponent {
     const command = new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName,
       this.Password, Number(this.verificationMethod), this.TermsAccepted);
 
-    this.usersService.postUser(command).subscribe((data: IRegisterResponse) => {
+    this.usersService.postUser(command).subscribe((data) => {
       this.sessionService.writeAccessToken(data.accessToken);
       this.sessionService.writeRefreshToken(data.refreshToken);
-      if (this.verificationMethod === VerificationMethod.Phone){
+      if (this.verificationMethod === VerificationMethod.Phone) {
         this.router.navigateByUrl('verify-phone').then(r => alert(data.message));
         return;
       }

@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {SessionService} from "../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {VerifyEmailCommand} from "../../../types/requests/VerifyEmailCommand";
-import {IVerifyEmailResponse} from "../../../types/responses/IVerifyEmailResponse";
 import {UsersService} from "../../services/users.service";
 
 @Component({
@@ -24,7 +23,7 @@ export class VerifyEmailComponent implements OnInit {
       const userId = params['userId'];
       const email = params['email'];
       this.usersService.putEmailConfirmation(new VerifyEmailCommand(email, userId))
-        .subscribe((data: IVerifyEmailResponse) => {
+        .subscribe((_) => {
           this.success = true;
         }, error => {
           this.message = error.error.ErrorMessage;
