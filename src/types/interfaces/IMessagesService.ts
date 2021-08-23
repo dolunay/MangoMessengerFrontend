@@ -4,6 +4,7 @@ import {ISendMessageResponse} from "../responses/ISendMessageResponse";
 import {SendMessageCommand} from "../requests/SendMessageCommand";
 import {EditMessageCommand} from "../requests/EditMessageCommand";
 import {IBaseResponse} from "../responses/IBaseResponse";
+import {IDeleteMessageResponse} from "../responses/IDeleteMessageResponse";
 
 export interface IMessagesService {
   getChatMessages(chatId: string): Observable<IGetChatMessagesResponse>;
@@ -12,5 +13,5 @@ export interface IMessagesService {
 
   editMessage(request: EditMessageCommand): Observable<IBaseResponse>;
 
-  deleteMessage(messageId: number): Observable<IBaseResponse>;
+  deleteMessage(messageId: string): Observable<IDeleteMessageResponse>;
 }

@@ -158,4 +158,8 @@ export class MainComponent implements OnInit {
   getMessageComponentClass(chat: IChat): string {
     return chat.chatId === this.activeChatId ? 'contacts-item friends active' : 'contacts-item friends';
   }
+
+  deleteMessageFromMemory(messageId: string) {
+    this.messages = this.messages.filter(x => x.messageId !== messageId);
+  }
 }
