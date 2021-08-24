@@ -48,6 +48,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.chatService.getUserChats().subscribe((data) => {
+        console.log(data.chats);
         const routeChatId = this.route.snapshot.paramMap.get('chatId');
         this.chats = data.chats;
 
