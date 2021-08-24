@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
@@ -21,9 +21,20 @@ export class MainComponent implements OnInit {
   chats: IChat[] = [];
 
   activeChatId = '';
-  activeMessageText: string = '';
-  activeChatTitle: string = '';
-  activeChatMembersCount: number = 0;
+
+  activeChat: IChat = {
+    chatId: "",
+    chatType: ChatType.DirectChat,
+    image: "",
+    isArchived: false,
+    isMember: false,
+    lastMessage: "",
+    lastMessageAt: "",
+    lastMessageAuthor: "",
+    membersCount: 0,
+    title: ""
+  };
+
   chatFilter = 'All Chats';
   searchQuery = '';
 
@@ -31,8 +42,7 @@ export class MainComponent implements OnInit {
               private chatService: ChatsService,
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
-              private route: ActivatedRoute,
-              private router: Router) {
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -41,13 +51,13 @@ export class MainComponent implements OnInit {
         this.chats = data.chats;
 
         if (routeChatId) {
-          this.getChatMessages(routeChatId);
+          this.loadChatAndMessages(routeChatId);
           return;
         }
 
         const firstChat = data.chats[0];
         if (firstChat) {
-          this.getChatMessages(firstChat.chatId);
+          this.loadChatAndMessages(firstChat.chatId);
         }
       },
       error => {
@@ -55,21 +65,17 @@ export class MainComponent implements OnInit {
       });
   }
 
-  reloadComponent(component: string): void {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate([component]).then(r => r);
-  }
-
-  getChatMessages(chatId: string): void {
+  loadChatAndMessages(chatId: string): void {
     this.messageService.getChatMessages(chatId).subscribe((getMessagesData) => {
         this.messages = getMessagesData.messages;
         this.activeChatId = chatId;
-        this.chatService.getUserChats().subscribe((getUserChatsData) => {
-          const chat = getUserChatsData.chats.filter(x => x.chatId === chatId)[0];
-          this.activeChatTitle = chat.title;
-          this.activeChatMembersCount = chat.membersCount;
-          this.scrollToEnd();
+        this.chatService.getChatById(chatId).subscribe((getChatByIdData) => {
+          if (getChatByIdData) {
+            this.activeChat = getChatByIdData.chat;
+            this.scrollToEnd();
+          }
+        }, error => {
+          alert(error.error.ErrorMessage);
         })
       },
       error => {
@@ -84,8 +90,8 @@ export class MainComponent implements OnInit {
     }, 0);
   }
 
-  onMessageSend(): void {
-    this.getChatMessages(this.activeChatId);
+  onMessageSendEvent(): void {
+    this.loadChatAndMessages(this.activeChatId);
   }
 
   onChatFilerClick(filer: string): void {
@@ -96,7 +102,7 @@ export class MainComponent implements OnInit {
           this.chats = data.chats.filter(x => !x.isArchived);
           const firstChat = data.chats[0];
           if (firstChat) {
-            this.getChatMessages(firstChat.chatId);
+            this.loadChatAndMessages(firstChat.chatId);
           }
           break;
         case 'Groups':
@@ -113,25 +119,25 @@ export class MainComponent implements OnInit {
       }
 
       this.chatFilter = filer;
+      this.searchQuery = '';
 
     });
   }
 
   onSearchClick(): void {
-    this.chatService.searchChat(this.searchQuery).subscribe((data: IGetUserChatsResponse) => {
+    this.chatService.searchChat(this.searchQuery).subscribe((data) => {
       this.chats = data.chats;
-      this.searchQuery = '';
       this.chatFilter = 'Search Results';
-      console.log(data.chats);
     }, error => {
       alert(error.error.ErrorMessage);
     })
   }
 
   onArchiveChatClick(): void {
-    this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+    this.chatService.getUserChats().subscribe((data) => {
       const chat = data.chats.filter(x => x.chatId === this.activeChatId)[0];
       const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
+
       this.userChatsService.putArchiveChat(command).subscribe((_) => {
         this.onChatFilerClick('All Chats');
       }, error => {
@@ -154,7 +160,11 @@ export class MainComponent implements OnInit {
     return chat.chatId === this.activeChatId ? 'contacts-item friends active' : 'contacts-item friends';
   }
 
-  deleteMessageFromMemory(messageId: string) {
+  onDeleteMessageEvent(messageId: string) {
     this.messages = this.messages.filter(x => x.messageId !== messageId);
+  }
+
+  onJoinGroupEvent() {
+    this.onChatFilerClick('All Chats');
   }
 }

@@ -2,6 +2,7 @@
 import {IGetUserChatsResponse} from "../responses/IGetUserChatsResponse";
 import {CreateGroupCommand} from "../requests/CreateGroupCommand";
 import {ICreateChatResponse} from "../responses/ICreateChatResponse";
+import {IGetChatByIdResponse} from "../responses/IGetChatByIdResponse";
 
 export interface IChatsService {
   getUserChats(): Observable<IGetUserChatsResponse>;
@@ -11,4 +12,6 @@ export interface IChatsService {
   createDirectChat(userId: string): Observable<ICreateChatResponse>;
 
   searchChat(displayName: string): Observable<IGetUserChatsResponse>;
+
+  getChatById(chatId: string): Observable<IGetChatByIdResponse>;
 }

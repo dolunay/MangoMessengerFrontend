@@ -6,6 +6,7 @@ import {IGetUserChatsResponse} from "../../types/responses/IGetUserChatsResponse
 import {ICreateChatResponse} from "../../types/responses/ICreateChatResponse";
 import {CreateGroupCommand} from "../../types/requests/CreateGroupCommand";
 import {ApiRoute} from "../../consts/ApiRoute";
+import {IGetChatByIdResponse} from "../../types/responses/IGetChatByIdResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,10 @@ export class ChatsService implements IChatsService {
   }
 
   searchChat(displayName: string): Observable<IGetUserChatsResponse> {
-    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + displayName);
+    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + 'searches/' + displayName);
+  }
+
+  getChatById(chatId: string): Observable<IGetChatByIdResponse> {
+    return this.httpClient.get<IGetChatByIdResponse>(ApiRoute.route + this.chatsRoute + chatId);
   }
 }

@@ -91,7 +91,7 @@
                 <form class="form-inline">
                   <div class="input-group">
                     <input [(ngModel)]="searchQuery" name="searchQuery" type="text"
-                           class="form-control search border-right-0 transparent-bg pr-0"
+                           class="form-control search border-right-0 transparent-bg pr-0 text-white"
                            placeholder="Search chats..." value="{{searchQuery}}">
                     <div class="input-group-append">
                       <div class="input-group-text transparent-bg border-left-0" role="button"
@@ -120,7 +120,7 @@
             <ul class="contacts-list" id="chatContactTab" data-chat-list="">
               <!-- Chat Item Start -->
               <li *ngFor="let chat of chats">
-                <app-chat-item-active [chat]="chat" (click)="getChatMessages(chat.chatId)"
+                <app-chat-item-active [chat]="chat" (click)="loadChatAndMessages(chat.chatId)"
                                       [ngClass]="getMessageComponentClass(chat)">
                 </app-chat-item-active>
               </li>
@@ -165,8 +165,8 @@
             </div>
 
             <div class="media-body align-self-center ">
-              <h6 class="text-truncate mb-0">{{activeChatTitle}}</h6>
-              <small class="text-muted">{{activeChatMembersCount}} Members</small>
+              <h6 class="text-truncate mb-0">{{activeChat.title}}</h6>
+              <small class="text-muted">{{activeChat.membersCount}} Members</small>
             </div>
           </div>
 
@@ -257,7 +257,7 @@
 
               <div *ngFor="let message of messages">
                 <app-received-message [message]="message"
-                                      (notifyParentOnDeleteMessage)="deleteMessageFromMemory($event)"></app-received-message>
+                                      (notifyParentOnDeleteMessage)="onDeleteMessageEvent($event)"></app-received-message>
               </div>
             </div>
             <!-- Message Day End -->
@@ -269,7 +269,12 @@
         <!-- Chat Content End-->
 
         <!-- Chat Footer Start-->
-        <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="onMessageSend()"></app-chat-footer>
+        <ng-container *ngIf="activeChat.isMember; else elseBlock">
+          <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="onMessageSendEvent()"></app-chat-footer>
+        </ng-container>
+        <ng-template #elseBlock>
+          <app-join-group [chatId]="activeChat.chatId" (notifyParentOnJoinGroup)="onJoinGroupEvent()"></app-join-group>
+        </ng-template>
         <!-- Chat Footer End-->
       </div>
     </div>
