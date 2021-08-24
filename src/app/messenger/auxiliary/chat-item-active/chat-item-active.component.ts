@@ -21,7 +21,8 @@ export class ChatItemActiveComponent {
     lastMessageAt: "",
     lastMessageAuthor: "",
     membersCount: 0,
-    title: ""
+    title: "",
+    isMember: false,
   };
 
   chatContainsMessages(): boolean {

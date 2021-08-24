@@ -10,4 +10,5 @@ export interface IChat {
   membersCount: number;
   chatType: ChatType;
   isArchived: boolean;
+  isMember: boolean;
 }
