@@ -21,11 +21,11 @@ export class ReceivedMessageComponent {
     userDisplayName: ""
   };
 
-  @Output() notifyParentOnDelete = new EventEmitter<string>();
+  @Output() notifyParentOnDeleteMessage = new EventEmitter<string>();
 
   deleteMessage() : void {
     this.messageService.deleteMessage(this.message.messageId).subscribe((data) => {
-      this.notifyParentOnDelete.emit(data.messageId);
+      this.notifyParentOnDeleteMessage.emit(data.messageId);
     }, error => {
       alert(error.error.ErrorMessage);
     })
