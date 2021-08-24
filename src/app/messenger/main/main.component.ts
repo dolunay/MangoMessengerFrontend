@@ -21,9 +21,20 @@ export class MainComponent implements OnInit {
   chats: IChat[] = [];
 
   activeChatId = '';
-  activeMessageText: string = '';
-  activeChatTitle: string = '';
-  activeChatMembersCount: number = 0;
+
+  activeChat: IChat = {
+    chatId: "",
+    chatType: ChatType.DirectChat,
+    image: "",
+    isArchived: false,
+    isMember: false,
+    lastMessage: "",
+    lastMessageAt: "",
+    lastMessageAuthor: "",
+    membersCount: 0,
+    title: ""
+  };
+
   chatFilter = 'All Chats';
   searchQuery = '';
 
@@ -67,9 +78,10 @@ export class MainComponent implements OnInit {
         this.activeChatId = chatId;
         this.chatService.getUserChats().subscribe((getUserChatsData) => {
           const chat = getUserChatsData.chats.filter(x => x.chatId === chatId)[0];
-          this.activeChatTitle = chat.title;
-          this.activeChatMembersCount = chat.membersCount;
-          this.scrollToEnd();
+          if (chat) {
+            this.activeChat = chat;
+            this.scrollToEnd();
+          }
         })
       },
       error => {

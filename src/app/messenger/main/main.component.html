@@ -165,8 +165,8 @@
             </div>
 
             <div class="media-body align-self-center ">
-              <h6 class="text-truncate mb-0">{{activeChatTitle}}</h6>
-              <small class="text-muted">{{activeChatMembersCount}} Members</small>
+              <h6 class="text-truncate mb-0">{{activeChat.title}}</h6>
+              <small class="text-muted">{{activeChat.membersCount}} Members</small>
             </div>
           </div>
 
@@ -269,7 +269,9 @@
         <!-- Chat Content End-->
 
         <!-- Chat Footer Start-->
-        <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="onMessageSend()"></app-chat-footer>
+        <ng-container>
+          <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="onMessageSend()"></app-chat-footer>
+        </ng-container>
         <!-- Chat Footer End-->
       </div>
     </div>

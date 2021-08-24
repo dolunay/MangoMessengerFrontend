@@ -24,6 +24,7 @@ import {CreateGroupComponent} from './messenger/modals/create-group/create-group
 import {InviteOthersComponent} from './messenger/modals/invite-others/invite-others.component';
 import {NotificationsComponent} from './messenger/modals/notifications/notifications.component';
 import {RequestHeaderInterceptor} from "./interceptors/request-header.interceptor";
+import { JoinGroupComponent } from './messenger/auxiliary/join-group/join-group.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {RequestHeaderInterceptor} from "./interceptors/request-header.intercepto
     CreateGroupComponent,
     InviteOthersComponent,
     NotificationsComponent,
+    JoinGroupComponent,
   ],
   imports: [
     HttpClientModule,
