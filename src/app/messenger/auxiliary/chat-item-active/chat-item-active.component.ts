@@ -13,6 +13,7 @@ export class ChatItemActiveComponent {
   }
 
   @Input() chat: IChat = {
+    description: "",
     chatId: "",
     chatType: ChatType.DirectChat,
     image: "",
@@ -22,7 +23,7 @@ export class ChatItemActiveComponent {
     lastMessageAuthor: "",
     membersCount: 0,
     title: "",
-    isMember: false,
+    isMember: false
   };
 
   chatContainsMessages(): boolean {

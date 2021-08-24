@@ -23,6 +23,7 @@ export class MainComponent implements OnInit {
   activeChatId = '';
 
   activeChat: IChat = {
+    description: "",
     chatId: "",
     chatType: ChatType.DirectChat,
     image: "",
