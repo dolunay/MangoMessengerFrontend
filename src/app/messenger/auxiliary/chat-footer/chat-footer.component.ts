@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-chat-footer',
   templateUrl: './chat-footer.component.html',
   styleUrls: ['./chat-footer.component.scss']
 })
-export class ChatFooterComponent implements OnInit {
+export class ChatFooterComponent {
 
-  constructor() { }
+  constructor() {
+  }
 
-  ngOnInit(): void {
+  currentMessageText: string = '';
+
+  onMessageSendClick() : void {
+    console.log(this.currentMessageText);
+    this.currentMessageText = '';
   }
 
 }
