@@ -1,5 +1,6 @@
 <div class="chat-footer">
-  <div class="form-row">
+  <ng-container *ngIf="isMember; else elseBlock">
+    <div class="form-row">
       <!-- Chat Input Group Start -->
       <div class="col">
         <div class="input-group">
@@ -134,5 +135,9 @@
         </div>
       </div>
       <!-- Submit Button End-->
-  </div>
+    </div>
+  </ng-container>
+  <ng-template #elseBlock>
+    <app-join-group></app-join-group>
+  </ng-template>
 </div>

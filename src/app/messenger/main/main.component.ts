@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
@@ -42,8 +42,7 @@ export class MainComponent implements OnInit {
               private chatService: ChatsService,
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
-              private route: ActivatedRoute,
-              private router: Router) {
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -52,13 +51,13 @@ export class MainComponent implements OnInit {
         this.chats = data.chats;
 
         if (routeChatId) {
-          this.getChatMessages(routeChatId);
+          this.loadChatAndMessages(routeChatId);
           return;
         }
 
         const firstChat = data.chats[0];
         if (firstChat) {
-          this.getChatMessages(firstChat.chatId);
+          this.loadChatAndMessages(firstChat.chatId);
         }
       },
       error => {
@@ -66,17 +65,17 @@ export class MainComponent implements OnInit {
       });
   }
 
-  getChatMessages(chatId: string): void {
+  loadChatAndMessages(chatId: string): void {
     this.messageService.getChatMessages(chatId).subscribe((getMessagesData) => {
         this.messages = getMessagesData.messages;
         this.activeChatId = chatId;
-        this.chatService.getUserChats().subscribe((getUserChatsData) => {
-          const chat = getUserChatsData.chats.filter(x => x.chatId === chatId)[0];
-          if (chat) {
-            this.activeChat = chat;
-            console.log(chat);
+        this.chatService.getChatById(chatId).subscribe((getChatByIdData) => {
+          if (getChatByIdData) {
+            this.activeChat = getChatByIdData.chat;
             this.scrollToEnd();
           }
+        }, error => {
+          alert(error.error.ErrorMessage);
         })
       },
       error => {
@@ -92,7 +91,7 @@ export class MainComponent implements OnInit {
   }
 
   onMessageSend(): void {
-    this.getChatMessages(this.activeChatId);
+    this.loadChatAndMessages(this.activeChatId);
   }
 
   onChatFilerClick(filer: string): void {
@@ -103,7 +102,7 @@ export class MainComponent implements OnInit {
           this.chats = data.chats.filter(x => !x.isArchived);
           const firstChat = data.chats[0];
           if (firstChat) {
-            this.getChatMessages(firstChat.chatId);
+            this.loadChatAndMessages(firstChat.chatId);
           }
           break;
         case 'Groups':
@@ -125,9 +124,8 @@ export class MainComponent implements OnInit {
   }
 
   onSearchClick(): void {
-    this.chatService.searchChat(this.searchQuery).subscribe((data: IGetUserChatsResponse) => {
+    this.chatService.searchChat(this.searchQuery).subscribe((data) => {
       this.chats = data.chats;
-      console.log(data.chats);
       this.searchQuery = '';
       this.chatFilter = 'Search Results';
       console.log(data.chats);
@@ -137,9 +135,10 @@ export class MainComponent implements OnInit {
   }
 
   onArchiveChatClick(): void {
-    this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+    this.chatService.getUserChats().subscribe((data) => {
       const chat = data.chats.filter(x => x.chatId === this.activeChatId)[0];
       const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
+
       this.userChatsService.putArchiveChat(command).subscribe((_) => {
         this.onChatFilerClick('All Chats');
       }, error => {
