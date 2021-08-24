@@ -5,6 +5,7 @@ export interface IChat {
   title: string;
   image: string;
   lastMessageAuthor: string;
+  description: string;
   lastMessage: string;
   lastMessageAt: string;
   membersCount: number;
