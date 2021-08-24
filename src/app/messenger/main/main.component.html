@@ -257,7 +257,7 @@
 
               <div *ngFor="let message of messages">
                 <app-received-message [message]="message"
-                                      (notifyParentOnDelete)="deleteMessageFromMemory($event)"></app-received-message>
+                                      (notifyParentOnDeleteMessage)="deleteMessageFromMemory($event)"></app-received-message>
               </div>
             </div>
             <!-- Message Day End -->
@@ -269,7 +269,7 @@
         <!-- Chat Content End-->
 
         <!-- Chat Footer Start-->
-        <app-chat-footer></app-chat-footer>
+        <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="onMessageSend()"></app-chat-footer>
         <!-- Chat Footer End-->
       </div>
     </div>

@@ -4,7 +4,6 @@ import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
 import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
-import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
 import {ChatType} from "../../../types/enums/ChatType";
@@ -85,17 +84,8 @@ export class MainComponent implements OnInit {
     }, 0);
   }
 
-  sendMessage(): void {
-    this.messageService.sendMessage(new SendMessageCommand(this.activeMessageText, this.activeChatId))
-      .subscribe((_) => {
-        this.activeMessageText = '';
-        this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
-          this.chats = data.chats;
-          this.getChatMessages(this.activeChatId);
-        })
-      }, error => {
-        alert(error.error.ErrorMessage);
-      });
+  onMessageSend(): void {
+    this.getChatMessages(this.activeChatId);
   }
 
   onChatFilerClick(filer: string): void {
