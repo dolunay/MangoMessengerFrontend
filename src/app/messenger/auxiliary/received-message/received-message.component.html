@@ -1,16 +1,16 @@
-<div [ngClass]="self ? 'message self' : 'message'">
+<div [ngClass]="message.self ? 'message self' : 'message'">
   <div class="message-wrapper">
     <div class="message-content">
-      <div><b>{{messageAuthor}}</b></div>
-      <div>{{message}}</div>
+      <div><b>{{message.userDisplayName}}</b></div>
+      <div>{{message.messageText}}</div>
     </div>
   </div>
   <div class="message-options">
     <div class="avatar avatar-sm"><img alt="" src="./../assets/media/avatar/2.png">
     </div>
-    <span class="message-date">{{sentDateTime}}</span>
+    <span class="message-date">{{message.sentAt}}</span>
     <div class="dropdown">
-      <a class="text-muted" href="#" data-toggle="dropdown" aria-haspopup="true"
+      <div class="text-muted" data-toggle="dropdown" aria-haspopup="true"
          aria-expanded="false">
         <!-- Default :: Inline SVG -->
         <svg class="hw-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -20,10 +20,10 @@
 
         <!-- Alternate :: External File link -->
         <!-- <img class="injectable hw-18" src="./../assets/media/heroicons/outline/dots-horizontal.svg" alt="message options"> -->
-      </a>
+      </div>
 
       <div class="dropdown-menu">
-        <a class="dropdown-item d-flex align-items-center" href="#">
+        <div class="dropdown-item d-flex align-items-center">
           <!-- Default :: Inline SVG -->
           <svg class="hw-18 mr-2" fill="none" viewBox="0 0 24 24"
                stroke="currentColor">
@@ -35,8 +35,8 @@
           <!-- Alternate :: External File link -->
           <!-- <img class="injectable hw-18 mr-2" src="./../assets/media/heroicons/outline/duplicate.svg" alt="message options"> -->
           <span>Copy</span>
-        </a>
-        <a class="dropdown-item d-flex align-items-center" href="#">
+        </div>
+        <div class="dropdown-item d-flex align-items-center">
           <!-- Default :: Inline SVG -->
           <svg class="hw-18 mr-2" fill="none" viewBox="0 0 24 24"
                stroke="currentColor">
@@ -48,8 +48,8 @@
           <!-- Alternate :: External File link -->
           <!-- <img class="injectable hw-18 mr-2" src="./../assets/media/heroicons/outline/reply.svg" alt="message replay"> -->
           <span>Replay</span>
-        </a>
-        <a class="dropdown-item d-flex align-items-center" href="#">
+        </div>
+        <div class="dropdown-item d-flex align-items-center">
           <!-- Default :: Inline SVG -->
           <svg class="hw-18 rotate-y mr-2" fill="none" viewBox="0 0 24 24"
                stroke="currentColor">
@@ -61,8 +61,8 @@
           <!-- Alternate :: External File link -->
           <!-- <img class="injectable rotate-y hw-18 mr-2" src="./../assets/media/heroicons/outline/reply.svg" alt="message forward"> -->
           <span>Forward</span>
-        </a>
-        <a class="dropdown-item d-flex align-items-center" href="#">
+        </div>
+        <div class="dropdown-item d-flex align-items-center">
           <!-- Default :: Inline SVG -->
           <svg class="hw-18 mr-2" fill="none" viewBox="0 0 24 24"
                stroke="currentColor">
@@ -74,8 +74,8 @@
           <!-- Alternate :: External File link -->
           <!-- <img class="injectable hw-18 mr-2" src="./../assets/media/heroicons/outline/star.svg" alt="message favourite"> -->
           <span>Favourite</span>
-        </a>
-        <a class="dropdown-item d-flex align-items-center text-danger" href="#">
+        </div>
+        <div class="dropdown-item d-flex align-items-center text-danger" (click)="deleteMessage()">
           <!-- Default :: Inline SVG -->
           <svg class="hw-18 mr-2" fill="none" viewBox="0 0 24 24"
                stroke="currentColor">
@@ -87,7 +87,7 @@
           <!-- Alternate :: External File link -->
           <!-- <img class="injectable hw-18 mr-2" src="./../assets/media/heroicons/outline/trash.svg" alt="message delete"> -->
           <span>Delete</span>
-        </a>
+        </div>
       </div>
     </div>
   </div>

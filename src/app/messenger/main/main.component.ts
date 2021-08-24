@@ -1,15 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
 import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
-import {IGetChatMessagesResponse} from "../../../types/responses/IGetChatMessagesResponse";
-import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
-import {ISendMessageResponse} from "../../../types/responses/ISendMessageResponse";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
-import {GroupType} from "../../../types/enums/GroupType";
+import {ChatType} from "../../../types/enums/ChatType";
+import {UserChatsService} from "../../services/user-chats.service";
+import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 
 @Component({
   selector: 'app-main',
@@ -18,69 +17,69 @@ import {GroupType} from "../../../types/enums/GroupType";
 })
 export class MainComponent implements OnInit {
 
-  // @ts-ignore
-  getUserChatsResponse: IGetUserChatsResponse;
-
   messages: IMessage[] = [];
   chats: IChat[] = [];
 
   activeChatId = '';
-  activeMessageText: string = '';
-  activeChatTitle: string = '';
-  activeChatMembersCount: number = 0;
+
+  activeChat: IChat = {
+    chatId: "",
+    chatType: ChatType.DirectChat,
+    image: "",
+    isArchived: false,
+    isMember: false,
+    lastMessage: "",
+    lastMessageAt: "",
+    lastMessageAuthor: "",
+    membersCount: 0,
+    title: ""
+  };
+
   chatFilter = 'All Chats';
   searchQuery = '';
 
   constructor(private authService: SessionService,
               private chatService: ChatsService,
               private messageService: MessagesService,
-              private route: ActivatedRoute,
-              private router: Router) {
+              private userChatsService: UserChatsService,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
-        this.getUserChatsResponse = data;
+    this.chatService.getUserChats().subscribe((data) => {
+        const routeChatId = this.route.snapshot.paramMap.get('chatId');
         this.chats = data.chats;
-        const lastChat = data.chats[0];
-        if (lastChat) {
-          this.getChatMessages(lastChat.chatId);
+
+        if (routeChatId) {
+          this.loadChatAndMessages(routeChatId);
+          return;
+        }
+
+        const firstChat = data.chats[0];
+        if (firstChat) {
+          this.loadChatAndMessages(firstChat.chatId);
         }
       },
       error => {
-        if (error && error.status) {
-          switch (error.status) {
-            case 409:
-              alert(error.message);
-              break;
-          }
-        }
+        alert(error.error.ErrorMessage);
       });
   }
 
-  reloadComponent(component: string): void {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate([component]).then(r => r);
-  }
-
-  getChatMessages(chatId: string): void {
-    this.messageService.getChatMessages(chatId).subscribe((data: IGetChatMessagesResponse) => {
-        this.messages = data.messages;
+  loadChatAndMessages(chatId: string): void {
+    this.messageService.getChatMessages(chatId).subscribe((getMessagesData) => {
+        this.messages = getMessagesData.messages;
         this.activeChatId = chatId;
-        const chat = this.getUserChatsResponse.chats.filter(x => x.chatId === chatId)[0];
-        this.activeChatTitle = chat.title;
-        this.activeChatMembersCount = chat.membersCount;
-        this.scrollToEnd();
+        this.chatService.getChatById(chatId).subscribe((getChatByIdData) => {
+          if (getChatByIdData) {
+            this.activeChat = getChatByIdData.chat;
+            this.scrollToEnd();
+          }
+        }, error => {
+          alert(error.error.ErrorMessage);
+        })
       },
       error => {
-        if (error && error.response) {
-          switch (error.response.status) {
-            case 400:
-              alert(error.message);
-              break;
-          }
-        }
+        alert(error.error.ErrorMessage);
       });
   }
 
@@ -91,52 +90,81 @@ export class MainComponent implements OnInit {
     }, 0);
   }
 
-  sendMessage(): void {
-    this.messageService.sendMessage(new SendMessageCommand(this.activeMessageText, this.activeChatId))
-      .subscribe((data: ISendMessageResponse) => {
-        this.activeMessageText = '';
-        this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
-          this.chats = data.chats;
-          this.getChatMessages(this.activeChatId);
-        })
-      }, error => {
-        if (error && error.response) {
-          switch (error.response.status) {
-            case 400:
-              alert(error.message);
-              break;
-          }
-        }
-      });
+  onMessageSendEvent(): void {
+    this.loadChatAndMessages(this.activeChatId);
   }
 
   onChatFilerClick(filer: string): void {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
-      this.getUserChatsResponse = data;
+
       switch (filer) {
         case 'All Chats':
-          this.chats = data.chats;
+          this.chats = data.chats.filter(x => !x.isArchived);
+          const firstChat = data.chats[0];
+          if (firstChat) {
+            this.loadChatAndMessages(firstChat.chatId);
+          }
           break;
         case 'Groups':
-          this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel || x.chatType === GroupType.PublicChannel);
+          this.chats = data.chats.filter(x => x.chatType === ChatType.ReadOnlyChannel || x.chatType === ChatType.PublicChannel);
           break;
         case 'Direct Chats':
-          this.chats = data.chats.filter(x => x.chatType === GroupType.DirectChat);
+          this.chats = data.chats.filter(x => x.chatType === ChatType.DirectChat);
+          break;
+        case 'Archived':
+          this.chats = data.chats.filter(x => x.isArchived);
           break;
         default:
           break;
       }
+
       this.chatFilter = filer;
+      this.searchQuery = '';
+
     });
   }
 
   onSearchClick(): void {
-    this.chatService.searchChat(this.searchQuery).subscribe((data: IGetUserChatsResponse) => {
+    this.chatService.searchChat(this.searchQuery).subscribe((data) => {
       this.chats = data.chats;
-      this.searchQuery = '';
       this.chatFilter = 'Search Results';
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  onArchiveChatClick(): void {
+    this.chatService.getUserChats().subscribe((data) => {
+      const chat = data.chats.filter(x => x.chatId === this.activeChatId)[0];
+      const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
+
+      this.userChatsService.putArchiveChat(command).subscribe((_) => {
+        this.onChatFilerClick('All Chats');
+      }, error => {
+        alert(error.error.ErrorMessage);
+      })
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  onLeaveChatClick(): void {
+    this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe((_) => {
+      this.onChatFilerClick('All Chats');
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  getMessageComponentClass(chat: IChat): string {
+    return chat.chatId === this.activeChatId ? 'contacts-item friends active' : 'contacts-item friends';
+  }
+
+  onDeleteMessageEvent(messageId: string) {
+    this.messages = this.messages.filter(x => x.messageId !== messageId);
+  }
+
+  onJoinGroupEvent() {
+    this.onChatFilerClick('All Chats');
   }
 }

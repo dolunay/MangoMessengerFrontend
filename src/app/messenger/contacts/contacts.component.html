@@ -147,28 +147,10 @@
                   <!-- <p class="text-white rounded px-2 bg-primary">+01-202-265462</p> -->
                   <div class="d-flex mt-2">
                     <button class="btn btn-outline-default" type="button" (click)="onAddContactClick()">
-                      Add To Contacts
+                      Add Contact
                     </button>
                     <button class="btn btn-outline-default" type="button" (click)="onSendMessageClick()">Message</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-options">
-                <div class="dropdown">
-                  <button class="btn btn-secondary btn-icon btn-minimal btn-sm text-muted"
-                          type="button" data-toggle="dropdown" aria-haspopup="true"
-                          aria-expanded="false">
-                    <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-                    </svg>
-
-                    <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/dots-vertical.svg" alt=""> -->
-                  </button>
-                  <div class="dropdown-menu">
-                    <div class="dropdown-item">Remove</div>
-                    <div class="dropdown-item">Block</div>
+                    <button class="btn btn-outline-default text-danger" type="button" (click)="onRemoveContactClick()">Remove Contact</button>
                   </div>
                 </div>
               </div>

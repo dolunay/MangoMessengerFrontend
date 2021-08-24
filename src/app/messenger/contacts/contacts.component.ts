@@ -6,7 +6,10 @@ import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
 import {ISearchResponse} from "../../../types/responses/ISearchResponse";
-import {IAddContactResponse} from "../../../types/responses/IAddContactResponse";
+import {ChatsService} from "../../services/chats.service";
+import {ICreateChatResponse} from "../../../types/responses/ICreateChatResponse";
+import {ActivatedRoute, Router} from "@angular/router";
+import {IBaseResponse} from "../../../types/responses/IBaseResponse";
 
 @Component({
   selector: 'app-contacts',
@@ -15,12 +18,31 @@ import {IAddContactResponse} from "../../../types/responses/IAddContactResponse"
 })
 export class ContactsComponent implements OnInit {
 
-  constructor(private contactsService: ContactsService, private userService: UsersService) {
+  constructor(private contactsService: ContactsService, private userService: UsersService,
+              private chatsService: ChatsService, private route: ActivatedRoute,
+              private router: Router) {
   }
 
   userContacts: IContact[] = [];
-  // @ts-ignore
-  currentUser: IUser;
+
+  currentUser: IUser = {
+    address: "",
+    bio: "",
+    birthdayDate: "",
+    displayName: "",
+    email: "",
+    facebook: "",
+    firstName: "",
+    instagram: "",
+    lastName: "",
+    linkedIn: "",
+    phoneNumber: "",
+    twitter: "",
+    userId: "",
+    username: "",
+    website: ""
+  };
+
   userSearchQuery = '';
   contactsFilter = 'All Contacts';
   activeContactId = '';
@@ -66,14 +88,26 @@ export class ContactsComponent implements OnInit {
   }
 
   onAddContactClick() {
-    this.contactsService.postAddContact(this.activeContactId).subscribe((data: IAddContactResponse) => {
-      alert(data.message);
+    this.contactsService.postAddContact(this.activeContactId).subscribe((_) => {
+      this.onFilterClick('All Contacts');
     }, error => {
       alert(error.error.ErrorMessage);
     });
   }
 
   onSendMessageClick() {
+    this.chatsService.createDirectChat(this.activeContactId).subscribe((data: ICreateChatResponse) => {
+      this.router.navigate(['main', {chatId: data.chatId}]).then(r => r);
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
 
+  onRemoveContactClick() {
+    this.contactsService.deleteContact(this.activeContactId).subscribe((_: IBaseResponse) => {
+      this.onFilterClick('All Contacts');
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
   }
 }

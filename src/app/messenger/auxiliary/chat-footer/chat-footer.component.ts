@@ -1,15 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {MessagesService} from "../../../services/messages.service";
+import {SendMessageCommand} from "../../../../types/requests/SendMessageCommand";
 
 @Component({
   selector: 'app-chat-footer',
   templateUrl: './chat-footer.component.html',
   styleUrls: ['./chat-footer.component.scss']
 })
-export class ChatFooterComponent implements OnInit {
+export class ChatFooterComponent {
 
-  constructor() { }
+  constructor(private messageService: MessagesService) {
+  }
 
-  ngOnInit(): void {
+  currentMessageText: string = '';
+  @Input() chatId: string = '';
+
+  @Output() notifyParentOnSendMessage = new EventEmitter();
+
+  onMessageSendClick(): void {
+    const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chatId);
+    this.messageService.sendMessage(sendMessageCommand).subscribe((_) => {
+      this.currentMessageText = '';
+      this.notifyParentOnSendMessage.emit();
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
   }
 
 }

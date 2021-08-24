@@ -1,15 +1,14 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ApiRoute} from "../../consts/Routes";
-import {SessionService} from "./session.service";
 import {IMessagesService} from "../../types/interfaces/IMessagesService";
 import {IGetChatMessagesResponse} from "../../types/responses/IGetChatMessagesResponse";
 import {SendMessageCommand} from "../../types/requests/SendMessageCommand";
 import {ISendMessageResponse} from "../../types/responses/ISendMessageResponse";
-import {IDeleteMessageResponse} from "../../types/responses/IDeleteMessageResponse";
-import {IEditMessageResponse} from "../../types/responses/IEditMessageResponse";
 import {EditMessageCommand} from "../../types/requests/EditMessageCommand";
+import {ApiRoute} from "../../consts/ApiRoute";
+import {IBaseResponse} from "../../types/responses/IBaseResponse";
+import {IDeleteMessageResponse} from "../../types/responses/IDeleteMessageResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -17,53 +16,22 @@ import {EditMessageCommand} from "../../types/requests/EditMessageCommand";
 export class MessagesService implements IMessagesService {
   private messagesRoute = 'api/messages/'
 
-  constructor(private httpClient: HttpClient, private authService: SessionService) {
+  constructor(private httpClient: HttpClient) {
   }
 
   getChatMessages(chatId: string): Observable<IGetChatMessagesResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.get<IGetChatMessagesResponse>(ApiRoute.route + this.messagesRoute + chatId,
-      header);
+    return this.httpClient.get<IGetChatMessagesResponse>(ApiRoute.route + this.messagesRoute + chatId);
   }
 
   sendMessage(request: SendMessageCommand): Observable<ISendMessageResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.post<ISendMessageResponse>(ApiRoute.route + this.messagesRoute,
-      request, header);
+    return this.httpClient.post<ISendMessageResponse>(ApiRoute.route + this.messagesRoute, request);
   }
 
-  deleteMessage(messageId: number): Observable<IDeleteMessageResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.delete<IDeleteMessageResponse>(ApiRoute.route + this.messagesRoute + messageId,
-      header);
+  deleteMessage(messageId: string): Observable<IDeleteMessageResponse> {
+    return this.httpClient.delete<IDeleteMessageResponse>(ApiRoute.route + this.messagesRoute + messageId);
   }
 
-  editMessage(request: EditMessageCommand): Observable<IEditMessageResponse> {
-    const accessToken = this.authService.getAccessToken();
-
-    const header = {
-      headers: new HttpHeaders()
-        .set('Authorization', `Bearer ${accessToken}`)
-    };
-
-    return this.httpClient.put<IEditMessageResponse>(ApiRoute.route + this.messagesRoute, request, header);
+  editMessage(request: EditMessageCommand): Observable<IBaseResponse> {
+    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.messagesRoute, request);
   }
 }

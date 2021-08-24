@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GroupItemComponent } from './group-item.component';
+import { JoinGroupComponent } from './join-group.component';
 
-describe('GroupItemComponent', () => {
-  let component: GroupItemComponent;
-  let fixture: ComponentFixture<GroupItemComponent>;
+describe('JoinGroupComponent', () => {
+  let component: JoinGroupComponent;
+  let fixture: ComponentFixture<JoinGroupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GroupItemComponent ]
+      declarations: [ JoinGroupComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GroupItemComponent);
+    fixture = TestBed.createComponent(JoinGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

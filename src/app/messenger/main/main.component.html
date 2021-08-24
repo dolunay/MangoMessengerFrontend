@@ -56,8 +56,8 @@
                         <div class="dropdown-item" role="button" data-toggle="modal" data-target="#createGroup">Create
                           Group
                         </div>
-                        <div class="dropdown-item" role="button" data-toggle="modal" data-target="#inviteOthers">Invite
-                          Others
+                        <div class="dropdown-item" role="button" data-toggle="modal" data-target="#inviteOthers">
+                          Invite Others
                         </div>
                       </div>
                     </div>
@@ -81,6 +81,7 @@
                     <div class="dropdown-item" (click)="onChatFilerClick('All Chats')">All Chats</div>
                     <div class="dropdown-item" (click)="onChatFilerClick('Groups')">Groups</div>
                     <div class="dropdown-item" (click)="onChatFilerClick('Direct Chats')">Direct Chats</div>
+                    <div class="dropdown-item" (click)="onChatFilerClick('Archived')">Archived</div>
                   </div>
                   <!-- Dropdown Menu End -->
                 </div>
@@ -90,10 +91,11 @@
                 <form class="form-inline">
                   <div class="input-group">
                     <input [(ngModel)]="searchQuery" name="searchQuery" type="text"
-                           class="form-control search border-right-0 transparent-bg pr-0"
+                           class="form-control search border-right-0 transparent-bg pr-0 text-white"
                            placeholder="Search chats..." value="{{searchQuery}}">
                     <div class="input-group-append">
-                      <div class="input-group-text transparent-bg border-left-0" role="button" (click)="onSearchClick()">
+                      <div class="input-group-text transparent-bg border-left-0" role="button"
+                           (click)="onSearchClick()">
                         <!-- Default :: Inline SVG -->
                         <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                              stroke="currentColor">
@@ -118,13 +120,8 @@
             <ul class="contacts-list" id="chatContactTab" data-chat-list="">
               <!-- Chat Item Start -->
               <li *ngFor="let chat of chats">
-                <app-chat-item-active [chatName]="chat.title"
-                                      [lastMessageAuthor]="chat.lastMessageAuthor"
-                                      [lastMessage]="chat.lastMessage"
-                                      [lastMessageDateTime]="chat.lastMessageAt"
-                                      [chatId]="chat.chatId"
-                                      (click)="getChatMessages(chat.chatId)"
-                                      [ngClass]="chat.chatId === activeChatId ? 'contacts-item friends active' : 'contacts-item friends'">
+                <app-chat-item-active [chat]="chat" (click)="loadChatAndMessages(chat.chatId)"
+                                      [ngClass]="getMessageComponentClass(chat)">
                 </app-chat-item-active>
               </li>
               <!-- Chat Item End -->
@@ -147,7 +144,87 @@
     <div class="chats">
       <div class="chat-body">
         <!-- Chat Header Start-->
-        <app-chat-header [chatTitle]="activeChatTitle" [membersCount]="activeChatMembersCount"></app-chat-header>
+        <div class="chat-header">
+          <!-- Chat Back Button (Visible only in Small Devices) -->
+          <button class="btn btn-secondary btn-icon btn-minimal btn-sm text-muted d-xl-none" type="button"
+                  data-close="">
+            <!-- Default :: Inline SVG -->
+            <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+
+            <!-- Alternate :: External File link -->
+            <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/arrow-left.svg" alt=""> -->
+          </button>
+
+          <!-- Chat participant's Name -->
+          <div class="media chat-name align-items-center text-truncate">
+            <div class="avatar avatar-online d-none d-sm-inline-block mr-3">
+              <img src="./../assets/media/avatar/2.png" alt="">
+            </div>
+
+            <div class="media-body align-self-center ">
+              <h6 class="text-truncate mb-0">{{activeChat.title}}</h6>
+              <small class="text-muted">{{activeChat.membersCount}} Members</small>
+            </div>
+          </div>
+
+          <!-- Chat Options -->
+          <ul class="nav flex-nowrap">
+            <li class="nav-item list-inline-item d-none d-sm-block mr-1">
+              <div class="nav-link text-muted px-1" data-toggle="collapse" data-target="#searchCollapse"
+                   aria-expanded="false">
+                <!-- Default :: Inline SVG -->
+                <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+
+                <!-- Alternate :: External File link -->
+                <!-- <img src="./../assets/media/heroicons/outline/search.svg" alt="" class="injectable hw-20"> -->
+              </div>
+            </li>
+
+            <li class="nav-item list-inline-item d-none d-sm-block mr-0">
+              <div class="dropdown">
+                <div class="nav-link text-muted px-1" role="button" title="Details"
+                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <!-- Default :: Inline SVG -->
+                  <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                  </svg>
+                </div>
+
+                <div class="dropdown-menu dropdown-menu-right">
+                  <div class="dropdown-item align-items-center d-flex" (click)="onArchiveChatClick()">
+                    <!-- Default :: Inline SVG -->
+                    <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                    </svg>
+
+                    <!-- Alternate :: External File link -->
+                    <!-- <img src="./../assets/media/heroicons/outline/archive.svg" alt="" class="injectable hw-20 mr-2"> -->
+                    <span>Archive Chat</span>
+                  </div>
+                  <div class="dropdown-item align-items-center d-flex" (click)="onLeaveChatClick()">
+                    <!-- Default :: Inline SVG -->
+                    <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+
+                    <!-- Alternate :: External File link -->
+                    <!-- <img src="./../assets/media/heroicons/outline/trash.svg" alt="" class="injectable hw-20 mr-2"> -->
+                    <span class="text-danger">Leave Chat</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
         <!-- Chat Header End-->
 
         <!-- Search Start -->
@@ -157,17 +234,13 @@
               <input type="text" class="form-control form-control-md border-right-0 transparent-bg pr-0"
                      placeholder="Search...">
               <div class="input-group-append">
-                                    <span class="input-group-text transparent-bg border-left-0">
-                                        <!-- Default :: Inline SVG -->
-                                        <svg class="hw-20 text-muted" fill="none" viewBox="0 0 24 24"
-                                             stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                        </svg>
-
-                                      <!-- Alternate :: External File link -->
-                                      <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/search.svg" alt="Search icon"> -->
-                                    </span>
+                <span class="input-group-text transparent-bg border-left-0">
+                  <!-- Default :: Inline SVG -->
+                  <svg class="hw-20 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                  </svg>
+                </span>
               </div>
             </div>
           </div>
@@ -182,12 +255,9 @@
             <!-- Message Day Start -->
             <div class="message-day" id="messageList">
 
-              <div class="message-divider sticky-top pb-2" data-label="Today">&nbsp;</div>
-
               <div *ngFor="let message of messages">
-                <app-received-message [self]="message.self"
-                                      [messageAuthor]="message.userDisplayName" [message]="message.messageText"
-                                      [sentDateTime]="message.sentAt"></app-received-message>
+                <app-received-message [message]="message"
+                                      (notifyParentOnDeleteMessage)="onDeleteMessageEvent($event)"></app-received-message>
               </div>
             </div>
             <!-- Message Day End -->
@@ -199,142 +269,14 @@
         <!-- Chat Content End-->
 
         <!-- Chat Footer Start-->
-        <div class="chat-footer">
-          <div class="form-row">
-            <!-- Chat Input Group Start -->
-            <div class="col">
-              <div class="input-group">
-                <!-- Attachment Start -->
-                <div class="input-group-prepend mr-sm-2 mr-1">
-                  <div class="dropdown">
-                    <button class="btn btn-secondary btn-icon btn-minimal btn-sm text-muted text-muted"
-                            type="button" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
-                      <!-- Default :: Inline SVG -->
-                      <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                      </svg>
-
-                      <!-- Alternate :: External File link -->
-                      <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/plus-circle.svg" alt=""> -->
-                    </button>
-                    <div class="dropdown-menu">
-                      <div class="dropdown-item">
-                        <!-- Default :: Inline SVG -->
-                        <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-
-                        <!-- Alternate :: External File link -->
-                        <!-- <img class="injectable hw-20 mr-2" src="./../assets/media/heroicons/outline/photograph.svg" alt=""> -->
-                        <span>Gallery</span>
-                      </div>
-                      <div class="dropdown-item">
-                        <!-- Default :: Inline SVG -->
-                        <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-                        </svg>
-
-                        <!-- Alternate :: External File link -->
-                        <!-- <img class="injectable hw-20 mr-2" src="./../assets/media/heroicons/outline/volume-up.svg" alt=""> -->
-                        <span>Audio</span>
-                      </div>
-                      <div class="dropdown-item">
-                        <!-- Default :: Inline SVG -->
-                        <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                        </svg>
-
-                        <!-- Alternate :: External File link -->
-                        <!-- <img class="injectable hw-20 mr-2" src="./../assets/media/heroicons/outline/document.svg" alt=""> -->
-                        <span>Document</span>
-                      </div>
-                      <div class="dropdown-item">
-                        <!-- Default :: Inline SVG -->
-                        <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-
-                        <!-- Alternate :: External File link -->
-                        <!-- <img class="injectable hw-20 mr-2" src="./../assets/media/heroicons/outline/user.svg" alt=""> -->
-                        <span>Contact</span>
-                      </div>
-                      <div class="dropdown-item">
-                        <!-- Default :: Inline SVG -->
-                        <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-
-                        <!-- Alternate :: External File link -->
-                        <!-- <img class="injectable hw-20 mr-2" src="./../assets/media/heroicons/outline/location-marker.svg" alt=""> -->
-                        <span>Location</span>
-                      </div>
-                      <div class="dropdown-item">
-                        <!-- Default :: Inline SVG -->
-                        <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-
-                        <!-- Alternate :: External File link -->
-                        <!-- <img class="injectable hw-20 mr-2" src="./../assets/media/heroicons/outline/chart-square-bar.svg" alt=""> -->
-                        <span>Poll</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Attachment End -->
-
-                <!-- Textarea Start-->
-                <input class="form-control transparent-bg border-0 no-resize hide-scrollbar"
-                       [(ngModel)]="activeMessageText"
-                       placeholder="Write your message..."/>
-                <!-- Textarea End -->
-              </div>
-            </div>
-            <!-- Chat Input Group End -->
-
-            <!-- Submit Button Start -->
-            <div class="col-auto">
-              <div class="btn btn-primary btn-icon rounded-circle text-light mb-1" role="button"
-                   (click)="sendMessage()">
-                <!-- Default :: Inline SVG -->
-                <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-
-              </div>
-            </div>
-            <!-- Submit Button End-->
-          </div>
-        </div>
+        <ng-container *ngIf="activeChat.isMember; else elseBlock">
+          <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="onMessageSendEvent()"></app-chat-footer>
+        </ng-container>
+        <ng-template #elseBlock>
+          <app-join-group [chatId]="activeChat.chatId" (notifyParentOnJoinGroup)="onJoinGroupEvent()"></app-join-group>
+        </ng-template>
         <!-- Chat Footer End-->
       </div>
-
-      <!-- Chat Info Start -->
-      <app-chat-info></app-chat-info>
-      <!-- Chat Info End -->
     </div>
     <!-- Chats Page End -->
 

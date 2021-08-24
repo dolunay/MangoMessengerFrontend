@@ -3,7 +3,7 @@ import {IGetChatMessagesResponse} from "../responses/IGetChatMessagesResponse";
 import {ISendMessageResponse} from "../responses/ISendMessageResponse";
 import {SendMessageCommand} from "../requests/SendMessageCommand";
 import {EditMessageCommand} from "../requests/EditMessageCommand";
-import {IEditMessageResponse} from "../responses/IEditMessageResponse";
+import {IBaseResponse} from "../responses/IBaseResponse";
 import {IDeleteMessageResponse} from "../responses/IDeleteMessageResponse";
 
 export interface IMessagesService {
@@ -11,7 +11,7 @@ export interface IMessagesService {
 
   sendMessage(request: SendMessageCommand): Observable<ISendMessageResponse>;
 
-  editMessage(request: EditMessageCommand): Observable<IEditMessageResponse>;
+  editMessage(request: EditMessageCommand): Observable<IBaseResponse>;
 
-  deleteMessage(messageId: number): Observable<IDeleteMessageResponse>;
+  deleteMessage(messageId: string): Observable<IDeleteMessageResponse>;
 }
