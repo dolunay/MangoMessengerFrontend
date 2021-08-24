@@ -255,8 +255,6 @@
             <!-- Message Day Start -->
             <div class="message-day" id="messageList">
 
-              <div class="message-divider sticky-top pb-2" data-label="Today">&nbsp;</div>
-
               <div *ngFor="let message of messages">
                 <app-received-message [message]="message"
                                       (notifyParentOnDelete)="deleteMessageFromMemory($event)"></app-received-message>

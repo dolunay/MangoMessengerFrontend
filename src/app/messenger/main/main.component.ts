@@ -4,7 +4,6 @@ import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
 import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
-import {IGetChatMessagesResponse} from "../../../types/responses/IGetChatMessagesResponse";
 import {SendMessageCommand} from "../../../types/requests/SendMessageCommand";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
@@ -18,8 +17,6 @@ import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
-
-  getUserChatsResponse: IGetUserChatsResponse = {chats: [], message: "", success: false};
 
   messages: IMessage[] = [];
   chats: IChat[] = [];
@@ -42,7 +39,6 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.chatService.getUserChats().subscribe((data) => {
         const routeChatId = this.route.snapshot.paramMap.get('chatId');
-        this.getUserChatsResponse = data;
         this.chats = data.chats;
 
         if (routeChatId) {
@@ -67,13 +63,15 @@ export class MainComponent implements OnInit {
   }
 
   getChatMessages(chatId: string): void {
-    this.messageService.getChatMessages(chatId).subscribe((data: IGetChatMessagesResponse) => {
-        this.messages = data.messages;
+    this.messageService.getChatMessages(chatId).subscribe((getMessagesData) => {
+        this.messages = getMessagesData.messages;
         this.activeChatId = chatId;
-        const chat = this.getUserChatsResponse.chats.filter(x => x.chatId === chatId)[0];
-        this.activeChatTitle = chat.title;
-        this.activeChatMembersCount = chat.membersCount;
-        this.scrollToEnd();
+        this.chatService.getUserChats().subscribe((getUserChatsData) => {
+          const chat = getUserChatsData.chats.filter(x => x.chatId === chatId)[0];
+          this.activeChatTitle = chat.title;
+          this.activeChatMembersCount = chat.membersCount;
+          this.scrollToEnd();
+        })
       },
       error => {
         alert(error.error.ErrorMessage);
@@ -134,6 +132,7 @@ export class MainComponent implements OnInit {
       this.chats = data.chats;
       this.searchQuery = '';
       this.chatFilter = 'Search Results';
+      console.log(data.chats);
     }, error => {
       alert(error.error.ErrorMessage);
     })
