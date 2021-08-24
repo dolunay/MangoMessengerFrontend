@@ -90,7 +90,7 @@ export class MainComponent implements OnInit {
     }, 0);
   }
 
-  onMessageSend(): void {
+  onMessageSendEvent(): void {
     this.loadChatAndMessages(this.activeChatId);
   }
 
@@ -119,6 +119,7 @@ export class MainComponent implements OnInit {
       }
 
       this.chatFilter = filer;
+      this.searchQuery = '';
 
     });
   }
@@ -126,9 +127,7 @@ export class MainComponent implements OnInit {
   onSearchClick(): void {
     this.chatService.searchChat(this.searchQuery).subscribe((data) => {
       this.chats = data.chats;
-      this.searchQuery = '';
       this.chatFilter = 'Search Results';
-      console.log(data.chats);
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -161,7 +160,11 @@ export class MainComponent implements OnInit {
     return chat.chatId === this.activeChatId ? 'contacts-item friends active' : 'contacts-item friends';
   }
 
-  deleteMessageFromMemory(messageId: string) {
+  onDeleteMessageEvent(messageId: string) {
     this.messages = this.messages.filter(x => x.messageId !== messageId);
+  }
+
+  onJoinGroupEvent() {
+    this.onChatFilerClick('All Chats');
   }
 }

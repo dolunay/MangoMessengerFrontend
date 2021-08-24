@@ -91,7 +91,7 @@
                 <form class="form-inline">
                   <div class="input-group">
                     <input [(ngModel)]="searchQuery" name="searchQuery" type="text"
-                           class="form-control search border-right-0 transparent-bg pr-0"
+                           class="form-control search border-right-0 transparent-bg pr-0 text-white"
                            placeholder="Search chats..." value="{{searchQuery}}">
                     <div class="input-group-append">
                       <div class="input-group-text transparent-bg border-left-0" role="button"
@@ -257,7 +257,7 @@
 
               <div *ngFor="let message of messages">
                 <app-received-message [message]="message"
-                                      (notifyParentOnDeleteMessage)="deleteMessageFromMemory($event)"></app-received-message>
+                                      (notifyParentOnDeleteMessage)="onDeleteMessageEvent($event)"></app-received-message>
               </div>
             </div>
             <!-- Message Day End -->
@@ -269,8 +269,12 @@
         <!-- Chat Content End-->
 
         <!-- Chat Footer Start-->
-        <app-chat-footer [chatId]="activeChatId" [isMember]="activeChat.isMember"
-                         (notifyParentOnSendMessage)="onMessageSend()"></app-chat-footer>
+        <ng-container *ngIf="activeChat.isMember; else elseBlock">
+          <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="onMessageSendEvent()"></app-chat-footer>
+        </ng-container>
+        <ng-template #elseBlock>
+          <app-join-group [chatId]="activeChat.chatId" (notifyParentOnJoinGroup)="onJoinGroupEvent()"></app-join-group>
+        </ng-template>
         <!-- Chat Footer End-->
       </div>
     </div>
