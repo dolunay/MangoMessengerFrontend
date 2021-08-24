@@ -29,6 +29,6 @@ export class ChatsService implements IChatsService {
   }
 
   searchChat(displayName: string): Observable<IGetUserChatsResponse> {
-    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + displayName);
+    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + 'searches/' + displayName);
   }
 }

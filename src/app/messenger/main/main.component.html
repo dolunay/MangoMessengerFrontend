@@ -269,13 +269,8 @@
         <!-- Chat Content End-->
 
         <!-- Chat Footer Start-->
-        <ng-container *ngIf="activeChat.isMember">
-          <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="onMessageSend()"></app-chat-footer>
-        </ng-container>
-
-        <ng-container *ngIf="!activeChat.isMember">
-          <app-join-group></app-join-group>
-        </ng-container>
+        <app-chat-footer [chatId]="activeChatId" [isMember]="activeChat.isMember"
+                         (notifyParentOnSendMessage)="onMessageSend()"></app-chat-footer>
         <!-- Chat Footer End-->
       </div>
     </div>

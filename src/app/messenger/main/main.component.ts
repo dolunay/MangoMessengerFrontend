@@ -48,7 +48,6 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.chatService.getUserChats().subscribe((data) => {
-        console.log(data.chats);
         const routeChatId = this.route.snapshot.paramMap.get('chatId');
         this.chats = data.chats;
 
@@ -67,12 +66,6 @@ export class MainComponent implements OnInit {
       });
   }
 
-  reloadComponent(component: string): void {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate([component]).then(r => r);
-  }
-
   getChatMessages(chatId: string): void {
     this.messageService.getChatMessages(chatId).subscribe((getMessagesData) => {
         this.messages = getMessagesData.messages;
@@ -81,6 +74,7 @@ export class MainComponent implements OnInit {
           const chat = getUserChatsData.chats.filter(x => x.chatId === chatId)[0];
           if (chat) {
             this.activeChat = chat;
+            console.log(chat);
             this.scrollToEnd();
           }
         })
@@ -133,6 +127,7 @@ export class MainComponent implements OnInit {
   onSearchClick(): void {
     this.chatService.searchChat(this.searchQuery).subscribe((data: IGetUserChatsResponse) => {
       this.chats = data.chats;
+      console.log(data.chats);
       this.searchQuery = '';
       this.chatFilter = 'Search Results';
       console.log(data.chats);

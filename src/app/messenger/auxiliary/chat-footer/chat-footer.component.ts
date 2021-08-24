@@ -14,6 +14,7 @@ export class ChatFooterComponent {
 
   currentMessageText: string = '';
   @Input() chatId: string = '';
+  @Input() isMember: boolean = false;
 
   @Output() notifyParentOnSendMessage = new EventEmitter();
 
