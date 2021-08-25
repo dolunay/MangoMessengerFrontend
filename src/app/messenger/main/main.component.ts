@@ -145,6 +145,11 @@ export class MainComponent implements OnInit {
       const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
 
       this.userChatsService.putArchiveChat(command).subscribe((_) => {
+        if (chat.isArchived) {
+          this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
+          return;
+        }
+
         this.onChatFilerClick('All Chats');
       }, error => {
         alert(error.error.ErrorMessage);
