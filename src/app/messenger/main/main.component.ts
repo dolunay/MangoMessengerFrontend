@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
@@ -39,20 +39,32 @@ export class MainComponent implements OnInit {
   chatFilter = 'All Chats';
   searchQuery = '';
 
-  constructor(private authService: SessionService,
+  constructor(private sessionService: SessionService,
               private chatService: ChatsService,
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
   ngOnInit(): void {
+    this.initializeView();
+  }
+
+  initializeView(): void {
     this.chatService.getUserChats().subscribe((data) => {
         const routeChatId = this.route.snapshot.paramMap.get('chatId');
         this.chats = data.chats;
 
         if (routeChatId) {
           this.loadChatAndMessages(routeChatId);
+          return;
+        }
+
+        const chatIdFromLocalStorage = this.sessionService.getActiveChatId();
+
+        if (chatIdFromLocalStorage) {
+          this.loadChatAndMessages(chatIdFromLocalStorage);
           return;
         }
 
@@ -70,6 +82,7 @@ export class MainComponent implements OnInit {
     this.messageService.getChatMessages(chatId).subscribe((getMessagesData) => {
         this.messages = getMessagesData.messages;
         this.activeChatId = chatId;
+        this.sessionService.writeActiveChatId(chatId);
         this.chatService.getChatById(chatId).subscribe((getChatByIdData) => {
           if (getChatByIdData) {
             this.activeChat = getChatByIdData.chat;
@@ -92,7 +105,7 @@ export class MainComponent implements OnInit {
   }
 
   onMessageSendEvent(): void {
-    this.loadChatAndMessages(this.activeChatId);
+    this.initializeView();
   }
 
   onChatFilerClick(filer: string): void {
@@ -140,6 +153,11 @@ export class MainComponent implements OnInit {
       const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
 
       this.userChatsService.putArchiveChat(command).subscribe((_) => {
+        if (chat.isArchived) {
+          this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
+          return;
+        }
+
         this.onChatFilerClick('All Chats');
       }, error => {
         alert(error.error.ErrorMessage);
@@ -166,6 +184,6 @@ export class MainComponent implements OnInit {
   }
 
   onJoinGroupEvent() {
-    this.onChatFilerClick('All Chats');
+    this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
   }
 }

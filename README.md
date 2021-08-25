@@ -8,6 +8,7 @@
 [![Trello board](https://img.shields.io/badge/Task%20Board-Trello-blue)](https://trello.com/b/Z7IlfrRb/mango-messenger-trello)
 
 ## Manual run
+
 - Clone this repository https://github.com/razumovskii/mango-angular-frontend.git
 - Install LTS Node Package Manager https://nodejs.org/en/download/
 - Check if NPM is installed correctly `npm -v`
@@ -18,10 +19,16 @@
 - Run project `ng serve`
 
 ## Docker run
+
 - Build container `docker build -t mango-angular-frontend .`
 - Run it `docker run -d -p 9080:80 --name mango_frontend mango-angular-frontend:latest`
 
+## Desktop version run
+
+- `ng build --base-href ./ && electron .`
+
 ## Git flow
+
 - Each task is assigned a number (MANGO-ID)
 - Tasks are at Trello board https://trello.com/b/F4N6Afg7/api-docs
 - There are two main branches: master, develop

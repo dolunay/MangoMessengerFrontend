@@ -20,4 +20,8 @@ export interface ISessionService {
   writeAccessToken(token: string): void;
 
   writeRefreshToken(tokenId: string): void;
+
+  writeActiveChatId(chatId: string): void;
+
+  getActiveChatId(): string | null;
 }

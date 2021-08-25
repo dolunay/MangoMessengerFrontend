@@ -1,5 +1,5 @@
 <li class="contacts-item friends">
-  <a class="contacts-link" href="javascript:;">
+  <div class="contacts-link">
     <div class="avatar avatar-online">
       <img src="./../assets/media/avatar/2.png" alt="">
     </div>
@@ -9,10 +9,13 @@
         <div class="chat-time">{{chat.lastMessageAt}}</div>
       </div>
       <div class="contacts-texts">
-        <p class="text-truncate" *ngIf="chatContainsMessages(); else elseBlock"><b>{{chat.lastMessageAuthor}}
-          : </b>{{chat.lastMessage}}</p>
-        <ng-template #elseBlock class="text-truncate">Chat is currently empty.</ng-template>
+        <p class="text-truncate" *ngIf="chatContainsMessages(); else elseBlock">
+          <b>{{chat.lastMessageAuthor}}: </b>{{chat.lastMessage}}
+        </p>
+        <ng-template #elseBlock class="text-truncate">
+          Chat is currently empty.
+        </ng-template>
       </div>
     </div>
-  </a>
+  </div>
 </li>
