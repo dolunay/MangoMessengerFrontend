@@ -39,7 +39,7 @@ export class MainComponent implements OnInit {
   chatFilter = 'All Chats';
   searchQuery = '';
 
-  constructor(private authService: SessionService,
+  constructor(private sessionService: SessionService,
               private chatService: ChatsService,
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
@@ -61,6 +61,13 @@ export class MainComponent implements OnInit {
           return;
         }
 
+        const chatIdFromLocalStorage = this.sessionService.getActiveChatId();
+
+        if (chatIdFromLocalStorage) {
+          this.loadChatAndMessages(chatIdFromLocalStorage);
+          return;
+        }
+
         const firstChat = data.chats[0];
         if (firstChat) {
           this.loadChatAndMessages(firstChat.chatId);
@@ -75,6 +82,7 @@ export class MainComponent implements OnInit {
     this.messageService.getChatMessages(chatId).subscribe((getMessagesData) => {
         this.messages = getMessagesData.messages;
         this.activeChatId = chatId;
+        this.sessionService.writeActiveChatId(chatId);
         this.chatService.getChatById(chatId).subscribe((getChatByIdData) => {
           if (getChatByIdData) {
             this.activeChat = getChatByIdData.chat;

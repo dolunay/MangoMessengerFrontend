@@ -17,6 +17,14 @@ export class SessionService implements ISessionService {
   constructor(private httpClient: HttpClient) {
   }
 
+  writeActiveChatId(chatId: string): void {
+    localStorage.setItem("MangoActiveChatId", chatId);
+  }
+
+  getActiveChatId(): string | null {
+    return localStorage.getItem("MangoActiveChatId");
+  }
+
   postSession(command: LoginCommand): Observable<ITokensResponse> {
     return this.httpClient.post<ITokensResponse>(ApiRoute.route + this.sessionsRoute, command,
       {withCredentials: true});
