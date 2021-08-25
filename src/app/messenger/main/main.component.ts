@@ -105,7 +105,7 @@ export class MainComponent implements OnInit {
   }
 
   onMessageSendEvent(): void {
-    this.loadChatAndMessages(this.activeChatId);
+    this.initializeView();
   }
 
   onChatFilerClick(filer: string): void {
