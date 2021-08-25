@@ -23,7 +23,7 @@ export class ReceivedMessageComponent {
 
   @Output() notifyParentOnDeleteMessage = new EventEmitter<string>();
 
-  deleteMessage() : void {
+  deleteMessage(): void {
     this.messageService.deleteMessage(this.message.messageId).subscribe((data) => {
       this.notifyParentOnDeleteMessage.emit(data.messageId);
     }, error => {
