@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
@@ -43,10 +43,15 @@ export class MainComponent implements OnInit {
               private chatService: ChatsService,
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
   ngOnInit(): void {
+    this.initializeView();
+  }
+
+  initializeView(): void {
     this.chatService.getUserChats().subscribe((data) => {
         const routeChatId = this.route.snapshot.paramMap.get('chatId');
         this.chats = data.chats;
@@ -166,6 +171,6 @@ export class MainComponent implements OnInit {
   }
 
   onJoinGroupEvent() {
-    this.onChatFilerClick('All Chats');
+    this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
   }
 }
