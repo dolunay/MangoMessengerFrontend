@@ -1,8 +1,9 @@
 {
   "name": "mango-angular-frontend",
   "version": "0.0.0",
+  "main": "app.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "ng build --base-href ./ && electron .",
     "build": "ng build --aot --configuration production",
     "test": "ng test",
     "lint": "ng lint",
