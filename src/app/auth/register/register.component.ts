@@ -26,14 +26,16 @@ export class RegisterComponent {
   }
 
   register(): void {
+    const verificationMethod = this.verificationMethod === VerificationMethod.Email ? 2 : 1;
+
     const command = new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName,
-      this.Password, Number(this.verificationMethod), this.TermsAccepted);
+      this.Password, verificationMethod, this.TermsAccepted);
 
     this.usersService.postUser(command).subscribe((data) => {
       this.sessionService.writeAccessToken(data.accessToken);
       this.sessionService.writeRefreshToken(data.refreshToken);
       if (this.verificationMethod === VerificationMethod.Phone) {
-        this.router.navigateByUrl('verify-phone').then(r => alert(data.message));
+        this.router.navigateByUrl('verify-phone').then(_ => alert(data.message));
         return;
       }
 
