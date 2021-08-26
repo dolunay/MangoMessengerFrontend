@@ -39,7 +39,7 @@ export class RegisterComponent {
         return;
       }
 
-      alert('Confirm your email');
+      alert('Mail is sent to the your inbox. Check and follow instructions.');
     }, error => {
       alert(error.error.ErrorMessage);
     });
