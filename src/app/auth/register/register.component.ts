@@ -12,12 +12,12 @@ import {RegisterCommand} from "../../../types/requests/RegisterCommand";
 })
 export class RegisterComponent {
 
-  PhoneNumber = '';
-  Email = '';
-  Password = '';
+  phoneNumber = '';
+  email = '';
+  password = '';
   verificationMethod = VerificationMethod.Email;
-  TermsAccepted = false;
-  DisplayName = '';
+  termsAccepted = false;
+  displayName = '';
 
   verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
@@ -28,8 +28,8 @@ export class RegisterComponent {
   register(): void {
     const verificationMethod = this.verificationMethod === VerificationMethod.Email ? 2 : 1;
 
-    const command = new RegisterCommand(this.PhoneNumber, this.Email, this.DisplayName,
-      this.Password, verificationMethod, this.TermsAccepted);
+    const command = new RegisterCommand(this.phoneNumber, this.email, this.displayName,
+      this.password, verificationMethod, this.termsAccepted);
 
     this.usersService.postUser(command).subscribe((data) => {
       this.sessionService.writeAccessToken(data.accessToken);
@@ -39,9 +39,19 @@ export class RegisterComponent {
         return;
       }
 
+      this.initializeForm();
       alert('Mail is sent to the your inbox. Check and follow instructions.');
     }, error => {
       alert(error.error.ErrorMessage);
     });
+  }
+
+  initializeForm(): void {
+    this.phoneNumber = '';
+    this.email = '';
+    this.password = '';
+    this.verificationMethod = VerificationMethod.Email;
+    this.termsAccepted = false;
+    this.displayName = '';
   }
 }
