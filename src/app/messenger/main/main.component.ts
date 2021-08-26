@@ -9,6 +9,10 @@ import {IChat} from "../../../types/models/IChat";
 import {ChatType} from "../../../types/enums/ChatType";
 import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
+import {MatDialog} from "@angular/material/dialog";
+import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
+import {NewChatDialogComponent} from "../dialogs/new-chat-dialog/new-chat-dialog.component";
+import {InviteOthersDialogComponent} from "../dialogs/invite-others-dialog/invite-others-dialog.component";
 
 @Component({
   selector: 'app-main',
@@ -44,7 +48,20 @@ export class MainComponent implements OnInit {
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              public dialog: MatDialog) {
+  }
+
+  openNewChatDialog(): void {
+    this.dialog.open(NewChatDialogComponent);
+  }
+
+  openCreateGroupDialog(): void {
+    this.dialog.open(CreateGroupDialogComponent);
+  }
+
+  openInviteOthersDialog(): void {
+    this.dialog.open(InviteOthersDialogComponent);
   }
 
   ngOnInit(): void {
