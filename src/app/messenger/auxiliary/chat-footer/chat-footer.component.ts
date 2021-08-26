@@ -12,12 +12,18 @@ export class ChatFooterComponent {
   constructor(private messageService: MessagesService) {
   }
 
+
+
   currentMessageText: string = '';
   @Input() chatId: string = '';
 
   @Output() notifyParentOnSendMessage = new EventEmitter();
 
-  onMessageSendClick(): void {
+  sendMessage(event: any): void {
+    return this.onMessageSendClick(event)
+  }
+
+  onMessageSendClick(event: any): void {
     const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chatId);
     this.messageService.sendMessage(sendMessageCommand).subscribe((_) => {
       this.currentMessageText = '';
