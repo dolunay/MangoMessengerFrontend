@@ -69,7 +69,7 @@ export class ContactsComponent implements OnInit {
   }
 
   onUserSearchClick(): void {
-    this.userService.postSearch(this.userSearchQuery).subscribe((data: ISearchResponse) => {
+    this.userService.getSearchUsers(this.userSearchQuery).subscribe((data: ISearchResponse) => {
       this.userContacts = data.users
         .map(({userId, displayName, address, bio}) => ({userId, displayName, address, bio})) as IContact[];
       this.contactsFilter = 'Search Results';
