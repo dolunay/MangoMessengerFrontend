@@ -42,8 +42,8 @@ export class UsersService implements IUserService {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + phoneCode, {});
   }
 
-  postSearch(displayName: string): Observable<ISearchResponse> {
-    return this.httpClient.post<ISearchResponse>(ApiRoute.route + this.usersRoute + displayName, {});
+  getSearchUsers(displayName: string): Observable<ISearchResponse> {
+    return this.httpClient.get<ISearchResponse>(ApiRoute.route + this.usersRoute + 'searches/' + displayName, {});
   }
 
   putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IBaseResponse> {

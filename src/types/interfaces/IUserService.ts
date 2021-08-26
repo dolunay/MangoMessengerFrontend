@@ -21,7 +21,7 @@ export interface IUserService {
 
   putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IBaseResponse>;
 
-  postSearch(displayName: string): Observable<ISearchResponse>;
+  getSearchUsers(displayName: string): Observable<ISearchResponse>;
 
   putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse>;
 }
