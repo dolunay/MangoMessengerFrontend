@@ -28,6 +28,8 @@ import {MatButtonModule} from "@angular/material/button";
 import { CreateGroupDialogComponent } from './messenger/dialogs/create-group-dialog/create-group-dialog.component';
 import { NewChatDialogComponent } from './messenger/dialogs/new-chat-dialog/new-chat-dialog.component';
 import { InviteOthersDialogComponent } from './messenger/dialogs/invite-others-dialog/invite-others-dialog.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   declarations: [
@@ -70,7 +72,9 @@ import { InviteOthersDialogComponent } from './messenger/dialogs/invite-others-d
     ReactiveFormsModule,
     FormsModule,
     BrowserAnimationsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: RequestHeaderInterceptor, multi: true},

@@ -1,4 +1,4 @@
-﻿export enum ChatType {
+﻿export enum GroupType {
   DirectChat = "Direct Chat",
   PrivateChannel = "Private Channel",
   PublicChannel = "Public Channel",

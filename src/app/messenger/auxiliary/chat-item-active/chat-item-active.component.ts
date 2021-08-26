@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {IChat} from "../../../../types/models/IChat";
-import {ChatType} from "../../../../types/enums/ChatType";
+import {GroupType} from "../../../../types/enums/GroupType";
 
 @Component({
   selector: 'app-chat-item-active',
@@ -15,7 +15,7 @@ export class ChatItemActiveComponent {
   @Input() chat: IChat = {
     description: "",
     chatId: "",
-    chatType: ChatType.DirectChat,
+    chatType: GroupType.DirectChat,
     image: "",
     isArchived: false,
     lastMessage: "",

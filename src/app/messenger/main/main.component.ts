@@ -6,7 +6,7 @@ import {MessagesService} from "../../services/messages.service";
 import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
-import {ChatType} from "../../../types/enums/ChatType";
+import {GroupType} from "../../../types/enums/GroupType";
 import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
@@ -29,7 +29,7 @@ export class MainComponent implements OnInit {
   activeChat: IChat = {
     description: "",
     chatId: "",
-    chatType: ChatType.DirectChat,
+    chatType: GroupType.DirectChat,
     image: "",
     isArchived: false,
     isMember: false,
@@ -53,7 +53,14 @@ export class MainComponent implements OnInit {
   }
 
   openNewChatDialog(): void {
-    this.dialog.open(NewChatDialogComponent);
+    const dialogRef = this.dialog.open(NewChatDialogComponent, {
+      width: '500px',
+      height: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    })
   }
 
   openCreateGroupDialog(): void {
@@ -137,10 +144,10 @@ export class MainComponent implements OnInit {
           }
           break;
         case 'Groups':
-          this.chats = data.chats.filter(x => x.chatType === ChatType.ReadOnlyChannel || x.chatType === ChatType.PublicChannel);
+          this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel || x.chatType === GroupType.PublicChannel);
           break;
         case 'Direct Chats':
-          this.chats = data.chats.filter(x => x.chatType === ChatType.DirectChat);
+          this.chats = data.chats.filter(x => x.chatType === GroupType.DirectChat);
           break;
         case 'Archived':
           this.chats = data.chats.filter(x => x.isArchived);
