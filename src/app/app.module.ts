@@ -20,11 +20,16 @@ import {ProfileSettingsSidebarComponent} from "./messenger/auxiliary/profile-set
 import {ProfileLogoutButtonComponent} from './messenger/auxiliary/profile-logout-button/profile-logout-button.component';
 import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
 import {ContactItemComponent} from "./messenger/auxiliary/contact-item/contact-item.component";
-import {CreateGroupComponent} from './messenger/modals/create-group/create-group.component';
-import {InviteOthersComponent} from './messenger/modals/invite-others/invite-others.component';
-import {NotificationsComponent} from './messenger/modals/notifications/notifications.component';
 import {RequestHeaderInterceptor} from "./interceptors/request-header.interceptor";
-import { JoinGroupComponent } from './messenger/auxiliary/join-group/join-group.component';
+import {JoinGroupComponent} from './messenger/auxiliary/join-group/join-group.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatButtonModule} from "@angular/material/button";
+import { CreateGroupDialogComponent } from './messenger/dialogs/create-group-dialog/create-group-dialog.component';
+import { NewChatDialogComponent } from './messenger/dialogs/new-chat-dialog/new-chat-dialog.component';
+import { InviteOthersDialogComponent } from './messenger/dialogs/invite-others-dialog/invite-others-dialog.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   declarations: [
@@ -43,13 +48,14 @@ import { JoinGroupComponent } from './messenger/auxiliary/join-group/join-group.
     ProfileSettingsSidebarComponent,
     ProfileLogoutButtonComponent,
     ContactItemComponent,
-    CreateGroupComponent,
-    InviteOthersComponent,
-    NotificationsComponent,
     JoinGroupComponent,
+    CreateGroupDialogComponent,
+    NewChatDialogComponent,
+    InviteOthersDialogComponent,
   ],
   imports: [
     HttpClientModule,
+    MatDialogModule,
     BrowserModule,
     RouterModule.forRoot([
       {path: 'register', component: RegisterComponent},
@@ -64,7 +70,11 @@ import { JoinGroupComponent } from './messenger/auxiliary/join-group/join-group.
     ]),
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: RequestHeaderInterceptor, multi: true},

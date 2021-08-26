@@ -5,7 +5,7 @@ export class RegisterCommand {
   email: string;
   displayName: string;
   password: string;
-  verificationMethod: VerificationMethod;
+  verificationMethod: VerificationMethod | number;
   termsAccepted: boolean;
 
 
@@ -13,7 +13,7 @@ export class RegisterCommand {
               email: string,
               displayName: string,
               password: string,
-              verificationMethod: VerificationMethod,
+              verificationMethod: VerificationMethod | number,
               termsAccepted: boolean) {
     this.phoneNumber = phoneNumber;
     this.email = email;

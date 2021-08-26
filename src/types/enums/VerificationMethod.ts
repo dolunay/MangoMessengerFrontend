@@ -1,4 +1,4 @@
 ﻿export enum VerificationMethod {
-  Phone = 1,
-  Email = 2,
+  Phone = "SMS",
+  Email = "Email",
 }

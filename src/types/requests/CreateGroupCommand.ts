@@ -1,11 +1,14 @@
-﻿import {ChatType} from "../enums/ChatType";
+﻿import {GroupType} from "../enums/GroupType";
 
 export class CreateGroupCommand {
-    groupType: ChatType;
-    groupTitle: string;
+  groupType: GroupType | number;
+  groupTitle: string;
+  groupDescription: string;
 
-    constructor(groupType: ChatType, groupTitle: string) {
-        this.groupType = groupType;
-        this.groupTitle = groupTitle;
-    }
+
+  constructor(groupType: GroupType | number, groupTitle: string, groupDescription: string) {
+    this.groupType = groupType;
+    this.groupTitle = groupTitle;
+    this.groupDescription = groupDescription;
+  }
 }
