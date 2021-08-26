@@ -29,6 +29,7 @@ export class VerifyEmailComponent implements OnInit {
           this.sessionService.postRefreshSession(refreshToken).subscribe(result => {
             this.sessionService.writeRefreshToken(result.refreshToken);
             this.sessionService.writeAccessToken(result.accessToken);
+            this.sessionService.writeActiveChatId('');
           })
         }, error => {
           this.message = error.error.ErrorMessage;
