@@ -24,9 +24,9 @@ export class VerifyPhoneComponent {
         this.sessionService.writeAccessToken(data.accessToken);
         this.sessionService.writeRefreshToken(data.refreshToken);
       }, error => {
-        alert(error.message);
+        this.router.navigateByUrl('login').then(_ => alert(error.error.ErrorMessage));
       })
-      this.router.navigateByUrl('login').then(_ => alert(data.message));
+      this.router.navigateByUrl('main').then(_ => alert(data.message));
     }, error => {
       alert(error.error.ErrorMessage);
     });
