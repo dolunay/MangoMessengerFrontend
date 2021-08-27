@@ -30,6 +30,7 @@ import { NewChatDialogComponent } from './messenger/dialogs/new-chat-dialog/new-
 import { InviteOthersDialogComponent } from './messenger/dialogs/invite-others-dialog/invite-others-dialog.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
+import { StartComponent } from './messenger/start/start.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import {MatInputModule} from "@angular/material/input";
     CreateGroupDialogComponent,
     NewChatDialogComponent,
     InviteOthersDialogComponent,
+    StartComponent,
   ],
   imports: [
     HttpClientModule,
@@ -64,6 +66,7 @@ import {MatInputModule} from "@angular/material/input";
       {path: 'verify-email', component: VerifyEmailComponent},
       {path: 'main', component: MainComponent},
       {path: 'main/:chatId', component: MainComponent},
+      {path: 'start', component: StartComponent},
       {path: 'contacts', component: ContactsComponent},
       {path: 'profile-settings', component: ProfileSettingsComponent},
       {path: '', redirectTo: '/login', pathMatch: 'full'},

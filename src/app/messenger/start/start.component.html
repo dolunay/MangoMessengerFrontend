@@ -1,0 +1,156 @@
+<body class="chat-tab-open">
+
+<div class="main-layout">
+  <!-- Navigation Start -->
+  <app-navigation-bar [activeRoute]="'chats'"></app-navigation-bar>
+  <!-- Navigation End -->
+
+  <!-- Sidebar Start -->
+  <aside class="sidebar">
+    <!-- Tab Content Start -->
+    <div class="tab-content">
+      <!-- Chat Tab Content Start -->
+      <div class="tab-pane active" id="chats-content">
+        <div class="d-flex flex-column h-100">
+          <div class="hide-scrollbar h-100" id="chatContactsList">
+
+            <!-- Chat Header Start -->
+            <div class="sidebar-header sticky-top p-2">
+
+              <div class="d-flex justify-content-between align-items-center">
+                <!-- Chat Tab Pane Title Start -->
+                <h3 class="font-weight-semibold mb-0">Chats</h3>
+                <!-- Chat Tab Pane Title End -->
+
+                <ul class="nav flex-nowrap">
+
+                  <li class="nav-item list-inline-item mr-1">
+                    <div class="nav-link text-muted px-1" title="Notifications" role="button" data-toggle="modal"
+                         data-target="#notificationModal">
+                      <!-- Default :: Inline SVG -->
+                      <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                      </svg>
+                    </div>
+                  </li>
+
+                  <li class="nav-item list-inline-item mr-0">
+                    <div class="dropdown">
+                      <div class="nav-link text-muted px-1" role="button" title="Details"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <!-- Default :: Inline SVG -->
+                        <svg class="hw-20" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                        </svg>
+                      </div>
+
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <button mat-raised-button class="dropdown-item" (click)="openNewChatDialog()">New Chat</button>
+                        <button mat-raised-button class="dropdown-item" (click)="openCreateGroupDialog()">Create Group
+                        </button>
+                        <button mat-raised-button class="dropdown-item" (click)="openInviteOthersDialog()">Invite
+                          Others
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+
+              <!-- Sidebar Header Start -->
+              <div class="sidebar-sub-header">
+                <!-- Sidebar Header Dropdown Start -->
+                <div class="dropdown mr-2">
+                  <!-- Dropdown Button Start -->
+                  <button class="btn btn-outline-default dropdown-toggle" type="button" data-toggle="dropdown">
+                    {{chatFilter}}
+                  </button>
+                  <!-- Dropdown Button End -->
+
+                  <!-- Dropdown Menu Start -->
+                  <div class="dropdown-menu">
+                    <div class="dropdown-item cursor-pointer" (click)="onChatFilerClick('All Chats')">All Chats</div>
+                    <div class="dropdown-item cursor-pointer" (click)="onChatFilerClick('Groups')">Groups</div>
+                    <div class="dropdown-item cursor-pointer" (click)="onChatFilerClick('Direct Chats')">Direct Chats
+                    </div>
+                    <div class="dropdown-item cursor-pointer" (click)="onChatFilerClick('Archived')">Archived</div>
+                  </div>
+                  <!-- Dropdown Menu End -->
+                </div>
+                <!-- Sidebar Header Dropdown End -->
+
+                <!-- Sidebar Search Start -->
+                <form class="form-inline">
+                  <div class="input-group">
+                    <input [(ngModel)]="searchQuery" name="searchQuery" type="text"
+                           class="form-control search border-right-0 transparent-bg pr-0 text-white"
+                           placeholder="Search chats..." value="{{searchQuery}}">
+                    <div class="input-group-append">
+                      <div class="input-group-text transparent-bg border-left-0" role="button"
+                           (click)="onSearchClick()">
+                        <!-- Default :: Inline SVG -->
+                        <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+
+                        <!-- Alternate :: External File link -->
+                        <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/search.svg" alt=""> -->
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <!-- Sidebar Search End -->
+              </div>
+              <!-- Sidebar Header End -->
+            </div>
+            <!-- Chat Header End -->
+
+            <!--Chat Contact List Start -->
+            <ul class="contacts-list" id="chatContactTab" data-chat-list="">
+              <!--Chat Item Start -->
+              <li *ngFor="let chat of chats">
+                <app-chat-item-active [chat]="chat"></app-chat-item-active>
+              </li>
+              <!--Chat Item End -->
+            </ul>
+            <!-- Chat Contact List End -->
+          </div>
+        </div>
+      </div>
+      <!-- Chats Tab Content End -->
+    </div>
+    <!-- Tab Content End -->
+  </aside>
+  <!-- Sidebar End -->
+
+  <main class="main">
+    <!-- Chats Page Start -->
+    <div class="chats">
+      <div class="d-flex flex-column justify-content-center text-center h-100 w-100">
+        <div class="container">
+          <div class="avatar avatar-lg mb-2">
+            <img class="avatar-img" src="assets/media/avatar/4.png" alt="">
+          </div>
+
+          <h5>Welcome, {{user.displayName}}!</h5>
+          <p class="text-muted">Please select a chat to Start messaging.</p>
+
+          <button class="btn btn-outline-primary no-box-shadow" type="button" data-toggle="modal" data-target="#startConversation">
+            Start a conversation
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Chats Page End -->
+  </main>
+</div>
+
+</body>
