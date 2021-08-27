@@ -20,7 +20,7 @@ export class LoginComponent {
     this.authService.postSession(new LoginCommand(this.email, this.password)).subscribe((data) => {
       this.authService.writeAccessToken(data.accessToken);
       this.authService.writeRefreshToken(data.refreshToken);
-      this.router.navigateByUrl('main').then(r => r);
+      this.router.navigateByUrl('start').then(r => r);
     }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")));
   }
 }

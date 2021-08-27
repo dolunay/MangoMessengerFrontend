@@ -51,12 +51,12 @@ export class ProfileSettingsSidebarComponent implements OnInit {
     let refreshToken = this.sessionService.getRefreshToken();
     this.sessionService.deleteSession(refreshToken)
       .subscribe((_) => {
-        this.sessionService.writeAccessToken('');
-        this.sessionService.writeRefreshToken('');
+        this.sessionService.clearAccessToken();
+        this.sessionService.clearRefreshToken();
         this.router.navigateByUrl('login').then(r => r);
       }, _ => {
-        this.sessionService.writeAccessToken('');
-        this.sessionService.writeRefreshToken('');
+        this.sessionService.clearAccessToken();
+        this.sessionService.clearRefreshToken();
         this.router.navigateByUrl('login').then(r => r);
       })
   }
@@ -65,12 +65,12 @@ export class ProfileSettingsSidebarComponent implements OnInit {
     let refreshToken = this.sessionService.getRefreshToken();
     this.sessionService.deleteAllSessions(refreshToken)
       .subscribe((_) => {
-        this.sessionService.writeAccessToken('');
-        this.sessionService.writeRefreshToken('');
+        this.sessionService.clearAccessToken();
+        this.sessionService.clearRefreshToken();
         this.router.navigateByUrl('login').then(r => r);
-      }, error => {
-        this.sessionService.writeAccessToken('');
-        this.sessionService.writeRefreshToken('');
+      }, _ => {
+        this.sessionService.clearAccessToken();
+        this.sessionService.clearRefreshToken();
         this.router.navigateByUrl('login').then(r => r);
       })
   }

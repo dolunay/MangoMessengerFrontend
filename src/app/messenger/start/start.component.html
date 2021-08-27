@@ -140,10 +140,11 @@
             <img class="avatar-img" src="assets/media/avatar/4.png" alt="">
           </div>
 
-          <h5>Welcome, {{user.displayName}}!</h5>
+          <h3>Welcome, {{user.displayName}}!</h3>
           <p class="text-muted">Please select a chat to Start messaging.</p>
-
-          <button class="btn btn-outline-primary no-box-shadow" type="button" data-toggle="modal" data-target="#startConversation">
+          <p class="text-muted">Search for chats in this component, for instance ExtremeCode.</p>
+          <p class="text-muted">Or search for particular user. Click button below.</p>
+          <button class="btn btn-outline-primary no-box-shadow" type="button" (click)="navigateContacts()">
             Start a conversation
           </button>
         </div>

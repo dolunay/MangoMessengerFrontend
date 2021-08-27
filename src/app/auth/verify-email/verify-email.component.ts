@@ -29,7 +29,6 @@ export class VerifyEmailComponent implements OnInit {
           this.sessionService.postRefreshSession(refreshToken).subscribe(result => {
             this.sessionService.writeRefreshToken(result.refreshToken);
             this.sessionService.writeAccessToken(result.accessToken);
-            this.sessionService.writeActiveChatId('');
           })
         }, error => {
           this.message = error.error.ErrorMessage;
@@ -38,7 +37,7 @@ export class VerifyEmailComponent implements OnInit {
     });
   }
 
-  proceedToMain(): void {
-    this.router.navigateByUrl('main').then(_ => _);
+  proceedToStart(): void {
+    this.router.navigateByUrl('start').then(_ => _);
   }
 }

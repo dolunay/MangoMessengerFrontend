@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ChatsService} from "../../services/chats.service";
 import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
 import {GroupType} from "../../../types/enums/GroupType";
@@ -10,6 +10,7 @@ import {InviteOthersDialogComponent} from "../dialogs/invite-others-dialog/invit
 import {MatDialog} from "@angular/material/dialog";
 import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-start',
@@ -44,14 +45,20 @@ export class StartComponent implements OnInit {
 
   constructor(private chatService: ChatsService,
               private userService: UsersService,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private route: ActivatedRoute,
+              private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.chatService.getUserChats().subscribe((data) =>
-      {
-        this.getUserDisplayName();
-        this.chats = data.chats;
-      });
+    this.chatService.getUserChats().subscribe((data) => {
+      this.getUserDisplayName();
+      this.chats = data.chats;
+    });
+  }
+
+  chatsAny(): boolean {
+    return this.chats.length > 0;
   }
 
   openNewChatDialog(): void {
@@ -109,9 +116,12 @@ export class StartComponent implements OnInit {
   }
 
   getUserDisplayName(): void {
-    this.userService.getCurrentUser().subscribe((data) =>
-      {
-        this.user = data.user;
-      });
+    this.userService.getCurrentUser().subscribe((data) => {
+      this.user = data.user;
+    });
+  }
+
+  navigateContacts(): void {
+    this.router.navigateByUrl('contacts').then(r => r);
   }
 }

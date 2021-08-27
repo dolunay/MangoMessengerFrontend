@@ -53,14 +53,14 @@ export class MainComponent implements OnInit {
   }
 
   openNewChatDialog(): void {
-    const dialogRef = this.dialog.open(NewChatDialogComponent, {
+    this.dialog.open(NewChatDialogComponent, {
       width: '500px',
       height: '500px'
     });
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-    })
+  chatsAny(): boolean {
+    return this.chats.length > 0;
   }
 
   openCreateGroupDialog(): void {
@@ -77,36 +77,32 @@ export class MainComponent implements OnInit {
 
   initializeView(): void {
     this.chatService.getUserChats().subscribe((data) => {
-        const routeChatId = this.route.snapshot.paramMap.get('chatId');
-        this.chats = data.chats;
+      const routeChatId = this.route.snapshot.paramMap.get('chatId');
+      this.chats = data.chats;
 
-        if (routeChatId) {
-          this.loadChatAndMessages(routeChatId);
-          return;
-        }
+      if (routeChatId) {
+        this.loadChatAndMessages(routeChatId);
+        return;
+      }
 
-        const chatIdFromLocalStorage = this.sessionService.getActiveChatId();
+      const firstChat = data.chats[0];
+      if (firstChat) {
+        this.loadChatAndMessages(firstChat.chatId);
+      }
+    }, error => {
+      if (error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+        return;
+      }
 
-        if (chatIdFromLocalStorage) {
-          this.loadChatAndMessages(chatIdFromLocalStorage);
-          return;
-        }
-
-        const firstChat = data.chats[0];
-        if (firstChat) {
-          this.loadChatAndMessages(firstChat.chatId);
-        }
-      },
-      error => {
-        alert(error.error.ErrorMessage);
-      });
+      alert(error.error.ErrorMessage);
+    });
   }
 
   loadChatAndMessages(chatId: string): void {
     this.messageService.getChatMessages(chatId).subscribe((getMessagesData) => {
         this.messages = getMessagesData.messages;
         this.activeChatId = chatId;
-        this.sessionService.writeActiveChatId(chatId);
         this.chatService.getChatById(chatId).subscribe((getChatByIdData) => {
           if (getChatByIdData) {
             this.activeChat = getChatByIdData.chat;
