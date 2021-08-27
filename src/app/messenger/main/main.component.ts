@@ -59,6 +59,10 @@ export class MainComponent implements OnInit {
     });
   }
 
+  chatsAny(): boolean {
+    return this.chats.length > 0;
+  }
+
   openCreateGroupDialog(): void {
     this.dialog.open(CreateGroupDialogComponent);
   }
