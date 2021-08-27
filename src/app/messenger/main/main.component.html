@@ -115,7 +115,7 @@
             <!-- Chat Header End -->
 
             <!-- Chat Contact List Start -->
-            <ul class="contacts-list" id="chatContactTab" data-chat-list="">
+            <ul class="contacts-list" id="chatContactTab">
               <!-- Chat Item Start -->
               <li *ngFor="let chat of chats">
                 <app-chat-item-active [chat]="chat" (click)="loadChatAndMessages(chat.chatId)"
@@ -138,7 +138,7 @@
   <main class="main main-visible">
 
     <!-- Chats Page Start -->
-    <div class="chats">
+    <div *ngIf="noActiveChat()" class="chats">
       <div class="chat-body">
         <!-- Chat Header Start-->
         <div class="chat-header">
@@ -161,7 +161,7 @@
               <img src="assets/media/avatar/3.png" alt="avatar_example">
             </div>
 
-            <div class="media-body align-self-center ">
+            <div class="media-body align-self-center">
               <h3 class="text-truncate mb-0">{{activeChat.title}}</h3>
               <small class="text-muted">{{activeChat.description}}</small>
               <br>

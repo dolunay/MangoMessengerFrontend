@@ -59,10 +59,6 @@ export class MainComponent implements OnInit {
     });
   }
 
-  chatsAny(): boolean {
-    return this.chats.length > 0;
-  }
-
   openCreateGroupDialog(): void {
     this.dialog.open(CreateGroupDialogComponent);
   }
@@ -162,6 +158,8 @@ export class MainComponent implements OnInit {
     this.chatService.searchChat(this.searchQuery).subscribe((data) => {
       this.chats = data.chats;
       this.chatFilter = 'Search Results';
+      console.log(this.noActiveChat());
+      console.log(this.activeChatId);
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -205,5 +203,9 @@ export class MainComponent implements OnInit {
 
   onJoinGroupEvent() {
     this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
+  }
+
+  noActiveChat(): boolean {
+    return this.activeChatId !== '';
   }
 }
