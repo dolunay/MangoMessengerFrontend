@@ -53,14 +53,10 @@ export class MainComponent implements OnInit {
   }
 
   openNewChatDialog(): void {
-    const dialogRef = this.dialog.open(NewChatDialogComponent, {
+    this.dialog.open(NewChatDialogComponent, {
       width: '500px',
       height: '500px'
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-    })
   }
 
   openCreateGroupDialog(): void {
@@ -77,22 +73,26 @@ export class MainComponent implements OnInit {
 
   initializeView(): void {
     this.chatService.getUserChats().subscribe((data) => {
-        const routeChatId = this.route.snapshot.paramMap.get('chatId');
-        this.chats = data.chats;
+      const routeChatId = this.route.snapshot.paramMap.get('chatId');
+      this.chats = data.chats;
 
-        if (routeChatId) {
-          this.loadChatAndMessages(routeChatId);
-          return;
-        }
+      if (routeChatId) {
+        this.loadChatAndMessages(routeChatId);
+        return;
+      }
 
-        const firstChat = data.chats[0];
-        if (firstChat) {
-          this.loadChatAndMessages(firstChat.chatId);
-        }
-      },
-      error => {
-        alert(error.error.ErrorMessage);
-      });
+      const firstChat = data.chats[0];
+      if (firstChat) {
+        this.loadChatAndMessages(firstChat.chatId);
+      }
+    }, error => {
+      if (error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+        return;
+      }
+
+      alert(error.error.ErrorMessage);
+    });
   }
 
   loadChatAndMessages(chatId: string): void {
