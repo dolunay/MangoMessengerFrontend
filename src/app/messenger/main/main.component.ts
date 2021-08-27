@@ -11,8 +11,6 @@ import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
-import {NewChatDialogComponent} from "../dialogs/new-chat-dialog/new-chat-dialog.component";
-import {InviteOthersDialogComponent} from "../dialogs/invite-others-dialog/invite-others-dialog.component";
 
 @Component({
   selector: 'app-main',
@@ -52,23 +50,8 @@ export class MainComponent implements OnInit {
               public dialog: MatDialog) {
   }
 
-  openNewChatDialog(): void {
-    this.dialog.open(NewChatDialogComponent, {
-      width: '500px',
-      height: '500px'
-    });
-  }
-
-  chatsAny(): boolean {
-    return this.chats.length > 0;
-  }
-
   openCreateGroupDialog(): void {
     this.dialog.open(CreateGroupDialogComponent);
-  }
-
-  openInviteOthersDialog(): void {
-    this.dialog.open(InviteOthersDialogComponent);
   }
 
   ngOnInit(): void {
@@ -140,7 +123,9 @@ export class MainComponent implements OnInit {
           }
           break;
         case 'Groups':
-          this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel || x.chatType === GroupType.PublicChannel);
+          this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel
+            || x.chatType === GroupType.PublicChannel
+            || x.chatType === GroupType.PrivateChannel);
           break;
         case 'Direct Chats':
           this.chats = data.chats.filter(x => x.chatType === GroupType.DirectChat);
@@ -162,6 +147,8 @@ export class MainComponent implements OnInit {
     this.chatService.searchChat(this.searchQuery).subscribe((data) => {
       this.chats = data.chats;
       this.chatFilter = 'Search Results';
+      console.log(this.noActiveChat());
+      console.log(this.activeChatId);
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -189,6 +176,7 @@ export class MainComponent implements OnInit {
 
   onLeaveChatClick(): void {
     this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe((_) => {
+      this.activeChatId = '';
       this.onChatFilerClick('All Chats');
     }, error => {
       alert(error.error.ErrorMessage);
@@ -205,5 +193,9 @@ export class MainComponent implements OnInit {
 
   onJoinGroupEvent() {
     this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
+  }
+
+  noActiveChat(): boolean {
+    return this.activeChatId !== '';
   }
 }

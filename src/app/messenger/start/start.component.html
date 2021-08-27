@@ -117,7 +117,7 @@
             <ul class="contacts-list" id="chatContactTab" data-chat-list="">
               <!--Chat Item Start -->
               <li *ngFor="let chat of chats">
-                <app-chat-item-active [chat]="chat"></app-chat-item-active>
+                <app-chat-item-active [chat]="chat" (click)="navigateToChat(chat.chatId)"></app-chat-item-active>
               </li>
               <!--Chat Item End -->
             </ul>

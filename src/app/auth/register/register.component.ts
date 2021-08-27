@@ -35,23 +35,13 @@ export class RegisterComponent {
       this.sessionService.writeAccessToken(data.accessToken);
       this.sessionService.writeRefreshToken(data.refreshToken);
       if (this.verificationMethod === VerificationMethod.Phone) {
-        this.router.navigateByUrl('verify-phone').then(_ => alert(data.message));
+        this.router.navigateByUrl('verify-phone').then(r => r);
         return;
       }
 
-      this.initializeForm();
-      alert('Mail is sent to the your inbox. Check and follow instructions.');
+      this.router.navigateByUrl('verify-email-note').then(r => r);
     }, error => {
       alert(error.error.ErrorMessage);
     });
-  }
-
-  initializeForm(): void {
-    this.phoneNumber = '';
-    this.email = '';
-    this.password = '';
-    this.verificationMethod = VerificationMethod.Email;
-    this.termsAccepted = false;
-    this.displayName = '';
   }
 }

@@ -124,4 +124,8 @@ export class StartComponent implements OnInit {
   navigateContacts(): void {
     this.router.navigateByUrl('contacts').then(r => r);
   }
+
+  navigateToChat(chatId: string): void {
+    this.router.navigate(['main', {chatId: chatId}]).then(r => r);
+  }
 }
