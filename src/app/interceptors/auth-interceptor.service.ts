@@ -32,22 +32,25 @@ export class AuthInterceptor implements HttpInterceptor {
             Authorization: 'Bearer ' + loginData.accessToken
           }, withCredentials: true
         }));
-      })).pipe(catchError((error: HttpErrorResponse) => {
-        if (error.url?.endsWith('refresh-token')) {
-          this.router.navigate(['login']).then(r => r);
-        }
+      })).pipe(catchError((_: HttpErrorResponse) => {
+        this.router.navigate(['login']).then(r => r);
         return of<never>();
       }));
     }
+
     return throwError(err);
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(catchError(error => {
+
       if (error instanceof HttpErrorResponse && error.status === 401) {
         return this.handleAuthError(error, request, next);
       }
+
       return throwError(error);
+
     }))
   }
+  
 }

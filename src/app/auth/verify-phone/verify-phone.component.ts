@@ -27,7 +27,6 @@ export class VerifyPhoneComponent {
         this.router.navigateByUrl('login').then(_ => alert(error.error.ErrorMessage));
       })
 
-      this.sessionService.writeActiveChatId('');
       this.router.navigateByUrl('main').then(_ => alert(data.message));
     }, error => {
       alert(error.error.ErrorMessage);
