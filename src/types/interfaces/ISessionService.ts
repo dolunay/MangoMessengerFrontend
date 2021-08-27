@@ -21,7 +21,7 @@ export interface ISessionService {
 
   writeRefreshToken(tokenId: string): void;
 
-  writeActiveChatId(chatId: string): void;
+  clearAccessToken(): void;
 
-  getActiveChatId(): string | null;
+  clearRefreshToken(): void;
 }
