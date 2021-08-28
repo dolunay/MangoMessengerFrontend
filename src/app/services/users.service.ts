@@ -43,7 +43,7 @@ export class UsersService implements IUserService {
   }
 
   getSearchUsers(displayName: string): Observable<ISearchResponse> {
-    return this.httpClient.get<ISearchResponse>(ApiRoute.route + this.usersRoute + 'searches/' + displayName, {});
+    return this.httpClient.get<ISearchResponse>(ApiRoute.route + this.usersRoute + 'searches?displayName=' + displayName);
   }
 
   putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IBaseResponse> {

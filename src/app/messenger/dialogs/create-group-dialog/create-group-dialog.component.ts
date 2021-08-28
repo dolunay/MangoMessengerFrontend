@@ -1,6 +1,5 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {GroupType} from "../../../../types/enums/GroupType";
 import {ICreateChatResponse} from "../../../../types/responses/ICreateChatResponse";
 import {ChatsService} from "../../../services/chats.service";
 import {CreateGroupCommand} from "../../../../types/requests/CreateGroupCommand";
@@ -17,8 +16,8 @@ export class CreateGroupDialogComponent {
               private chatService: ChatsService) {
   }
 
-  groupType: GroupType = GroupType.PublicChannel;
-  groupTypes = [GroupType.PrivateChannel, GroupType.PublicChannel, GroupType.ReadOnlyChannel];
+  groupType = "Private Channel";
+  groupTypes = ["Private Channel", "Public Channel", "ReadOnly Channel"];
   groupTitle = '';
   groupDescription = '';
 
@@ -39,11 +38,11 @@ export class CreateGroupDialogComponent {
   }
 
   private parseGroupType(): number {
-    if (this.groupType === GroupType.PrivateChannel) {
+    if (this.groupType === "Private Channel") {
       return 2;
     }
 
-    if (this.groupType === GroupType.PublicChannel) {
+    if (this.groupType === "Public Channel") {
       return 3;
     }
 
