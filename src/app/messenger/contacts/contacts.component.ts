@@ -48,16 +48,23 @@ export class ContactsComponent implements OnInit {
   activeContactId = '';
 
   ngOnInit(): void {
+    this.initializeView();
+  }
+
+  initializeView(): void {
     this.contactsService.getContacts().subscribe((data: IGetContactsResponse) => {
       this.userContacts = data.contacts;
       this.userService.getCurrentUser().subscribe((data: IGetUserResponse) => {
         this.currentUser = data.user;
         this.activeContactId = data.user.userId;
+        this.activeContactId = '';
+        this.contactsFilter = 'All Contacts';
+        this.userSearchQuery = '';
       })
     }, error => {
       alert(error.error.ErrorMessage);
     });
-  };
+  }
 
   onFilterClick(filter: string) {
     this.contactsFilter = filter;
@@ -105,7 +112,7 @@ export class ContactsComponent implements OnInit {
 
   onRemoveContactClick() {
     this.contactsService.deleteContact(this.activeContactId).subscribe((_: IBaseResponse) => {
-      this.onFilterClick('All Contacts');
+      this.initializeView();
     }, error => {
       alert(error.error.ErrorMessage);
     })

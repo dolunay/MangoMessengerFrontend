@@ -30,7 +30,7 @@ export class ChatsService implements IChatsService {
   }
 
   searchChat(displayName: string): Observable<IGetUserChatsResponse> {
-    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + 'searches/' + displayName);
+    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + 'searches?displayName=' + displayName);
   }
 
   getChatById(chatId: string): Observable<IGetChatByIdResponse> {
