@@ -85,7 +85,8 @@
                 <div class="input-group">
                   <input [(ngModel)]="userSearchQuery" name="userSearchQuery" type="text"
                          class="form-control search border-right-0 transparent-bg pr-0"
-                         placeholder="Search users..." value="{{userSearchQuery}}">
+                         placeholder="Search users..." value="{{userSearchQuery}}"
+                         (keydown.enter)="searchByEnter()">
                   <div class="input-group-append">
                     <div class="input-group-text transparent-bg border-left-0" role="button"
                          (click)="onUserSearchClick()">

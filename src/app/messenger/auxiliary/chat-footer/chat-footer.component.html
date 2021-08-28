@@ -109,6 +109,7 @@
 
         <!-- Textarea Start-->
         <textarea [(ngModel)]="currentMessageText"
+                  (keyup.enter)="sendMessage($event)"
                   name="currentMessageText"
                   class="form-control transparent-bg border-0 no-resize hide-scrollbar text-white"
                   placeholder="Write your message..."
@@ -121,8 +122,8 @@
     <!-- Chat Input Group End -->
 
     <!-- Submit Button Start -->
-    <div class="col-auto" (click)="onMessageSendClick()">
-      <div class="btn btn-primary btn-icon rounded-circle text-light mb-1" role="button">
+    <div class="col-auto" (click)="onMessageSendClick($event)">
+      <div class="btn btn-primary btn-icon rounded-circle text-light mb-1" role="button" >
         <!-- Default :: Inline SVG -->
         <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

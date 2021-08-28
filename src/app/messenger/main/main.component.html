@@ -90,7 +90,8 @@
                   <div class="input-group">
                     <input [(ngModel)]="searchQuery" name="searchQuery" type="text"
                            class="form-control search border-right-0 transparent-bg pr-0 text-white"
-                           placeholder="Search chats..." value="{{searchQuery}}">
+                           placeholder="Search chats..." value="{{searchQuery}}"
+                            (keyup.enter)="searchByEnter()">
                     <div class="input-group-append">
                       <div class="input-group-text transparent-bg border-left-0" role="button"
                            (click)="onSearchClick()">
