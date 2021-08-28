@@ -1,6 +1,6 @@
 ﻿export enum GroupType {
-  DirectChat = "Direct Chat",
-  PrivateChannel = "Private Channel",
-  PublicChannel = "Public Channel",
-  ReadOnlyChannel = "Read Only Channel"
+  DirectChat = 1,
+  PrivateChannel = 2,
+  PublicChannel = 3,
+  ReadOnlyChannel = 4,
 }

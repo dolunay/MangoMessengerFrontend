@@ -123,6 +123,7 @@ export class MainComponent implements OnInit {
           }
           break;
         case 'Groups':
+          console.log(data.chats);
           this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel
             || x.chatType === GroupType.PublicChannel
             || x.chatType === GroupType.PrivateChannel);
