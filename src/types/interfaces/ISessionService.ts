@@ -20,4 +20,8 @@ export interface ISessionService {
   writeAccessToken(token: string): void;
 
   writeRefreshToken(tokenId: string): void;
+
+  clearAccessToken(): void;
+
+  clearRefreshToken(): void;
 }

@@ -16,48 +16,48 @@
 
             <div class="d-flex justify-content-between align-items-center">
               <!-- Chat Tab Pane Title Start -->
-              <h5 class="font-weight-semibold mb-0">Contacts</h5>
+              <h3 class="font-weight-semibold mb-0">Contacts</h3>
               <!-- Chat Tab Pane Title End -->
 
               <ul class="nav flex-nowrap">
 
-                <li class="nav-item list-inline-item mr-1">
-                  <div class="nav-link text-muted px-1" title="Notifications" role="button" data-toggle="modal"
-                       data-target="#notificationModal">
-                    <!-- Default :: Inline SVG -->
-                    <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                    </svg>
-                  </div>
-                </li>
+                <!--                <li class="nav-item list-inline-item mr-1">-->
+                <!--                  <div class="nav-link text-muted px-1" title="Notifications" role="button" data-toggle="modal"-->
+                <!--                       data-target="#notificationModal">-->
+                <!--                    &lt;!&ndash; Default :: Inline SVG &ndash;&gt;-->
+                <!--                    <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+                <!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+                <!--                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>-->
+                <!--                    </svg>-->
+                <!--                  </div>-->
+                <!--                </li>-->
 
-                <li class="nav-item list-inline-item mr-0">
-                  <div class="dropdown">
-                    <div class="nav-link text-muted px-1" role="button" title="Details"
-                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <!-- Default :: Inline SVG -->
-                      <svg class="hw-20" fill="none" viewBox="0 0 24 24"
-                           stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-                      </svg>
-                    </div>
+                <!--                <li class="nav-item list-inline-item mr-0">-->
+                <!--                  <div class="dropdown">-->
+                <!--                    <div class="nav-link text-muted px-1" role="button" title="Details"-->
+                <!--                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                <!--                      &lt;!&ndash; Default :: Inline SVG &ndash;&gt;-->
+                <!--                      <svg class="hw-20" fill="none" viewBox="0 0 24 24"-->
+                <!--                           stroke="currentColor">-->
+                <!--                        <path stroke-linecap="round" stroke-linejoin="round"-->
+                <!--                              stroke-width="2"-->
+                <!--                              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>-->
+                <!--                      </svg>-->
+                <!--                    </div>-->
 
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <div class="dropdown-item" role="button" data-toggle="modal" data-target="#startConversation">New
-                        Chat
-                      </div>
-                      <div class="dropdown-item" role="button" data-toggle="modal" data-target="#createGroup">Create
-                        Group
-                      </div>
-                      <div class="dropdown-item" role="button" data-toggle="modal" data-target="#inviteOthers">Invite
-                        Others
-                      </div>
-                    </div>
-                  </div>
-                </li>
+                <!--                    <div class="dropdown-menu dropdown-menu-right">-->
+                <!--                      <div class="dropdown-item" role="button" data-toggle="modal" data-target="#startConversation">New-->
+                <!--                        Chat-->
+                <!--                      </div>-->
+                <!--                      <div class="dropdown-item" role="button" data-toggle="modal" data-target="#createGroup">Create-->
+                <!--                        Group-->
+                <!--                      </div>-->
+                <!--                      <div class="dropdown-item" role="button" data-toggle="modal" data-target="#inviteOthers">Invite-->
+                <!--                        Others-->
+                <!--                      </div>-->
+                <!--                    </div>-->
+                <!--                  </div>-->
+                <!--                </li>-->
               </ul>
             </div>
 
@@ -143,15 +143,20 @@
                 </div>
 
                 <div class="d-flex flex-column align-items-center">
-                  <h5 class="mb-1">{{currentUser.firstName}} {{currentUser.lastName}}</h5>
-                  <h6 class="mb-1">{{currentUser.bio}}</h6>
+                  <h3 class="mb-1">{{currentUser.displayName}}</h3>
+                  <h4 class="mb-1">{{currentUser.bio}}</h4>
                   <!-- <p class="text-white rounded px-2 bg-primary">+01-202-265462</p> -->
                   <div class="d-flex mt-2">
                     <button class="btn btn-outline-default" type="button" (click)="onAddContactClick()">
                       Add Contact
                     </button>
-                    <button class="btn btn-outline-default" type="button" (click)="onSendMessageClick()">Message</button>
-                    <button class="btn btn-outline-default text-danger" type="button" (click)="onRemoveContactClick()">Remove Contact</button>
+                    <button class="btn btn-outline-default" type="button" (click)="onSendMessageClick()"
+                            style="margin-left: 20px;">Message
+                    </button>
+                    <button class="btn btn-outline-default text-danger" type="button" (click)="onRemoveContactClick()"
+                            style="margin-left: 20px;">
+                      Remove Contact
+                    </button>
                   </div>
                 </div>
               </div>

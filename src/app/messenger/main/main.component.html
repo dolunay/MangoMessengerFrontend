@@ -20,21 +20,21 @@
 
               <div class="d-flex justify-content-between align-items-center">
                 <!-- Chat Tab Pane Title Start -->
-                <h5 class="font-weight-semibold mb-0">Chats</h5>
+                <h3 class="font-weight-semibold mb-0">Chats</h3>
                 <!-- Chat Tab Pane Title End -->
 
                 <ul class="nav flex-nowrap">
 
-                  <li class="nav-item list-inline-item mr-1">
-                    <div class="nav-link text-muted px-1" title="Notifications" role="button" data-toggle="modal"
-                         data-target="#notificationModal">
-                      <!-- Default :: Inline SVG -->
-                      <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                      </svg>
-                    </div>
-                  </li>
+                  <!--                  <li class="nav-item list-inline-item mr-1">-->
+                  <!--                    <div class="nav-link text-muted px-1" title="Notifications" role="button" data-toggle="modal"-->
+                  <!--                         data-target="#notificationModal">-->
+                  <!--                      &lt;!&ndash; Default :: Inline SVG &ndash;&gt;-->
+                  <!--                      <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+                  <!--                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+                  <!--                              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>-->
+                  <!--                      </svg>-->
+                  <!--                    </div>-->
+                  <!--                  </li>-->
 
                   <li class="nav-item list-inline-item mr-0">
                     <div class="dropdown">
@@ -50,15 +50,12 @@
                       </div>
 
                       <div class="dropdown-menu dropdown-menu-right">
-                        <div class="dropdown-item" role="button" data-toggle="modal" data-target="#startConversation">
-                          New Chat
-                        </div>
-                        <div class="dropdown-item" role="button" data-toggle="modal" data-target="#createGroup">Create
-                          Group
-                        </div>
-                        <div class="dropdown-item" role="button" data-toggle="modal" data-target="#inviteOthers">
-                          Invite Others
-                        </div>
+                        <!--                        <button mat-raised-button class="dropdown-item" (click)="openNewChatDialog()">New Chat</button>-->
+                        <button mat-raised-button class="dropdown-item" (click)="openCreateGroupDialog()">Create Group
+                        </button>
+                        <!--                        <button mat-raised-button class="dropdown-item" (click)="openInviteOthersDialog()">Invite-->
+                        <!--                          Others-->
+                        <!--                        </button>-->
                       </div>
                     </div>
                   </li>
@@ -80,7 +77,8 @@
                   <div class="dropdown-menu">
                     <div class="dropdown-item cursor-pointer" (click)="onChatFilerClick('All Chats')">All Chats</div>
                     <div class="dropdown-item cursor-pointer" (click)="onChatFilerClick('Groups')">Groups</div>
-                    <div class="dropdown-item cursor-pointer" (click)="onChatFilerClick('Direct Chats')">Direct Chats</div>
+                    <div class="dropdown-item cursor-pointer" (click)="onChatFilerClick('Direct Chats')">Direct Chats
+                    </div>
                     <div class="dropdown-item cursor-pointer" (click)="onChatFilerClick('Archived')">Archived</div>
                   </div>
                   <!-- Dropdown Menu End -->
@@ -118,7 +116,7 @@
             <!-- Chat Header End -->
 
             <!-- Chat Contact List Start -->
-            <ul class="contacts-list" id="chatContactTab" data-chat-list="">
+            <ul class="contacts-list" id="chatContactTab">
               <!-- Chat Item Start -->
               <li *ngFor="let chat of chats">
                 <app-chat-item-active [chat]="chat" (click)="loadChatAndMessages(chat.chatId)"
@@ -126,7 +124,6 @@
                 </app-chat-item-active>
               </li>
               <!-- Chat Item End -->
-
             </ul>
             <!-- Chat Contact List End -->
           </div>
@@ -142,7 +139,7 @@
   <main class="main main-visible">
 
     <!-- Chats Page Start -->
-    <div class="chats">
+    <div *ngIf="noActiveChat()" class="chats">
       <div class="chat-body">
         <!-- Chat Header Start-->
         <div class="chat-header">
@@ -162,11 +159,11 @@
           <!-- Chat participant's Name -->
           <div class="media chat-name align-items-center text-truncate">
             <div class="avatar avatar-online d-none d-sm-inline-block mr-3">
-              <img src="./../assets/media/avatar/2.png" alt="">
+              <img src="assets/media/avatar/3.png" alt="avatar_example">
             </div>
 
-            <div class="media-body align-self-center ">
-              <h6 class="text-truncate mb-0">{{activeChat.title}}</h6>
+            <div class="media-body align-self-center">
+              <h3 class="text-truncate mb-0">{{activeChat.title}}</h3>
               <small class="text-muted">{{activeChat.description}}</small>
               <br>
               <small class="text-muted">{{activeChat.membersCount}} Members</small>
@@ -175,19 +172,19 @@
 
           <!-- Chat Options -->
           <ul class="nav flex-nowrap">
-            <li class="nav-item list-inline-item d-none d-sm-block mr-1">
-              <div class="nav-link text-muted px-1" data-toggle="collapse" data-target="#searchCollapse"
-                   aria-expanded="false">
-                <!-- Default :: Inline SVG -->
-                <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
+            <!--            <li class="nav-item list-inline-item d-none d-sm-block mr-1">-->
+            <!--              <div class="nav-link text-muted px-1" data-toggle="collapse" data-target="#searchCollapse"-->
+            <!--                   aria-expanded="false">-->
+            <!--                &lt;!&ndash; Default :: Inline SVG &ndash;&gt;-->
+            <!--                <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+            <!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+            <!--                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>-->
+            <!--                </svg>-->
 
-                <!-- Alternate :: External File link -->
-                <!-- <img src="./../assets/media/heroicons/outline/search.svg" alt="" class="injectable hw-20"> -->
-              </div>
-            </li>
+            <!--                &lt;!&ndash; Alternate :: External File link &ndash;&gt;-->
+            <!--                &lt;!&ndash; <img src="./../assets/media/heroicons/outline/search.svg" alt="" class="injectable hw-20"> &ndash;&gt;-->
+            <!--              </div>-->
+            <!--            </li>-->
 
             <li class="nav-item list-inline-item d-none d-sm-block mr-0">
               <div class="dropdown">
@@ -231,24 +228,24 @@
         <!-- Chat Header End-->
 
         <!-- Search Start -->
-        <div class="collapse border-bottom px-3" id="searchCollapse">
-          <div class="container-xl py-2 px-0 px-md-3">
-            <div class="input-group bg-light ">
-              <input type="text" class="form-control form-control-md border-right-0 transparent-bg pr-0"
-                     placeholder="Search...">
-              <div class="input-group-append">
-                <span class="input-group-text transparent-bg border-left-0">
-                  <!-- Default :: Inline SVG -->
-                  <svg class="hw-20 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                  </svg>
-                </span>
-              </div>
-            </div>
-          </div>
+        <!--        <div class="collapse border-bottom px-3" id="searchCollapse">-->
+        <!--          <div class="container-xl py-2 px-0 px-md-3">-->
+        <!--            <div class="input-group bg-light ">-->
+        <!--              <input type="text" class="form-control form-control-md border-right-0 transparent-bg pr-0"-->
+        <!--                     placeholder="Search...">-->
+        <!--              <div class="input-group-append">-->
+        <!--                <span class="input-group-text transparent-bg border-left-0">-->
+        <!--                  &lt;!&ndash; Default :: Inline SVG &ndash;&gt;-->
+        <!--                  <svg class="hw-20 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+        <!--                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+        <!--                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>-->
+        <!--                  </svg>-->
+        <!--                </span>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--          </div>-->
 
-        </div>
+        <!--        </div>-->
         <!-- Search End -->
 
         <!-- Chat Content Start-->

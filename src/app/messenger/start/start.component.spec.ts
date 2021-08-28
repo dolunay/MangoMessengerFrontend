@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InviteOthersComponent } from './invite-others.component';
+import { StartComponent } from './start.component';
 
-describe('InviteOthersComponent', () => {
-  let component: InviteOthersComponent;
-  let fixture: ComponentFixture<InviteOthersComponent>;
+describe('StartComponent', () => {
+  let component: StartComponent;
+  let fixture: ComponentFixture<StartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InviteOthersComponent ]
+      declarations: [ StartComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InviteOthersComponent);
+    fixture = TestBed.createComponent(StartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

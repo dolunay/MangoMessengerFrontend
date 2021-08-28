@@ -22,13 +22,22 @@ export class VerifyEmailComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       const userId = params['userId'];
       const email = params['email'];
+      const refreshToken = this.sessionService.getRefreshToken();
       this.usersService.putEmailConfirmation(new VerifyEmailCommand(email, userId))
         .subscribe((_) => {
           this.success = true;
+          this.sessionService.postRefreshSession(refreshToken).subscribe(result => {
+            this.sessionService.writeRefreshToken(result.refreshToken);
+            this.sessionService.writeAccessToken(result.accessToken);
+          })
         }, error => {
           this.message = error.error.ErrorMessage;
           alert(error.error.ErrorMessage);
         });
     });
+  }
+
+  proceedToStart(): void {
+    this.router.navigateByUrl('start').then(_ => _);
   }
 }

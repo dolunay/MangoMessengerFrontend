@@ -49,4 +49,12 @@ export class SessionService implements ISessionService {
   writeRefreshToken(tokenId: string): void {
     localStorage.setItem(Tokens.refreshToken, tokenId);
   }
+
+  clearAccessToken(): void {
+    localStorage.removeItem(Tokens.accessToken);
+  }
+
+  clearRefreshToken(): void {
+    localStorage.removeItem(Tokens.refreshToken);
+  }
 }

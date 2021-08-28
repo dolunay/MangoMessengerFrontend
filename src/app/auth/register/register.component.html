@@ -8,28 +8,28 @@
         <form class="mb-3">
           <div class="form-group">
             <label for="phoneNumber" class="sr-only">Phone Number</label>
-            <input [(ngModel)]="PhoneNumber" name="PhoneNumber" type="text" class="form-control form-control-md"
+            <input [(ngModel)]="phoneNumber" name="PhoneNumber" type="text" class="form-control form-control-md"
                    id="phoneNumber"
                    placeholder="Enter your phone number">
           </div>
           <div class="form-group">
             <label for="displayName" class="sr-only">Display Name</label>
-            <input [(ngModel)]="DisplayName" name="DisplayName" type="text" class="form-control form-control-md"
+            <input [(ngModel)]="displayName" name="DisplayName" type="text" class="form-control form-control-md"
                    id="displayName"
                    placeholder="Enter your display name">
           </div>
           <div class="form-group">
             <label for="email" class="sr-only">Email Address</label>
-            <input [(ngModel)]="Email" name="Email" type="email" class="form-control form-control-md" id="email"
+            <input [(ngModel)]="email" name="Email" type="email" class="form-control form-control-md" id="email"
                    placeholder="Enter your email address">
           </div>
           <div class="form-group">
             <label for="password" class="sr-only">Password</label>
-            <input [(ngModel)]="Password" name="Password" type="password" class="form-control form-control-md"
+            <input [(ngModel)]="password" name="Password" type="password" class="form-control form-control-md"
                    id="password"
                    placeholder="Enter your password">
           </div>
-          <div>
+          <div class="text-white">
             Verification method:
             <select [(ngModel)]="verificationMethod" name="verificationMethod" [value]="verificationMethod">
               <option *ngFor="let method of verificationMethods" [value]="method"
@@ -37,7 +37,7 @@
             </select>
           </div>
           <div class="form-group">
-            <input [checked]="TermsAccepted" (change)="TermsAccepted = !TermsAccepted" [name]="TermsAccepted"
+            <input [checked]="termsAccepted" (change)="termsAccepted = !termsAccepted" [name]="termsAccepted"
                    type="checkbox"
                    id="termsOfService" name="termsOfService" checked>
             <label for="termsOfService">I accept terms of service</label>
@@ -47,7 +47,7 @@
           </button>
         </form>
 
-        <p>Already have an account? <a class="font-weight-semibold" routerLink="/login">Sign in</a>.</p>
+        <p>Already have an account? <a class="font-weight-semibold" routerLink="/login">Login</a>.</p>
       </div>
     </div>
   </div>

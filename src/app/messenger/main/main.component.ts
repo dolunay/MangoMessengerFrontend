@@ -6,9 +6,11 @@ import {MessagesService} from "../../services/messages.service";
 import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
-import {ChatType} from "../../../types/enums/ChatType";
+import {GroupType} from "../../../types/enums/GroupType";
 import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
+import {MatDialog} from "@angular/material/dialog";
+import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
 
 @Component({
   selector: 'app-main',
@@ -25,7 +27,7 @@ export class MainComponent implements OnInit {
   activeChat: IChat = {
     description: "",
     chatId: "",
-    chatType: ChatType.DirectChat,
+    chatType: GroupType.DirectChat,
     image: "",
     isArchived: false,
     isMember: false,
@@ -39,12 +41,17 @@ export class MainComponent implements OnInit {
   chatFilter = 'All Chats';
   searchQuery = '';
 
-  constructor(private authService: SessionService,
+  constructor(private sessionService: SessionService,
               private chatService: ChatsService,
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              public dialog: MatDialog) {
+  }
+
+  openCreateGroupDialog(): void {
+    this.dialog.open(CreateGroupDialogComponent);
   }
 
   ngOnInit(): void {
@@ -53,22 +60,26 @@ export class MainComponent implements OnInit {
 
   initializeView(): void {
     this.chatService.getUserChats().subscribe((data) => {
-        const routeChatId = this.route.snapshot.paramMap.get('chatId');
-        this.chats = data.chats;
+      const routeChatId = this.route.snapshot.paramMap.get('chatId');
+      this.chats = data.chats;
 
-        if (routeChatId) {
-          this.loadChatAndMessages(routeChatId);
-          return;
-        }
+      if (routeChatId) {
+        this.loadChatAndMessages(routeChatId);
+        return;
+      }
 
-        const firstChat = data.chats[0];
-        if (firstChat) {
-          this.loadChatAndMessages(firstChat.chatId);
-        }
-      },
-      error => {
-        alert(error.error.ErrorMessage);
-      });
+      const firstChat = data.chats[0];
+      if (firstChat) {
+        this.loadChatAndMessages(firstChat.chatId);
+      }
+    }, error => {
+      if (error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+        return;
+      }
+
+      alert(error.error.ErrorMessage);
+    });
   }
 
   loadChatAndMessages(chatId: string): void {
@@ -101,7 +112,7 @@ export class MainComponent implements OnInit {
   }
 
   onMessageSendEvent(): void {
-    this.loadChatAndMessages(this.activeChatId);
+    this.initializeView();
   }
 
   onChatFilerClick(filer: string): void {
@@ -116,10 +127,13 @@ export class MainComponent implements OnInit {
           }
           break;
         case 'Groups':
-          this.chats = data.chats.filter(x => x.chatType === ChatType.ReadOnlyChannel || x.chatType === ChatType.PublicChannel);
+          console.log(data.chats);
+          this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel
+            || x.chatType === GroupType.PublicChannel
+            || x.chatType === GroupType.PrivateChannel);
           break;
         case 'Direct Chats':
-          this.chats = data.chats.filter(x => x.chatType === ChatType.DirectChat);
+          this.chats = data.chats.filter(x => x.chatType === GroupType.DirectChat);
           break;
         case 'Archived':
           this.chats = data.chats.filter(x => x.isArchived);
@@ -138,6 +152,8 @@ export class MainComponent implements OnInit {
     this.chatService.searchChat(this.searchQuery).subscribe((data) => {
       this.chats = data.chats;
       this.chatFilter = 'Search Results';
+      console.log(this.noActiveChat());
+      console.log(this.activeChatId);
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -165,6 +181,7 @@ export class MainComponent implements OnInit {
 
   onLeaveChatClick(): void {
     this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe((_) => {
+      this.activeChatId = '';
       this.onChatFilerClick('All Chats');
     }, error => {
       alert(error.error.ErrorMessage);
@@ -181,5 +198,9 @@ export class MainComponent implements OnInit {
 
   onJoinGroupEvent() {
     this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
+  }
+
+  noActiveChat(): boolean {
+    return this.activeChatId !== '';
   }
 }
