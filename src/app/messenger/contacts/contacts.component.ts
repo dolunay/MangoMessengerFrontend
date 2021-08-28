@@ -68,6 +68,10 @@ export class ContactsComponent implements OnInit {
     });
   }
 
+  searchByEnter(): any {
+    return this.onUserSearchClick()
+  }
+
   onUserSearchClick(): void {
     this.userService.postSearch(this.userSearchQuery).subscribe((data: ISearchResponse) => {
       this.userContacts = data.users

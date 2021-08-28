@@ -96,6 +96,10 @@ export class MainComponent implements OnInit {
     }, 0);
   }
 
+  searchByEnter(): any {
+    return this.onSearchClick()
+  }
+
   onMessageSendEvent(): void {
     this.loadChatAndMessages(this.activeChatId);
   }
