@@ -183,7 +183,7 @@
           <div class="col">
             <div class="card">
               <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.birthdayDate" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Birthdate</p>
@@ -198,7 +198,7 @@
                     <!-- <img class="injectable text-muted hw-20" src="./../assets/media/heroicons/outline/calendar.svg" alt=""> -->
                   </div>
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.phoneNumber" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Phone</p>
@@ -212,7 +212,7 @@
                     <!-- <img class="injectable text-muted hw-20" src="./../assets/media/heroicons/outline/phone.svg" alt=""> -->
                   </div>
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.email" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Email</p>
@@ -226,7 +226,7 @@
                     <!-- <img class="injectable text-muted hw-20" src="./../assets/media/heroicons/outline/mail.svg" alt=""> -->
                   </div>
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.username" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Username</p>
@@ -240,7 +240,7 @@
                     <!-- <img class="injectable text-muted hw-20" src="./../assets/media/heroicons/outline/mail.svg" alt=""> -->
                   </div>
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.website" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Website</p>
@@ -255,7 +255,7 @@
                     <!-- <img class="injectable text-muted hw-20" src="./../assets/media/heroicons/outline/globe.svg" alt=""> -->
                   </div>
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.address" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Address</p>
@@ -275,7 +275,7 @@
 
             <div class="card">
               <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.facebook" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Facebook</p>
@@ -291,7 +291,7 @@
                     <!-- <img class="injectable text-muted hw-20" src="./../assets/media/icons/facebook.svg" alt=""> -->
                   </div>
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.twitter" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Twitter</p>
@@ -308,7 +308,7 @@
                     <!-- <img class="injectable text-muted hw-20" src="./../assets/media/icons/twitter.svg" alt=""> -->
                   </div>
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.instagram" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Instagram</p>
@@ -326,7 +326,7 @@
                     <!-- <img class="injectable text-muted hw-20" src="./../assets/media/icons/instagram.svg" alt=""> -->
                   </div>
                 </li>
-                <li class="list-group-item">
+                <li *ngIf="currentOpenedUser.linkedIn" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Linkedin</p>
