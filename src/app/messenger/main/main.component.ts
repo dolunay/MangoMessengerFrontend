@@ -61,7 +61,8 @@ export class MainComponent implements OnInit {
   initializeView(): void {
     this.chatService.getUserChats().subscribe((data) => {
       const routeChatId = this.route.snapshot.paramMap.get('chatId');
-      this.chats = data.chats;
+      this.chatFilter = 'All Chats';
+      this.chats = data.chats.filter(x => !x.isArchived);
 
       if (routeChatId) {
         this.loadChatAndMessages(routeChatId);
@@ -107,14 +108,6 @@ export class MainComponent implements OnInit {
     }, 0);
   }
 
-  searchByEnter(): any {
-    return this.onSearchClick()
-  }
-
-  onMessageSendEvent(): void {
-    this.initializeView();
-  }
-
   onChatFilerClick(filer: string): void {
     this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
 
@@ -144,7 +137,6 @@ export class MainComponent implements OnInit {
 
       this.chatFilter = filer;
       this.searchQuery = '';
-
     });
   }
 
@@ -165,12 +157,13 @@ export class MainComponent implements OnInit {
       const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
 
       this.userChatsService.putArchiveChat(command).subscribe((_) => {
+
         if (chat.isArchived) {
           this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
           return;
         }
 
-        this.onChatFilerClick('All Chats');
+        this.initializeView();
       }, error => {
         alert(error.error.ErrorMessage);
       })
