@@ -42,7 +42,6 @@ export class ProfileSettingsSidebarComponent implements OnInit {
       this.firstName = data.user.firstName;
       this.lastName = data.user.lastName;
       this.facebook = data.user.facebook;
-      console.log(data);
     }, error => {
       alert(error.message);
     })
