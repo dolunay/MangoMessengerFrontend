@@ -10,7 +10,7 @@
       <img src="assets/media/avatar/3.png" alt="avatar_image">
     </div>
     <span class="message-date">{{message.sentAt}}</span>
-    <div class="dropdown">
+    <div *ngIf="message.self" class="dropdown">
       <div class="text-muted" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <!-- Default :: Inline SVG -->
         <svg class="hw-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
