@@ -5,6 +5,7 @@ import {IGetContactsResponse} from "../../types/responses/IGetContactsResponse";
 import {HttpClient} from "@angular/common/http";
 import {ApiRoute} from "../../consts/ApiRoute";
 import {IBaseResponse} from "../../types/responses/IBaseResponse";
+import {ISearchContactsResponse} from "../../types/responses/ISearchContactsResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class ContactsService implements IContactsService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getContacts(): Observable<IGetContactsResponse> {
+  getCurrentUserContacts(): Observable<IGetContactsResponse> {
     return this.httpClient.get<IGetContactsResponse>(ApiRoute.route + this.contactsRoute);
   }
 
@@ -25,5 +26,10 @@ export class ContactsService implements IContactsService {
 
   deleteContact(userId: string): Observable<IBaseResponse> {
     return this.httpClient.delete<IGetContactsResponse>(ApiRoute.route + this.contactsRoute + userId);
+  }
+
+  searchContacts(displayName: string): Observable<ISearchContactsResponse> {
+    return this.httpClient.get<ISearchContactsResponse>(ApiRoute.route + this.contactsRoute +
+      'searches?displayName=' + displayName);
   }
 }

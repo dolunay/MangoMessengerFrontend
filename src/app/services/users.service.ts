@@ -5,7 +5,7 @@ import {IUserService} from "../../types/interfaces/IUserService";
 import {IGetUserResponse} from "../../types/responses/IGetUserResponse";
 import {RegisterCommand} from "../../types/requests/RegisterCommand";
 import {VerifyEmailCommand} from "../../types/requests/VerifyEmailCommand";
-import {ISearchResponse} from "../../types/responses/ISearchResponse";
+import {ISearchContactsResponse} from "../../types/responses/ISearchContactsResponse";
 import {UpdateUserInformationCommand} from "../../types/requests/UpdateUserInformationCommand";
 import {ChangePasswordCommand} from "../../types/requests/ChangePasswordCommand";
 import {ApiRoute} from "../../consts/ApiRoute";
@@ -42,12 +42,8 @@ export class UsersService implements IUserService {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + phoneCode, {});
   }
 
-  getSearchUsers(displayName: string): Observable<ISearchResponse> {
-    return this.httpClient.get<ISearchResponse>(ApiRoute.route + this.usersRoute + 'searches?displayName=' + displayName);
-  }
-
   putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IBaseResponse> {
-    return this.httpClient.put<ISearchResponse>(ApiRoute.route + this.usersRoute + 'information/', request);
+    return this.httpClient.put<ISearchContactsResponse>(ApiRoute.route + this.usersRoute + 'information/', request);
   }
 
   putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse> {
