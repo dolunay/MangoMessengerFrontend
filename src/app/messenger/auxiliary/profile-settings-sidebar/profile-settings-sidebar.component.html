@@ -69,7 +69,7 @@
                 <!-- List Group Start -->
                 <ul class="list-group list-group-flush">
                   <!-- List Group Item Start -->
-                  <li class="list-group-item py-2">
+                  <li *ngIf="birthdayDate" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Birthdate</p>
@@ -90,7 +90,7 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li class="list-group-item py-2">
+                  <li *ngIf="phoneNumber" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Phone</p>
@@ -111,7 +111,7 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li class="list-group-item py-2">
+                  <li *ngIf="email" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Email</p>
@@ -133,7 +133,7 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li class="list-group-item py-2">
+                  <li *ngIf="website" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Website</p>
@@ -154,7 +154,7 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li class="list-group-item pt-2">
+                  <li *ngIf="address" class="list-group-item pt-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Address</p>
@@ -187,7 +187,7 @@
                 <ul class="list-group list-group-flush">
 
                   <!-- List Group Item Start -->
-                  <li class="list-group-item py-2">
+                  <li *ngIf="facebook" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Facebook</p>
@@ -208,7 +208,7 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li class="list-group-item py-2">
+                  <li *ngIf="twitter" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Twitter</p>
@@ -230,7 +230,7 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li class="list-group-item py-2">
+                  <li *ngIf="instagram" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Instagram</p>
@@ -253,7 +253,7 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li class="list-group-item py-2">
+                  <li *ngIf="linkedIn" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Linkedin</p>
