@@ -88,6 +88,11 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   changePassword(): void {
+    if (this.currentPassword === this.newPassword) {
+      alert("New password should not equals current password");
+      return;
+    }
+
     if (this.newPassword !== this.repeatNewPassword) {
       alert('Passwords are different.');
       return;
