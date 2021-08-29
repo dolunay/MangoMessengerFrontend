@@ -101,6 +101,7 @@ export class ContactsComponent implements OnInit {
   onAddContactClick() {
     this.contactsService.postAddContact(this.activeContactId).subscribe((_) => {
       this.onFilterClick('All Contacts');
+      this.userSearchQuery = '';
     }, error => {
       alert(error.error.ErrorMessage);
     });
