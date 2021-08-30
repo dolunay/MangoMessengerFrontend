@@ -4,6 +4,7 @@ import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
 import {UpdateUserInformationCommand} from "../../../types/requests/UpdateUserInformationCommand";
 import {ChangePasswordCommand} from "../../../types/requests/ChangePasswordCommand";
 import {IUser} from "../../../types/models/IUser";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-profile-settings',
@@ -14,6 +15,8 @@ export class ProfileSettingsComponent implements OnInit {
 
   constructor(private userService: UsersService) {
   }
+
+  eventsSubject: Subject<void> = new Subject<void>();
 
   currentUser: IUser = {
     address: "",
@@ -66,6 +69,7 @@ export class ProfileSettingsComponent implements OnInit {
     command.website = this.currentUser.website;
 
     this.userService.putUpdateUserInformation(command).subscribe((data) => {
+      this.eventsSubject.next();
       this.initializeView();
       alert(data.message);
     }, error => {
@@ -81,7 +85,7 @@ export class ProfileSettingsComponent implements OnInit {
     command.linkedIn = this.currentUser.linkedIn;
 
     this.userService.putUpdateUserInformation(command).subscribe((_) => {
-
+      this.eventsSubject.next();
     }, error => {
       alert(error.error.ErrorMessage);
     })
