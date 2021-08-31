@@ -1,26 +1,28 @@
-<h1 mat-dialog-title>Create group</h1>
-<div mat-dialog-content>
-  <p>Enter title of the group</p>
-  <mat-form-field appearance="fill">
-    <mat-label>Title of the group</mat-label>
-    <input [(ngModel)]="groupTitle" matInput>
-  </mat-form-field>
+<div mat-dialog-container>
+  <h1 mat-dialog-title>Create group</h1>
+  <div mat-dialog-content>
+    <p>Enter title of the group</p>
+    <mat-form-field appearance="fill">
+      <mat-label>Title of the group</mat-label>
+      <input [(ngModel)]="groupTitle" matInput>
+    </mat-form-field>
 
-  <p>Choose group type</p>
-  <div style="margin-bottom: 65px;">
-    <select [(ngModel)]="groupType" name="groupType" [value]="groupType">
-      <option *ngFor="let type of groupTypes" [value]="type"
-              [label]="type"></option>
-    </select>
+    <p>Choose group type</p>
+    <div style="margin-bottom: 15px;">
+      <select  [(ngModel)]="groupType" name="groupType" [value]="groupType">
+        <option *ngFor="let type of groupTypes" [value]="type"
+                [label]="type"></option>
+      </select>
+    </div>
+
+    <p>Description of the group</p>
+    <mat-form-field appearance="fill">
+      <mat-label>Description of the chat</mat-label>
+      <input matInput [(ngModel)]="groupDescription">
+    </mat-form-field>
   </div>
-
-  <p>Description of the group</p>
-  <mat-form-field appearance="fill">
-    <mat-label>Description</mat-label>
-    <input [(ngModel)]="groupDescription" matInput>
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button (click)="onCreateGroupClick()" cdkFocusInitial>Ok</button>
+  <div mat-dialog-actions>
+    <button mat-button style="color: #dbd8d8" (click)="onNoClick()">Cancel</button>
+    <button mat-button style="color: #dbd8d8" (click)="onCreateGroupClick()" cdkFocusInitial>Ok</button>
+  </div>
 </div>
