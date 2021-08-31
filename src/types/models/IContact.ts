@@ -3,4 +3,5 @@
   displayName: string;
   address: string;
   bio: string;
+  isContact: boolean;
 }

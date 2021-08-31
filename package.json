@@ -1,14 +1,14 @@
 {
   "name": "mango-angular-frontend",
   "version": "0.0.0",
-  "main": "app.js",
   "scripts": {
     "start": "node server.js",
     "build": "ng build --aot --configuration production",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "ngcc"
+    "postinstall": "ngcc",
+    "sonar": "sonar-scanner"
   },
   "private": true,
   "dependencies": {
@@ -41,7 +41,6 @@
     "browser-sync": "^2.26.7",
     "codelyzer": "^6.0.0",
     "cssnano": "^4.1.10",
-    "electron": "^13.2.2",
     "enhanced-resolve": "^5.8.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.1.0",
@@ -50,6 +49,7 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.6.0",
     "protractor": "~7.0.0",
+    "sonar-scanner": "^3.1.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~4.1.5"

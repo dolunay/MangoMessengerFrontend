@@ -5,7 +5,7 @@ import {IGetContactsResponse} from "../../../types/responses/IGetContactsRespons
 import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
-import {ISearchResponse} from "../../../types/responses/ISearchResponse";
+import {ISearchContactsResponse} from "../../../types/responses/ISearchContactsResponse";
 import {ChatsService} from "../../services/chats.service";
 import {ICreateChatResponse} from "../../../types/responses/ICreateChatResponse";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -23,9 +23,9 @@ export class ContactsComponent implements OnInit {
               private router: Router) {
   }
 
-  userContacts: IContact[] = [];
+  contacts: IContact[] = [];
 
-  currentUser: IUser = {
+  currentOpenedUser: IUser = {
     address: "",
     bio: "",
     birthdayDate: "",
@@ -43,23 +43,22 @@ export class ContactsComponent implements OnInit {
     website: ""
   };
 
-  userSearchQuery = '';
+  contactsSearchQuery = '';
   contactsFilter = 'All Contacts';
-  activeContactId = '';
+  currentOpenedUserIsContact = false;
 
   ngOnInit(): void {
     this.initializeView();
   }
 
   initializeView(): void {
-    this.contactsService.getContacts().subscribe((data: IGetContactsResponse) => {
-      this.userContacts = data.contacts;
+    this.contactsService.getCurrentUserContacts().subscribe((data: IGetContactsResponse) => {
+      this.contacts = data.contacts;
       this.userService.getCurrentUser().subscribe((data: IGetUserResponse) => {
-        this.currentUser = data.user;
-        this.activeContactId = data.user.userId;
-        this.activeContactId = '';
+        this.currentOpenedUser = data.user;
+        this.currentOpenedUserIsContact = true;
         this.contactsFilter = 'All Contacts';
-        this.userSearchQuery = '';
+        this.contactsSearchQuery = '';
       })
     }, error => {
       alert(error.error.ErrorMessage);
@@ -68,42 +67,42 @@ export class ContactsComponent implements OnInit {
 
   onFilterClick(filter: string) {
     this.contactsFilter = filter;
-    this.contactsService.getContacts().subscribe((data: IGetContactsResponse) => {
-      this.userContacts = data.contacts;
+    this.contactsService.getCurrentUserContacts().subscribe((data: IGetContactsResponse) => {
+      this.contacts = data.contacts;
     }, error => {
       alert(error.error.ErrorMessage);
     });
   }
 
   onUserSearchClick(): void {
-    this.userService.getSearchUsers(this.userSearchQuery).subscribe((data: ISearchResponse) => {
-      this.userContacts = data.users
-        .map(({userId, displayName, address, bio}) => ({userId, displayName, address, bio})) as IContact[];
+    this.contactsService.searchContacts(this.contactsSearchQuery).subscribe((data: ISearchContactsResponse) => {
+      this.contacts = data.contacts;
       this.contactsFilter = 'Search Results';
     }, error => {
       alert(error.error.ErrorMessage);
     });
   }
 
-  onContactClick(userId: string): void {
-    this.userService.getUserById(userId).subscribe((data: IGetUserResponse) => {
-      this.activeContactId = userId;
-      this.currentUser = data.user;
+  onContactClick(contact: IContact): void {
+    this.userService.getUserById(contact.userId).subscribe((data: IGetUserResponse) => {
+      this.currentOpenedUser = data.user;
+      this.currentOpenedUserIsContact = contact.isContact;
     }, error => {
       alert(error.error.ErrorMessage);
     });
   }
 
   onAddContactClick() {
-    this.contactsService.postAddContact(this.activeContactId).subscribe((_) => {
+    this.contactsService.postAddContact(this.currentOpenedUser.userId).subscribe((_) => {
       this.onFilterClick('All Contacts');
+      this.contactsSearchQuery = '';
     }, error => {
       alert(error.error.ErrorMessage);
     });
   }
 
   onSendMessageClick() {
-    this.chatsService.createDirectChat(this.activeContactId).subscribe((data: ICreateChatResponse) => {
+    this.chatsService.createDirectChat(this.currentOpenedUser.userId).subscribe((data: ICreateChatResponse) => {
       this.router.navigate(['main', {chatId: data.chatId}]).then(r => r);
     }, error => {
       alert(error.error.ErrorMessage);
@@ -111,7 +110,7 @@ export class ContactsComponent implements OnInit {
   }
 
   onRemoveContactClick() {
-    this.contactsService.deleteContact(this.activeContactId).subscribe((_: IBaseResponse) => {
+    this.contactsService.deleteContact(this.currentOpenedUser.userId).subscribe((_: IBaseResponse) => {
       this.initializeView();
     }, error => {
       alert(error.error.ErrorMessage);

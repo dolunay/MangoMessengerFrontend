@@ -90,7 +90,8 @@
                   <div class="input-group">
                     <input [(ngModel)]="searchQuery" name="searchQuery" type="text"
                            class="form-control search border-right-0 transparent-bg pr-0 text-white"
-                           placeholder="Search chats..." value="{{searchQuery}}">
+                           placeholder="Search chats..." value="{{searchQuery}}"
+                           (keyup.enter)="onSearchClick()">
                     <div class="input-group-append">
                       <div class="input-group-text transparent-bg border-left-0" role="button"
                            (click)="onSearchClick()">
@@ -206,7 +207,10 @@
 
                     <!-- Alternate :: External File link -->
                     <!-- <img src="./../assets/media/heroicons/outline/archive.svg" alt="" class="injectable hw-20 mr-2"> -->
-                    <span>Archive Chat</span>
+                    <span *ngIf="!activeChat.isArchived; else unArchiveChat">Archive Chat</span>
+                    <ng-template #unArchiveChat>
+                      <span>Un-archive Chat</span>
+                    </ng-template>
                   </div>
                   <div class="dropdown-item align-items-center d-flex cursor-pointer" (click)="onLeaveChatClick()">
                     <!-- Default :: Inline SVG -->
@@ -269,7 +273,7 @@
 
         <!-- Chat Footer Start-->
         <ng-container *ngIf="activeChat.isMember; else elseBlock">
-          <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="onMessageSendEvent()"></app-chat-footer>
+          <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="initializeView()"></app-chat-footer>
         </ng-container>
         <ng-template #elseBlock>
           <app-join-group [chatId]="activeChat.chatId" (notifyParentOnJoinGroup)="onJoinGroupEvent()"></app-join-group>
