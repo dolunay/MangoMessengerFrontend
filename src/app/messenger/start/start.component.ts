@@ -11,8 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-start',
-  templateUrl: './start.component.html',
-  styleUrls: ['./start.component.scss']
+  templateUrl: './start.component.html'
 })
 export class StartComponent implements OnInit {
 
@@ -48,9 +47,9 @@ export class StartComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.chatService.getUserChats().subscribe((data) => {
+    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
       this.getUserDisplayName();
-      this.chats = data.chats;
+      this.chats = getUserChatsResponse.chats;
     });
   }
 
