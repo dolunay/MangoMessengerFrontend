@@ -9,7 +9,7 @@
 
     <p>Choose group type</p>
     <div style="margin-bottom: 15px;">
-      <select  [(ngModel)]="groupType" name="groupType" [value]="groupType">
+      <select [(ngModel)]="groupType" name="groupType" [value]="groupType">
         <option *ngFor="let type of groupTypes" [value]="type"
                 [label]="type"></option>
       </select>
@@ -22,7 +22,7 @@
     </mat-form-field>
   </div>
   <div mat-dialog-actions>
-    <button mat-button style="color: #dbd8d8" (click)="onNoClick()">Cancel</button>
+    <button class="btn btn-danger" mat-button style="color: #dbd8d8" (click)="onNoClick()">Cancel</button>
     <button mat-button style="color: #dbd8d8" (click)="onCreateGroupClick()" cdkFocusInitial>Ok</button>
   </div>
 </div>

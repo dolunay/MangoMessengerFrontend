@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
-import {IGetUserResponse} from "../../../types/responses/IGetUserResponse";
 import {UpdateUserInformationCommand} from "../../../types/requests/UpdateUserInformationCommand";
 import {ChangePasswordCommand} from "../../../types/requests/ChangePasswordCommand";
 import {IUser} from "../../../types/models/IUser";
@@ -8,8 +7,7 @@ import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-profile-settings',
-  templateUrl: './profile-settings.component.html',
-  styleUrls: ['./profile-settings.component.scss']
+  templateUrl: './profile-settings.component.html'
 })
 export class ProfileSettingsComponent implements OnInit {
 
@@ -42,11 +40,11 @@ export class ProfileSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeView();
-  };
+  }
 
   initializeView(): void {
-    this.userService.getCurrentUser().subscribe((data: IGetUserResponse) => {
-      this.currentUser = data.user;
+    this.userService.getCurrentUser().subscribe(getUserResponse => {
+      this.currentUser = getUserResponse.user;
       this.currentPassword = '';
       this.newPassword = '';
       this.repeatNewPassword = '';
@@ -68,14 +66,14 @@ export class ProfileSettingsComponent implements OnInit {
 
     command.website = this.currentUser.website;
 
-    this.userService.putUpdateUserInformation(command).subscribe((data) => {
+    this.userService.putUpdateUserInformation(command).subscribe(response => {
       this.eventsSubject.next();
       this.initializeView();
-      alert(data.message);
+      alert(response.message);
     }, error => {
       alert(error.error.ErrorMessage);
     })
-  };
+  }
 
   saveSocialMediaInfo(): void {
     const command = UpdateUserInformationCommand.CreateEmptyCommand();
@@ -84,7 +82,7 @@ export class ProfileSettingsComponent implements OnInit {
     command.instagram = this.currentUser.instagram;
     command.linkedIn = this.currentUser.linkedIn;
 
-    this.userService.putUpdateUserInformation(command).subscribe((_) => {
+    this.userService.putUpdateUserInformation(command).subscribe(_ => {
       this.eventsSubject.next();
     }, error => {
       alert(error.error.ErrorMessage);
@@ -103,11 +101,10 @@ export class ProfileSettingsComponent implements OnInit {
     }
 
     const command = new ChangePasswordCommand(this.currentPassword, this.newPassword);
-    this.userService.putChangePassword(command).subscribe((_) => {
+    this.userService.putChangePassword(command).subscribe(_ => {
       alert('Password changed OK.');
     }, error => {
       alert(error.error.ErrorMessage);
     })
   }
-
 }

@@ -1,18 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-profile-logout-button',
-  templateUrl: './profile-logout-button.component.html',
-  styleUrls: ['./profile-logout-button.component.scss']
+  templateUrl: './profile-logout-button.component.html'
 })
-export class ProfileLogoutButtonComponent implements OnInit {
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
-
+export class ProfileLogoutButtonComponent {
   @Input() ButtonText: string = 'Logout';
-
 }
