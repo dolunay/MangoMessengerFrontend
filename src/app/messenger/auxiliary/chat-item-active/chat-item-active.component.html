@@ -5,7 +5,15 @@
     </div>
     <div class="contacts-content">
       <div class="contacts-info">
-        <h6 class="chat-name text-truncate">{{chat.title}}</h6>
+        <h6 *ngIf="chat.chatType != 1; else elseDirect" class="chat-name text-truncate">
+          <mat-icon>group</mat-icon>
+          {{chat.title}}
+        </h6>
+        <ng-template #elseDirect>
+          <h6 class="chat-name text-truncate">
+            {{chat.title}}
+          </h6>
+        </ng-template>
         <div class="chat-time">{{chat.lastMessageAt}}</div>
       </div>
       <div class="contacts-texts">

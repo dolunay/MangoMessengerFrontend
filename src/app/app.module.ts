@@ -29,6 +29,7 @@ import {CreateGroupDialogComponent} from './messenger/dialogs/create-group-dialo
 import {NewChatDialogComponent} from './messenger/dialogs/new-chat-dialog/new-chat-dialog.component';
 import {InviteOthersDialogComponent} from './messenger/dialogs/invite-others-dialog/invite-others-dialog.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
+import { MatIconModule } from '@angular/material/icon'
 import {MatInputModule} from "@angular/material/input";
 import {StartComponent} from './messenger/start/start.component';
 import {VerifyEmailNoteComponent} from './messenger/auxiliary/verify-email-note/verify-email-note.component';
@@ -80,7 +81,8 @@ import {VerifyEmailNoteComponent} from './messenger/auxiliary/verify-email-note/
     BrowserAnimationsModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatIconModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: RequestHeaderInterceptor, multi: true},
