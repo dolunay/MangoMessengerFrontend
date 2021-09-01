@@ -25,17 +25,6 @@
 
                 <ul class="nav flex-nowrap">
 
-                  <!--                  <li class="nav-item list-inline-item mr-1">-->
-                  <!--                    <div class="nav-link text-muted px-1" title="Notifications" role="button" data-toggle="modal"-->
-                  <!--                         data-target="#notificationModal">-->
-                  <!--                      &lt;!&ndash; Default :: Inline SVG &ndash;&gt;-->
-                  <!--                      <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-                  <!--                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-                  <!--                              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>-->
-                  <!--                      </svg>-->
-                  <!--                    </div>-->
-                  <!--                  </li>-->
-
                   <li class="nav-item list-inline-item mr-0">
                     <div class="dropdown">
                       <div class="nav-link text-muted px-1" role="button" title="Details"
@@ -50,12 +39,8 @@
                       </div>
 
                       <div class="dropdown-menu dropdown-menu-right">
-                        <!--                        <button mat-raised-button class="dropdown-item" (click)="openNewChatDialog()">New Chat</button>-->
                         <button mat-raised-button class="dropdown-item" (click)="openCreateGroupDialog()">Create Group
                         </button>
-                        <!--                        <button mat-raised-button class="dropdown-item" (click)="openInviteOthersDialog()">Invite-->
-                        <!--                          Others-->
-                        <!--                        </button>-->
                       </div>
                     </div>
                   </li>
@@ -152,8 +137,6 @@
                     d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
 
-            <!-- Alternate :: External File link -->
-            <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/arrow-left.svg" alt=""> -->
           </button>
 
           <!-- Chat participant's Name -->
@@ -172,19 +155,6 @@
 
           <!-- Chat Options -->
           <ul class="nav flex-nowrap">
-            <!--            <li class="nav-item list-inline-item d-none d-sm-block mr-1">-->
-            <!--              <div class="nav-link text-muted px-1" data-toggle="collapse" data-target="#searchCollapse"-->
-            <!--                   aria-expanded="false">-->
-            <!--                &lt;!&ndash; Default :: Inline SVG &ndash;&gt;-->
-            <!--                <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-            <!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-            <!--                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>-->
-            <!--                </svg>-->
-
-            <!--                &lt;!&ndash; Alternate :: External File link &ndash;&gt;-->
-            <!--                &lt;!&ndash; <img src="./../assets/media/heroicons/outline/search.svg" alt="" class="injectable hw-20"> &ndash;&gt;-->
-            <!--              </div>-->
-            <!--            </li>-->
 
             <li class="nav-item list-inline-item d-none d-sm-block mr-0">
               <div class="dropdown">
@@ -205,8 +175,6 @@
                             d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
                     </svg>
 
-                    <!-- Alternate :: External File link -->
-                    <!-- <img src="./../assets/media/heroicons/outline/archive.svg" alt="" class="injectable hw-20 mr-2"> -->
                     <span *ngIf="!activeChat.isArchived; else unArchiveChat">Archive Chat</span>
                     <ng-template #unArchiveChat>
                       <span>Un-archive Chat</span>
@@ -219,8 +187,6 @@
                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>
 
-                    <!-- Alternate :: External File link -->
-                    <!-- <img src="./../assets/media/heroicons/outline/trash.svg" alt="" class="injectable hw-20 mr-2"> -->
                     <span class="text-danger">Leave Chat</span>
                   </div>
                 </div>
@@ -229,27 +195,6 @@
           </ul>
         </div>
         <!-- Chat Header End-->
-
-        <!-- Search Start -->
-        <!--        <div class="collapse border-bottom px-3" id="searchCollapse">-->
-        <!--          <div class="container-xl py-2 px-0 px-md-3">-->
-        <!--            <div class="input-group bg-light ">-->
-        <!--              <input type="text" class="form-control form-control-md border-right-0 transparent-bg pr-0"-->
-        <!--                     placeholder="Search...">-->
-        <!--              <div class="input-group-append">-->
-        <!--                <span class="input-group-text transparent-bg border-left-0">-->
-        <!--                  &lt;!&ndash; Default :: Inline SVG &ndash;&gt;-->
-        <!--                  <svg class="hw-20 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-        <!--                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-        <!--                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>-->
-        <!--                  </svg>-->
-        <!--                </span>-->
-        <!--              </div>-->
-        <!--            </div>-->
-        <!--          </div>-->
-
-        <!--        </div>-->
-        <!-- Search End -->
 
         <!-- Chat Content Start-->
         <div class="chat-content p-2" id="messageBody">
@@ -260,23 +205,25 @@
 
               <div *ngFor="let message of messages">
                 <app-received-message [message]="message"
-                                      (notifyParentOnDeleteMessage)="onDeleteMessageEvent($event)"></app-received-message>
+                                      (notifyParentOnDeleteMessage)="onDeleteMessageEvent($event)">
+                </app-received-message>
               </div>
             </div>
             <!-- Message Day End -->
           </div>
-
-          <!-- Scroll to finish -->
-          <div class="chat-finished" id="chat-finished"></div>
         </div>
         <!-- Chat Content End-->
 
         <!-- Chat Footer Start-->
         <ng-container *ngIf="activeChat.isMember; else elseBlock">
-          <app-chat-footer [chatId]="activeChatId" (notifyParentOnSendMessage)="initializeView()"></app-chat-footer>
+          <app-chat-footer [chatId]="activeChatId"
+                           (notifyParentOnSendMessage)="initializeView()">
+          </app-chat-footer>
         </ng-container>
         <ng-template #elseBlock>
-          <app-join-group [chatId]="activeChat.chatId" (notifyParentOnJoinGroup)="onJoinGroupEvent()"></app-join-group>
+          <app-join-group [chatId]="activeChat.chatId"
+                          (notifyParentOnJoinGroup)="onJoinGroupEvent()">
+          </app-join-group>
         </ng-template>
         <!-- Chat Footer End-->
       </div>
@@ -286,9 +233,6 @@
   </main>
   <!-- Main End -->
 
-  <div class="backdrop"></div>
-
 </div>
 <!-- Main Layout End -->
-
 </body>

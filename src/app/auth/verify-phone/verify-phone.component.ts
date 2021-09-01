@@ -2,12 +2,10 @@ import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {UsersService} from "../../services/users.service";
 import {SessionService} from "../../services/session.service";
-import {ITokensResponse} from "../../../types/responses/ITokensResponse";
 
 @Component({
   selector: 'app-verify-phone',
-  templateUrl: './verify-phone.component.html',
-  styleUrls: ['./verify-phone.component.scss']
+  templateUrl: './verify-phone.component.html'
 })
 export class VerifyPhoneComponent {
 
@@ -18,16 +16,16 @@ export class VerifyPhoneComponent {
   }
 
   verifyPhone(): void {
-    this.usersService.putPhoneConfirmation(this.phoneCode).subscribe((data) => {
+    this.usersService.putPhoneConfirmation(this.phoneCode).subscribe((phoneConfirmResponse) => {
       const refreshToken = this.sessionService.getRefreshToken();
-      this.sessionService.postRefreshSession(refreshToken).subscribe((data: ITokensResponse) => {
-        this.sessionService.writeAccessToken(data.accessToken);
-        this.sessionService.writeRefreshToken(data.refreshToken);
+      this.sessionService.postRefreshSession(refreshToken).subscribe((refreshTokenResponse) => {
+        this.sessionService.writeAccessToken(refreshTokenResponse.accessToken);
+        this.sessionService.writeRefreshToken(refreshTokenResponse.refreshToken);
       }, error => {
         this.router.navigateByUrl('login').then(_ => alert(error.error.ErrorMessage));
       })
 
-      this.router.navigateByUrl('start').then(_ => alert(data.message));
+      this.router.navigateByUrl('start').then(_ => alert(phoneConfirmResponse.message));
     }, error => {
       alert(error.error.ErrorMessage);
     });

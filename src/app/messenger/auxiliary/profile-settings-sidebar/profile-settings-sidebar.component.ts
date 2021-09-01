@@ -7,8 +7,7 @@ import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-profile-settings-sidebar',
-  templateUrl: './profile-settings-sidebar.component.html',
-  styleUrls: ['./profile-settings-sidebar.component.scss']
+  templateUrl: './profile-settings-sidebar.component.html'
 })
 export class ProfileSettingsSidebarComponent implements OnInit {
 

@@ -3,7 +3,6 @@ import {IGetUserResponse} from "../responses/IGetUserResponse";
 import {RegisterCommand} from "../requests/RegisterCommand";
 import {VerifyEmailCommand} from "../requests/VerifyEmailCommand";
 import {UpdateUserInformationCommand} from "../requests/UpdateUserInformationCommand";
-import {ISearchContactsResponse} from "../responses/ISearchContactsResponse";
 import {ChangePasswordCommand} from "../requests/ChangePasswordCommand";
 import {ITokensResponse} from "../responses/ITokensResponse";
 import {IBaseResponse} from "../responses/IBaseResponse";

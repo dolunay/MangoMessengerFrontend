@@ -5,8 +5,7 @@ import {LoginCommand} from "../../../types/requests/LoginCommand";
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  templateUrl: './login.component.html'
 })
 export class LoginComponent {
 

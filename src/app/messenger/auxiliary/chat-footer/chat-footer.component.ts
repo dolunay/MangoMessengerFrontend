@@ -4,8 +4,7 @@ import {SendMessageCommand} from "../../../../types/requests/SendMessageCommand"
 
 @Component({
   selector: 'app-chat-footer',
-  templateUrl: './chat-footer.component.html',
-  styleUrls: ['./chat-footer.component.scss']
+  templateUrl: './chat-footer.component.html'
 })
 export class ChatFooterComponent {
 
