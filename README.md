@@ -26,6 +26,7 @@
 ## Desktop version run
 
 - `ng build --base-href ./ && electron .`
+- Electron guide: https://buddy.works/tutorials/building-a-desktop-app-with-electron-and-angular
 
 ## Git flow
 
