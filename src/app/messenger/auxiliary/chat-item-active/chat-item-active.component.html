@@ -1,33 +1,31 @@
-<li class="contacts-item friends">
-  <div class="contacts-link">
-    <div class="avatar avatar-online">
-      <img src="assets/media/avatar/3.png" alt="avatar_example">
-    </div>
-    <div class="contacts-content">
-      <div class="contacts-info">
-        <div *ngIf="chat.chatType != 1; else elseDirect" class="chat-name text-truncate">
-          <div>
-            <div style="display: inline-block; margin-right: 10px;">
-              <mat-icon>group</mat-icon>
-            </div>
-            <div style="display: inline-block; vertical-align: top;">{{chat.title}}</div>
+<div class="contacts-link">
+  <div class="avatar avatar-online">
+    <img src="assets/media/avatar/3.png" alt="avatar_example">
+  </div>
+  <div class="contacts-content">
+    <div class="contacts-info">
+      <div *ngIf="chat.chatType != 1; else elseDirect" class="chat-name text-truncate">
+        <div>
+          <div style="display: inline-block; margin-right: 10px;">
+            <mat-icon>group</mat-icon>
           </div>
+          <div style="display: inline-block; vertical-align: top;">{{chat.title}}</div>
         </div>
-        <ng-template #elseDirect>
-          <div class="chat-name text-truncate">
-            {{chat.title}}
-          </div>
-        </ng-template>
-        <div class="chat-time">{{chat.lastMessageAt}}</div>
       </div>
-      <div class="contacts-texts">
-        <p class="text-truncate" *ngIf="chatContainsMessages(); else elseBlock">
-          <b>{{chat.lastMessageAuthor}}: </b>{{chat.lastMessage}}
-        </p>
-        <ng-template #elseBlock class="text-truncate">
-          Chat is currently empty.
-        </ng-template>
-      </div>
+      <ng-template #elseDirect>
+        <div class="chat-name text-truncate">
+          {{chat.title}}
+        </div>
+      </ng-template>
+      <div class="chat-time">{{chat.lastMessageAt}}</div>
+    </div>
+    <div class="contacts-texts">
+      <p class="text-truncate" *ngIf="chatContainsMessages(); else elseBlock">
+        <strong>{{chat.lastMessageAuthor}}: </strong>{{chat.lastMessage}}
+      </p>
+      <ng-template #elseBlock class="text-truncate">
+        Chat is currently empty.
+      </ng-template>
     </div>
   </div>
-</li>
+</div>
