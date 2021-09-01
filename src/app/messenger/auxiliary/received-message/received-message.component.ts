@@ -4,8 +4,7 @@ import {MessagesService} from "../../../services/messages.service";
 
 @Component({
   selector: 'app-received-message',
-  templateUrl: './received-message.component.html',
-  styleUrls: ['./received-message.component.scss']
+  templateUrl: './received-message.component.html'
 })
 export class ReceivedMessageComponent {
 

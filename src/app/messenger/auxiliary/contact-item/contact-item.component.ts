@@ -1,20 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-contact-item',
-  templateUrl: './contact-item.component.html',
-  styleUrls: ['./contact-item.component.scss']
+  templateUrl: './contact-item.component.html'
 })
-export class ContactItemComponent implements OnInit {
-
-  constructor() {
-  }
+export class ContactItemComponent {
 
   @Input() contactName = '';
   @Input() contactAddress = '';
   @Input() contactBio = '';
-
-  ngOnInit(): void {
-  }
-
 }

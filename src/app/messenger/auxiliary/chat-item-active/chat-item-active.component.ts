@@ -4,13 +4,9 @@ import {GroupType} from "../../../../types/enums/GroupType";
 
 @Component({
   selector: 'app-chat-item-active',
-  templateUrl: './chat-item-active.component.html',
-  styleUrls: ['./chat-item-active.component.scss']
+  templateUrl: './chat-item-active.component.html'
 })
 export class ChatItemActiveComponent {
-
-  constructor() {
-  }
 
   @Input() chat: IChat = {
     description: "",

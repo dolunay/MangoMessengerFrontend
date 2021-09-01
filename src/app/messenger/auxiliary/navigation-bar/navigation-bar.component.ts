@@ -1,22 +1,18 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-navigation-bar',
-  templateUrl: './navigation-bar.component.html',
-  styleUrls: ['./navigation-bar.component.scss']
+  templateUrl: './navigation-bar.component.html'
 })
-export class NavigationBarComponent implements OnInit {
+export class NavigationBarComponent {
 
   constructor(private route: ActivatedRoute, private router: Router) {
   }
 
   @Input() activeRoute = '';
 
-  ngOnInit(): void {
-  }
-
-  navigateToChats() : void {
+  navigateToChats(): void {
     this.router.navigateByUrl('main').then(r => r);
   }
 
@@ -24,7 +20,7 @@ export class NavigationBarComponent implements OnInit {
     this.router.navigateByUrl('contacts').then(r => r);
   }
 
-  navigateToSettings() : void {
+  navigateToSettings(): void {
     this.router.navigateByUrl('profile-settings').then(r => r);
   }
 }

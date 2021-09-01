@@ -9,7 +9,7 @@
 
     <p>Choose group type</p>
     <div style="margin-bottom: 15px;">
-      <select  [(ngModel)]="groupType" name="groupType" [value]="groupType">
+      <select [(ngModel)]="groupType" name="groupType" [value]="groupType">
         <option *ngFor="let type of groupTypes" [value]="type"
                 [label]="type"></option>
       </select>

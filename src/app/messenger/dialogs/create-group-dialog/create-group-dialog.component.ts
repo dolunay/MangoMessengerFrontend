@@ -6,8 +6,7 @@ import {CreateGroupCommand} from "../../../../types/requests/CreateGroupCommand"
 
 @Component({
   selector: 'app-create-group-dialog',
-  templateUrl: './create-group-dialog.component.html',
-  styleUrls: ['./create-group-dialog.component.scss']
+  templateUrl: './create-group-dialog.component.html'
 })
 export class CreateGroupDialogComponent {
 
