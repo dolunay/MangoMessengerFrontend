@@ -30,6 +30,6 @@ export class ContactsService implements IContactsService {
 
   searchContacts(displayName: string): Observable<ISearchContactsResponse> {
     return this.httpClient.get<ISearchContactsResponse>(ApiRoute.route + this.contactsRoute +
-      'searches?displayName=' + displayName);
+      'searches?searchQuery=' + displayName);
   }
 }

@@ -9,17 +9,18 @@ import {LoginCommand} from "../../../types/requests/LoginCommand";
 })
 export class LoginComponent {
 
-  email = '';
+  emailOrPhone = '';
   password = '';
 
   constructor(private authService: SessionService, private route: ActivatedRoute, private router: Router) {
   }
 
   login(): void {
-    this.authService.postSession(new LoginCommand(this.email, this.password)).subscribe((data) => {
+    this.authService.postSession(new LoginCommand(this.emailOrPhone, this.password)).subscribe(data =>
+    {
       this.authService.writeAccessToken(data.accessToken);
       this.authService.writeRefreshToken(data.refreshToken);
       this.router.navigateByUrl('start').then(r => r);
-    }, error => alert(error.error.ErrorMessage.toLowerCase().replaceAll("_", " ")));
+    }, error => alert(error.error.ErrorMessage));
   }
 }
