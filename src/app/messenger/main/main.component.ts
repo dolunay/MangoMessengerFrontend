@@ -10,6 +10,7 @@ import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
+import {CryptoService} from "../../services/crypto.service";
 
 @Component({
   selector: 'app-main',
@@ -19,6 +20,7 @@ export class MainComponent implements OnInit {
 
   messages: IMessage[] = [];
   chats: IChat[] = [];
+  private cryptoService: CryptoService;
 
   activeChatId = '';
 
@@ -46,6 +48,7 @@ export class MainComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               public dialog: MatDialog) {
+    this.cryptoService = new CryptoService("18");
   }
 
   openCreateGroupDialog(): void {
