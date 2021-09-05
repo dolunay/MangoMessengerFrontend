@@ -19,6 +19,7 @@ export class StartComponent implements OnInit {
   chats: IChat[] = [];
 
   user: IUser = {
+    publicKey: 0,
     address: "",
     bio: "",
     birthdayDate: "",

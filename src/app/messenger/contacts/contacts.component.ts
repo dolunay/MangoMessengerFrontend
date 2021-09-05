@@ -20,6 +20,7 @@ export class ContactsComponent implements OnInit {
   contacts: IContact[] = [];
 
   currentOpenedUser: IUser = {
+    publicKey: 0,
     address: "",
     bio: "",
     birthdayDate: "",

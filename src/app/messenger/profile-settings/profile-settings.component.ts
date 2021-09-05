@@ -4,6 +4,8 @@ import {UpdateUserInformationCommand} from "../../../types/requests/UpdateUserIn
 import {ChangePasswordCommand} from "../../../types/requests/ChangePasswordCommand";
 import {IUser} from "../../../types/models/IUser";
 import {Subject} from "rxjs";
+import {CryptoService} from "../../services/crypto.service";
+import {Tokens} from "../../../consts/Tokens";
 
 @Component({
   selector: 'app-profile-settings',
@@ -11,12 +13,13 @@ import {Subject} from "rxjs";
 })
 export class ProfileSettingsComponent implements OnInit {
 
-  constructor(private userService: UsersService) {
+  constructor(private userService: UsersService, private cryptoService: CryptoService) {
   }
 
   eventsSubject: Subject<void> = new Subject<void>();
 
   currentUser: IUser = {
+    publicKey: 0,
     address: "",
     bio: "",
     birthdayDate: "",
@@ -38,6 +41,8 @@ export class ProfileSettingsComponent implements OnInit {
   newPassword = '';
   repeatNewPassword = '';
 
+  privateKey = 0;
+
   ngOnInit(): void {
     this.initializeView();
   }
@@ -48,6 +53,7 @@ export class ProfileSettingsComponent implements OnInit {
       this.currentPassword = '';
       this.newPassword = '';
       this.repeatNewPassword = '';
+      this.privateKey = 0;
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -101,8 +107,21 @@ export class ProfileSettingsComponent implements OnInit {
     }
 
     const command = new ChangePasswordCommand(this.currentPassword, this.newPassword);
-    this.userService.putChangePassword(command).subscribe(_ => {
-      alert('Password changed OK.');
+    this.userService.putChangePassword(command).subscribe(data => {
+      alert(data.message);
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  updatePublicKey(): void {
+    const base = Tokens.base;
+    const modulus = Tokens.modulus;
+    const newPubicKey = Math.pow(base, this.privateKey) % modulus;
+    this.cryptoService.updatePublicKey(newPubicKey).subscribe(data => {
+      this.cryptoService.writeSecretKey(this.privateKey.toString());
+      this.initializeView();
+      alert(data.message);
     }, error => {
       alert(error.error.ErrorMessage);
     })
