@@ -1,4 +1,5 @@
 import * as CryptoJS from 'crypto-js';
+import {Tokens} from "../../consts/Tokens";
 
 export class CryptoService {
   private readonly key: string;
@@ -15,5 +16,13 @@ export class CryptoService {
   decryptUsingAES256(encryptedString: string): string {
     const decrypted = CryptoJS.AES.decrypt(encryptedString, this.key);
     return decrypted.toString(CryptoJS.enc.Utf8);
+  }
+
+  getSecretKey(): string | null {
+    return localStorage.getItem(Tokens.secretKey);
+  }
+
+  writeSecretKey(key: string): void {
+    localStorage.setItem(Tokens.secretKey, key);
   }
 }
