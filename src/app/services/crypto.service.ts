@@ -1,12 +1,12 @@
 import * as CryptoJS from 'crypto-js';
 import {Tokens} from "../../consts/Tokens";
+import {Injectable} from "@angular/core";
 
+@Injectable({
+  providedIn: 'root'
+})
 export class CryptoService {
-  private readonly key: string;
-
-  constructor(key: string) {
-    this.key = key;
-  }
+  private key: string = '';
 
   encryptUsingAES256(message: string): string {
     const encrypted = CryptoJS.AES.encrypt(JSON.stringify(message), this.key);
@@ -24,5 +24,9 @@ export class CryptoService {
 
   writeSecretKey(key: string): void {
     localStorage.setItem(Tokens.secretKey, key);
+  }
+
+  setKey(key: string): void {
+    this.key = key;
   }
 }

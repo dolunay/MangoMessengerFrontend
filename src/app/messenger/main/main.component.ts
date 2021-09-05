@@ -20,7 +20,6 @@ export class MainComponent implements OnInit {
 
   messages: IMessage[] = [];
   chats: IChat[] = [];
-  private cryptoService: CryptoService;
 
   activeChatId = '';
 
@@ -47,8 +46,8 @@ export class MainComponent implements OnInit {
               private userChatsService: UserChatsService,
               private route: ActivatedRoute,
               private router: Router,
-              public dialog: MatDialog) {
-    this.cryptoService = new CryptoService("18");
+              public dialog: MatDialog,
+              private cryptoService: CryptoService) {
   }
 
   openCreateGroupDialog(): void {

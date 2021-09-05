@@ -17,6 +17,7 @@ export class ProfileSettingsComponent implements OnInit {
   eventsSubject: Subject<void> = new Subject<void>();
 
   currentUser: IUser = {
+    publicKey: 0,
     address: "",
     bio: "",
     birthdayDate: "",
@@ -37,6 +38,8 @@ export class ProfileSettingsComponent implements OnInit {
   currentPassword = '';
   newPassword = '';
   repeatNewPassword = '';
+
+  privateKey = 0;
 
   ngOnInit(): void {
     this.initializeView();
@@ -106,5 +109,9 @@ export class ProfileSettingsComponent implements OnInit {
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  updatePublicKey(): void {
+
   }
 }
