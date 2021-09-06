@@ -6,6 +6,7 @@ import {IUser} from "../../../types/models/IUser";
 import {Subject} from "rxjs";
 import {CryptoService} from "../../services/crypto.service";
 import {Tokens} from "../../../consts/Tokens";
+import {RandomGeneratorService} from "../../services/random-generator.service";
 
 @Component({
   selector: 'app-profile-settings',
@@ -13,7 +14,8 @@ import {Tokens} from "../../../consts/Tokens";
 })
 export class ProfileSettingsComponent implements OnInit {
 
-  constructor(private userService: UsersService, private cryptoService: CryptoService) {
+  constructor(private userService: UsersService, private cryptoService: CryptoService,
+              private randomGenerator: RandomGeneratorService) {
   }
 
   eventsSubject: Subject<void> = new Subject<void>();
