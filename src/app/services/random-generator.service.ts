@@ -8,14 +8,9 @@ export class RandomGeneratorService {
   constructor() {
   }
 
-  test(): void {
-    const array = new Uint32Array(10);
+  generateRandomNumber(): number {
+    const array = new Uint32Array(1);
     window.crypto.getRandomValues(array);
-
-    console.log("Ваше счастливое число:");
-
-    for (let i = 0; i < array.length; i++) {
-      console.log(array[i]);
-    }
+    return array[0];
   }
 }
