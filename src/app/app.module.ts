@@ -64,7 +64,6 @@ import {VerifyEmailNoteComponent} from './messenger/auxiliary/verify-email-note/
       {path: 'verify-phone', component: VerifyPhoneComponent},
       {path: 'verify-email', component: VerifyEmailComponent},
       {path: 'main', component: MainComponent},
-      {path: 'main/:chatId', component: MainComponent},
       {path: 'start', component: StartComponent},
       {path: 'contacts', component: ContactsComponent},
       {path: 'profile-settings', component: ProfileSettingsComponent},
