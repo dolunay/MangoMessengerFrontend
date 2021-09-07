@@ -119,9 +119,10 @@ export class ProfileSettingsComponent implements OnInit {
   updatePublicKey(): void {
     const base = Tokens.base;
     const modulus = Tokens.modulus;
-    const newPubicKey = Math.pow(base, this.privateKey) % modulus;
+    const privateKey = this.randomGenerator.generateRandomNumber();
+    const newPubicKey = Math.pow(base, privateKey) % modulus;
     this.cryptoService.updatePublicKey(newPubicKey).subscribe(data => {
-      this.cryptoService.writeSecretKey(this.privateKey.toString());
+      this.cryptoService.writeSecretKey(privateKey.toString());
       this.initializeView();
       alert(data.message);
     }, error => {
