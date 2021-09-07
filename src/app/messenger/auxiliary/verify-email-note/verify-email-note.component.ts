@@ -1,15 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-verify-email-note',
-  templateUrl: './verify-email-note.component.html',
-  styleUrls: ['./verify-email-note.component.scss']
+  templateUrl: './verify-email-note.component.html'
 })
-export class VerifyEmailNoteComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+export class VerifyEmailNoteComponent {
 
 }

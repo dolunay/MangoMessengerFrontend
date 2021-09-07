@@ -14,4 +14,5 @@
   twitter: string;
   instagram: string;
   linkedIn: string;
+  publicKey: number;
 }

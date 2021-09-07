@@ -24,7 +24,6 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
           </svg>
-          <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/arrow-left.svg" alt=""> -->
         </button>
 
         <div class="pl-2 pl-xl-0">
@@ -248,32 +247,33 @@
 
             <div class="card mb-3">
               <div class="card-header">
-                <h3 class="mb-1">Security</h3>
+                <h3 class="mb-1">Update Public Key</h3>
                 <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
               </div>
 
-              <div class="card-body p-0">
-                <ul class="list-group list-group-flush list-group-sm-column">
-                  <li class="list-group-item py-2">
-                    <div class="media align-items-center">
-                      <div class="media-body">
-                        <p class="mb-0">Use two-factor authentication</p>
-                        <p class="small text-muted mb-0">Ask for a code if attempted login from
-                          an unrecognised device or browser.</p>
-                      </div>
-                      <div class="custom-control custom-switch mr-2">
-                        <input type="checkbox" class="custom-control-input" id="twoFactorSwitch"
-                               checked="">
-                        <label class="custom-control-label" for="twoFactorSwitch">&nbsp;</label>
+              <div class="card-body">
+                <form>
+                  <div class="row">
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="public-key">Public Key</label>
+                        <input [(ngModel)]="currentUser.publicKey"
+                               class="form-control form-control-md"
+                               id="public-key"
+                               placeholder="Public key"
+                               autocomplete="off"
+                               name="public-key"
+                               readonly
+                               value="{{currentUser.publicKey}}">
                       </div>
                     </div>
-                  </li>
-                </ul>
+                  </div>
+                </form>
               </div>
 
               <div class="card-footer d-flex justify-content-end">
-                <button class="btn btn-link text-muted mx-1">Reset</button>
-                <button class="btn btn-primary" type="button">Save Changes</button>
+                <button (click)="initializeView()" type="button" class="btn btn-link text-muted mx-1">Reset</button>
+                <button (click)="updatePublicKey()" type="button" class="btn btn-primary">Save Changes</button>
               </div>
             </div>
           </div>
@@ -283,8 +283,6 @@
     <!-- Profile Settings End -->
   </main>
   <!-- Main End-->
-
-  <div class="backdrop"></div>
 </div>
 <!-- Main Layout End -->
 </body>

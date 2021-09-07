@@ -3,8 +3,7 @@ import {UserChatsService} from "../../../services/user-chats.service";
 
 @Component({
   selector: 'app-join-group',
-  templateUrl: './join-group.component.html',
-  styleUrls: ['./join-group.component.scss']
+  templateUrl: './join-group.component.html'
 })
 export class JoinGroupComponent {
 

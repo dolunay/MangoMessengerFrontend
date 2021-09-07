@@ -1,9 +1,9 @@
 ﻿export class LoginCommand {
-  email: string;
+  emailOrPhone: string;
   password: string;
 
-  constructor(email: string, password: string) {
-    this.email = email;
+  constructor(emailOrPhone: string, password: string) {
+    this.emailOrPhone = emailOrPhone;
     this.password = password;
   }
 }

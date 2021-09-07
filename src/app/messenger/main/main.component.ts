@@ -3,7 +3,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
-import {IGetUserChatsResponse} from "../../../types/responses/IGetUserChatsResponse";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
 import {GroupType} from "../../../types/enums/GroupType";
@@ -11,11 +10,11 @@ import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
+import {CryptoService} from "../../services/crypto.service";
 
 @Component({
   selector: 'app-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  templateUrl: './main.component.html'
 })
 export class MainComponent implements OnInit {
 
@@ -47,7 +46,8 @@ export class MainComponent implements OnInit {
               private userChatsService: UserChatsService,
               private route: ActivatedRoute,
               private router: Router,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private cryptoService: CryptoService) {
   }
 
   openCreateGroupDialog(): void {
@@ -59,17 +59,17 @@ export class MainComponent implements OnInit {
   }
 
   initializeView(): void {
-    this.chatService.getUserChats().subscribe((data) => {
+    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
       const routeChatId = this.route.snapshot.paramMap.get('chatId');
       this.chatFilter = 'All Chats';
-      this.chats = data.chats.filter(x => !x.isArchived);
+      this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived);
 
       if (routeChatId) {
         this.loadChatAndMessages(routeChatId);
         return;
       }
 
-      const firstChat = data.chats[0];
+      const firstChat = getUserChatsResponse.chats[0];
       if (firstChat) {
         this.loadChatAndMessages(firstChat.chatId);
       }
@@ -84,12 +84,12 @@ export class MainComponent implements OnInit {
   }
 
   loadChatAndMessages(chatId: string): void {
-    this.messageService.getChatMessages(chatId).subscribe((getMessagesData) => {
-        this.messages = getMessagesData.messages;
+    this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
+        this.messages = getMessagesResponse.messages;
         this.activeChatId = chatId;
-        this.chatService.getChatById(chatId).subscribe((getChatByIdData) => {
-          if (getChatByIdData) {
-            this.activeChat = getChatByIdData.chat;
+        this.chatService.getChatById(chatId).subscribe(getChatByIdResponse => {
+          if (getChatByIdResponse) {
+            this.activeChat = getChatByIdResponse.chat;
             this.scrollToEnd();
           }
         }, error => {
@@ -109,27 +109,27 @@ export class MainComponent implements OnInit {
   }
 
   onChatFilerClick(filer: string): void {
-    this.chatService.getUserChats().subscribe((data: IGetUserChatsResponse) => {
+    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
 
       switch (filer) {
         case 'All Chats':
-          this.chats = data.chats.filter(x => !x.isArchived);
-          const firstChat = data.chats[0];
+          this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived);
+          const firstChat = getUserChatsResponse.chats[0];
           if (firstChat) {
             this.loadChatAndMessages(firstChat.chatId);
           }
           break;
         case 'Groups':
-          console.log(data.chats);
-          this.chats = data.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel
+          console.log(getUserChatsResponse.chats);
+          this.chats = getUserChatsResponse.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel
             || x.chatType === GroupType.PublicChannel
             || x.chatType === GroupType.PrivateChannel);
           break;
         case 'Direct Chats':
-          this.chats = data.chats.filter(x => x.chatType === GroupType.DirectChat);
+          this.chats = getUserChatsResponse.chats.filter(x => x.chatType === GroupType.DirectChat);
           break;
         case 'Archived':
-          this.chats = data.chats.filter(x => x.isArchived);
+          this.chats = getUserChatsResponse.chats.filter(x => x.isArchived);
           break;
         default:
           break;
@@ -141,8 +141,8 @@ export class MainComponent implements OnInit {
   }
 
   onSearchClick(): void {
-    this.chatService.searchChat(this.searchQuery).subscribe((data) => {
-      this.chats = data.chats;
+    this.chatService.searchChat(this.searchQuery).subscribe(getUserChatsResponse => {
+      this.chats = getUserChatsResponse.chats;
       this.chatFilter = 'Search Results';
       console.log(this.noActiveChat());
       console.log(this.activeChatId);
@@ -152,11 +152,11 @@ export class MainComponent implements OnInit {
   }
 
   onArchiveChatClick(): void {
-    this.chatService.getUserChats().subscribe((data) => {
-      const chat = data.chats.filter(x => x.chatId === this.activeChatId)[0];
+    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
+      const chat = getUserChatsResponse.chats.filter(x => x.chatId === this.activeChatId)[0];
       const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
 
-      this.userChatsService.putArchiveChat(command).subscribe((_) => {
+      this.userChatsService.putArchiveChat(command).subscribe(_ => {
 
         if (chat.isArchived) {
           this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
@@ -173,7 +173,7 @@ export class MainComponent implements OnInit {
   }
 
   onLeaveChatClick(): void {
-    this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe((_) => {
+    this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
       this.activeChatId = '';
       this.onChatFilerClick('All Chats');
     }, error => {
