@@ -2,14 +2,13 @@ import {Component, Input, OnInit} from '@angular/core';
 import {SessionService} from "../../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UsersService} from "../../../services/users.service";
-import {IGetUserResponse} from "../../../../types/responses/IGetUserResponse";
-import {Observable, Subscription} from "rxjs";
+import {IUser} from "../../../../types/models/IUser";
 
 @Component({
   selector: 'app-profile-settings-sidebar',
   templateUrl: './profile-settings-sidebar.component.html'
 })
-export class ProfileSettingsSidebarComponent implements OnInit {
+export class ProfileSettingsSidebarComponent {
 
   constructor(private sessionService: SessionService,
               private userService: UsersService,
@@ -17,48 +16,7 @@ export class ProfileSettingsSidebarComponent implements OnInit {
               private router: Router) {
   }
 
-  private eventsSubscription!: Subscription;
-
-  @Input() events!: Observable<void>;
-
-  birthdayDate = '';
-  phoneNumber = '';
-  email = '';
-  website = '';
-  address = '';
-  facebook = '';
-  twitter = '';
-  instagram = '';
-  linkedIn = '';
-  firstName = '';
-  lastName = '';
-
-  ngOnInit(): void {
-    this.eventsSubscription = this.events.subscribe(() => this.initializeView());
-    this.initializeView();
-  }
-
-  ngOnDestroy() {
-    this.eventsSubscription.unsubscribe();
-  }
-
-  initializeView(): void {
-    this.userService.getCurrentUser().subscribe((data: IGetUserResponse) => {
-      this.birthdayDate = data.user.birthdayDate;
-      this.phoneNumber = data.user.phoneNumber;
-      this.email = data.user.email;
-      this.website = data.user.website;
-      this.address = data.user.address;
-      this.facebook = data.user.facebook;
-      this.twitter = data.user.twitter;
-      this.instagram = data.user.instagram;
-      this.linkedIn = data.user.linkedIn;
-      this.firstName = data.user.firstName;
-      this.lastName = data.user.lastName;
-    }, error => {
-      alert(error.message);
-    })
-  }
+  @Input() user!: IUser;
 
   logout(): void {
     let refreshToken = this.sessionService.getRefreshToken();
