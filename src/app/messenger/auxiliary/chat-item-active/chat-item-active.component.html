@@ -17,11 +17,11 @@
           {{chat.title}}
         </div>
       </ng-template>
-      <div class="chat-time">{{chat.lastMessageAt}}</div>
+      <div class="chat-time">{{chat.lastMessage?.createdAt}}</div>
     </div>
     <div class="contacts-texts">
       <p class="text-truncate" *ngIf="chatContainsMessages(); else elseBlock">
-        <strong>{{chat.lastMessageAuthor}}: </strong>{{chat.lastMessage}}
+        <strong>{{chat.lastMessage?.userDisplayName}}: </strong>{{chat.lastMessage?.messageText}}
       </p>
       <ng-template #elseBlock class="text-truncate">
         Chat is currently empty.

@@ -24,15 +24,13 @@ export class MainComponent implements OnInit {
   activeChatId = '';
 
   activeChat: IChat = {
+    lastMessage: null,
     description: "",
     chatId: "",
     chatType: GroupType.DirectChat,
     image: "",
     isArchived: false,
     isMember: false,
-    lastMessage: "",
-    lastMessageAt: "",
-    lastMessageAuthor: "",
     membersCount: 0,
     title: ""
   };

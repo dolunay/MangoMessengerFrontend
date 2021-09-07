@@ -2,7 +2,9 @@
   messageId: string;
   userDisplayName: string;
   messageText: string;
-  sentAt: string;
-  editedAt: string;
+  createdAt: string;
+  updatedAt: string;
   self: boolean;
+  isEncrypted: boolean;
+  authorPublicKey: number;
 }

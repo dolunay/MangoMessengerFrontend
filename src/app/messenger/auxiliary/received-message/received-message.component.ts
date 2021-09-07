@@ -12,11 +12,13 @@ export class ReceivedMessageComponent {
   }
 
   @Input() message: IMessage = {
-    editedAt: "",
+    authorPublicKey: 0,
+    isEncrypted: false,
+    updatedAt: "",
     messageId: "",
     messageText: "",
     self: false,
-    sentAt: "",
+    createdAt: "",
     userDisplayName: ""
   };
 
