@@ -136,8 +136,6 @@ export class MainComponent implements OnInit {
     this.chatService.searchChat(this.searchQuery).subscribe(getUserChatsResponse => {
       this.chats = getUserChatsResponse.chats;
       this.chatFilter = 'Search Results';
-      console.log(this.noActiveChat());
-      console.log(this.activeChatId);
     }, error => {
       alert(error.error.ErrorMessage);
     })
