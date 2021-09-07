@@ -64,6 +64,7 @@ export class ContactsComponent implements OnInit {
     this.contactsFilter = filter;
     this.contactsService.getCurrentUserContacts().subscribe(getContactsResponse => {
       this.contacts = getContactsResponse.contacts;
+      this.contactsSearchQuery = '';
     }, error => {
       alert(error.error.ErrorMessage);
     });
