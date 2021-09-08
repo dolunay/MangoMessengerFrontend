@@ -48,7 +48,7 @@ export class UsersService implements IUserService {
   }
 
   updateUserAccountInformation(request: UpdateAccountInformationCommand): Observable<IBaseResponse> {
-    return this.httpClient.put<ISearchContactsResponse>(ApiRoute.route + this.usersRoute + 'information/', request);
+    return this.httpClient.put<ISearchContactsResponse>(ApiRoute.route + this.usersRoute + 'account/', request);
   }
 
   putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse> {
