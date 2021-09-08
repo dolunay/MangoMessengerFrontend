@@ -155,7 +155,7 @@
           </div>
 
           <!-- Chat Options -->
-          <ul class="nav flex-nowrap">
+          <ul *ngIf="activeChat.isMember" class="nav flex-nowrap">
 
             <li class="nav-item list-inline-item d-none d-sm-block mr-0">
               <div class="dropdown">
