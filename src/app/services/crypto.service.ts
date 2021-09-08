@@ -1,10 +1,10 @@
 import * as CryptoJS from 'crypto-js';
-import {Tokens} from "../../consts/Tokens";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {IBaseResponse} from "../../types/responses/IBaseResponse";
 import {ApiRoute} from "../../consts/ApiRoute";
+import {UsersService} from "./users.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ export class CryptoService {
   private key: string = '';
   private userRoute = 'api/users/public-key/'
 
-
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+              private userService: UsersService) {
   }
 
   encryptUsingAES256(message: string): string {
@@ -28,11 +28,24 @@ export class CryptoService {
   }
 
   getSecretKey(): string | null {
-    return localStorage.getItem(Tokens.secretKey);
+    let userAlias: string = '';
+
+    this.userService.getCurrentUser().subscribe(response => {
+      userAlias = response.user.userId + '_MangoSecret';
+    }, error => {
+      alert(error.error.ErrorMessage);
+    });
+
+    return localStorage.getItem(userAlias);
   }
 
-  writeSecretKey(key: string): void {
-    localStorage.setItem(Tokens.secretKey, key);
+  writeSecretKey(secret: string): void {
+    this.userService.getCurrentUser().subscribe(response => {
+      const userAlias = response.user.userId + '_MangoSecret';
+      localStorage.setItem(userAlias, secret);
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
   }
 
   setKey(key: string): void {
