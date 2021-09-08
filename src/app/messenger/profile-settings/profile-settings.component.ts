@@ -7,6 +7,7 @@ import {Subject} from "rxjs";
 import {CryptoService} from "../../services/crypto.service";
 import {Tokens} from "../../../consts/Tokens";
 import {RandomGeneratorService} from "../../services/random-generator.service";
+import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocialsCommand";
 
 @Component({
   selector: 'app-profile-settings',
@@ -82,6 +83,16 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   saveSocialMediaInfo(): void {
+    const command = new UpdateUserSocialsCommand(this.currentUser.facebook,
+      this.currentUser.twitter,
+      this.currentUser.instagram,
+      this.currentUser.linkedIn);
+
+    this.userService.updateUserSocials(command).subscribe(response => {
+      alert(response.message);
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
   }
 
   changePassword(): void {
