@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
-import {UpdateUserInformationCommand} from "../../../types/requests/UpdateUserInformationCommand";
+import {UpdateAccountInformationCommand} from "../../../types/requests/UpdateAccountInformationCommand";
 import {ChangePasswordCommand} from "../../../types/requests/ChangePasswordCommand";
 import {IUser} from "../../../types/models/IUser";
 import {Subject} from "rxjs";
@@ -62,21 +62,19 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   saveAccountInfo(): void {
-    const command = new UpdateUserInformationCommand(this.currentUser.firstName,
+    const command = new UpdateAccountInformationCommand(
+      this.currentUser.firstName,
       this.currentUser.lastName,
       this.currentUser.displayName,
       this.currentUser.phoneNumber,
       this.currentUser.birthdayDate,
       this.currentUser.email,
+      this.currentUser.website,
       this.currentUser.username,
       this.currentUser.bio,
       this.currentUser.address);
 
-    command.website = this.currentUser.website;
-
-    this.userService.putUpdateUserInformation(command).subscribe(response => {
-      this.eventsSubject.next();
-      this.initializeView();
+    this.userService.updateUserAccountInformation(command).subscribe(response => {
       alert(response.message);
     }, error => {
       alert(error.error.ErrorMessage);
@@ -84,17 +82,6 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   saveSocialMediaInfo(): void {
-    const command = UpdateUserInformationCommand.CreateEmptyCommand();
-    command.facebook = this.currentUser.facebook;
-    command.twitter = this.currentUser.twitter;
-    command.instagram = this.currentUser.instagram;
-    command.linkedIn = this.currentUser.linkedIn;
-
-    this.userService.putUpdateUserInformation(command).subscribe(_ => {
-      this.eventsSubject.next();
-    }, error => {
-      alert(error.error.ErrorMessage);
-    })
   }
 
   changePassword(): void {
