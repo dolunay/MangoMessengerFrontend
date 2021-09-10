@@ -7,4 +7,5 @@
   self: boolean;
   isEncrypted: boolean;
   authorPublicKey: number;
+  pictureUrl: string;
 }

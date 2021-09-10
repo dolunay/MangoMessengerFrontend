@@ -22,6 +22,7 @@ export class ProfileSettingsComponent implements OnInit {
   eventsSubject: Subject<void> = new Subject<void>();
 
   currentUser: IUser = {
+    pictureUrl: "",
     publicKey: 0,
     address: "",
     bio: "",
@@ -57,6 +58,7 @@ export class ProfileSettingsComponent implements OnInit {
       this.newPassword = '';
       this.repeatNewPassword = '';
       this.privateKey = 0;
+      console.log(this.currentUser);
     }, error => {
       alert(error.error.ErrorMessage);
     })
