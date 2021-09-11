@@ -7,6 +7,7 @@ import {ChangePasswordCommand} from "../requests/ChangePasswordCommand";
 import {ITokensResponse} from "../responses/ITokensResponse";
 import {IBaseResponse} from "../responses/IBaseResponse";
 import {UpdateUserSocialsCommand} from "../requests/UpdateUserSocialsCommand";
+import {IUser} from "../models/IUser";
 
 export interface IUserService {
   postUser(command: RegisterCommand): Observable<ITokensResponse>;
@@ -24,4 +25,6 @@ export interface IUserService {
   putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse>;
 
   updateUserSocials(request: UpdateUserSocialsCommand): Observable<IBaseResponse>;
+
+  getUserProfilePicture(user: IUser): string;
 }

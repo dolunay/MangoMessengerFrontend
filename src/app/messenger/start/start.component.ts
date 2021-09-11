@@ -42,7 +42,7 @@ export class StartComponent implements OnInit {
   searchQuery = '';
 
   constructor(private chatService: ChatsService,
-              private userService: UsersService,
+              public userService: UsersService,
               private dialog: MatDialog,
               private route: ActivatedRoute,
               private router: Router) {
@@ -109,7 +109,7 @@ export class StartComponent implements OnInit {
     this.router.navigateByUrl('contacts').then(r => r);
   }
 
-  navigateToChat(chatId: string): void {
-    this.router.navigate(['main', {chatId: chatId}]).then(r => r);
+  navigateToMain(): void {
+    this.router.navigate(['main']).then(r => r);
   }
 }

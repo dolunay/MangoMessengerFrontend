@@ -12,6 +12,7 @@ import {ApiRoute} from "../../consts/ApiRoute";
 import {ITokensResponse} from "../../types/responses/ITokensResponse";
 import {IBaseResponse} from "../../types/responses/IBaseResponse";
 import {UpdateUserSocialsCommand} from 'src/types/requests/UpdateUserSocialsCommand';
+import {IUser} from "../../types/models/IUser";
 
 @Injectable({
   providedIn: 'root'
@@ -53,5 +54,9 @@ export class UsersService implements IUserService {
 
   putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'password/', request);
+  }
+
+  getUserProfilePicture(user: IUser): string {
+    return user.pictureUrl ? user.pictureUrl : 'assets/media/avatar/4.png';
   }
 }

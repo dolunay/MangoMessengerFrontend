@@ -12,8 +12,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class ContactsComponent implements OnInit {
 
-  constructor(private contactsService: ContactsService, private userService: UsersService,
-              private chatsService: ChatsService, private route: ActivatedRoute,
+  constructor(private contactsService: ContactsService,
+              public userService: UsersService,
+              private chatsService: ChatsService,
+              private route: ActivatedRoute,
               private router: Router) {
   }
 
@@ -112,5 +114,9 @@ export class ContactsComponent implements OnInit {
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  getContactItemClass(userId: string): string {
+    return userId === this.currentOpenedUser.userId ? 'contacts-item active' : 'contacts-item';
   }
 }
