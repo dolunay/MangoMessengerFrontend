@@ -8,6 +8,7 @@ import {CryptoService} from "../../services/crypto.service";
 import {Tokens} from "../../../consts/Tokens";
 import {RandomGeneratorService} from "../../services/random-generator.service";
 import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocialsCommand";
+import {DocumentsService} from "../../services/documents.service";
 
 @Component({
   selector: 'app-profile-settings',
@@ -15,7 +16,9 @@ import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocial
 })
 export class ProfileSettingsComponent implements OnInit {
 
-  constructor(private userService: UsersService, private cryptoService: CryptoService,
+  constructor(private userService: UsersService,
+              private documentService: DocumentsService,
+              private cryptoService: CryptoService,
               private randomGenerator: RandomGeneratorService) {
   }
 
@@ -46,6 +49,9 @@ export class ProfileSettingsComponent implements OnInit {
   repeatNewPassword = '';
 
   privateKey = 0;
+  fileName = '';
+
+  file!: File;
 
   ngOnInit(): void {
     this.initializeView();
@@ -58,7 +64,6 @@ export class ProfileSettingsComponent implements OnInit {
       this.newPassword = '';
       this.repeatNewPassword = '';
       this.privateKey = 0;
-      console.log(this.currentUser);
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -128,5 +133,28 @@ export class ProfileSettingsComponent implements OnInit {
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  updateProfilePicture(): void {
+    const formData = new FormData();
+    formData.append("formFile", this.file);
+    this.documentService.uploadDocument(formData).subscribe(uploadResponse => {
+      this.userService.updateProfilePicture(uploadResponse.fileName).subscribe(updateResponse => {
+        alert(updateResponse.message);
+        this.initializeView();
+      })
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  onFileSelected(event: any) {
+
+    const file: File = event.target.files[0];
+
+    if (file) {
+      this.file = file;
+      this.fileName = file.name;
+    }
   }
 }

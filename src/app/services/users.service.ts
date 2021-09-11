@@ -59,4 +59,8 @@ export class UsersService implements IUserService {
   getUserProfilePicture(user: IUser): string {
     return user.pictureUrl ? user.pictureUrl : 'assets/media/avatar/4.png';
   }
+
+  updateProfilePicture(image: string): Observable<IBaseResponse> {
+    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'picture/' + image, {});
+  }
 }

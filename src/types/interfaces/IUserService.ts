@@ -27,4 +27,6 @@ export interface IUserService {
   updateUserSocials(request: UpdateUserSocialsCommand): Observable<IBaseResponse>;
 
   getUserProfilePicture(user: IUser): string;
+
+  updateProfilePicture(image: string): Observable<IBaseResponse>;
 }
