@@ -28,7 +28,7 @@ export class MainComponent implements OnInit {
     description: "",
     chatId: "",
     chatType: GroupType.DirectChat,
-    image: "",
+    chatLogoImageUrl: "",
     isArchived: false,
     isMember: false,
     membersCount: 0,

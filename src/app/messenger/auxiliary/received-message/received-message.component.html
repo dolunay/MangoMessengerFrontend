@@ -6,8 +6,8 @@
     </div>
   </div>
   <div class="message-options">
-    <div *ngIf="message.pictureUrl; else elsePicture" class="avatar avatar-sm">
-      <img src="{{message.pictureUrl}}" alt="avatar_image">
+    <div *ngIf="message.messageAuthorPictureUrl; else elsePicture" class="avatar avatar-sm">
+      <img src="{{message.messageAuthorPictureUrl}}" alt="avatar_image">
     </div>
     <ng-template #elsePicture>
       <div class="avatar avatar-sm">

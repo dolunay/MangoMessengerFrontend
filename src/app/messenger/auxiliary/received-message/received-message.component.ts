@@ -12,7 +12,7 @@ export class ReceivedMessageComponent {
   }
 
   @Input() message: IMessage = {
-    pictureUrl: "",
+    messageAuthorPictureUrl: "",
     authorPublicKey: 0,
     isEncrypted: false,
     updatedAt: "",

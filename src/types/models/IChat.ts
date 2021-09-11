@@ -5,7 +5,7 @@ export interface IChat {
   chatId: string;
   title: string;
   chatType: GroupType;
-  image: string;
+  chatLogoImageUrl: string;
   description: string;
   membersCount: number;
   isArchived: boolean;

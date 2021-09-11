@@ -13,7 +13,7 @@ export class ChatItemActiveComponent {
     description: "",
     chatId: "",
     chatType: GroupType.DirectChat,
-    image: "",
+    chatLogoImageUrl: "",
     isArchived: false,
     membersCount: 0,
     title: "",
@@ -22,5 +22,9 @@ export class ChatItemActiveComponent {
 
   chatContainsMessages(): boolean {
     return this.chat.lastMessage?.userDisplayName != null && this.chat.lastMessage != null;
+  }
+
+  getChatPictureUrl(): string {
+    return this.chat.chatLogoImageUrl ? this.chat.chatLogoImageUrl : 'assets/media/avatar/3.png';
   }
 }
