@@ -106,8 +106,12 @@
                             (click)="onAddContactClick()">
                       Add Contact
                     </button>
-                    <button class="btn btn-outline-default" type="button" (click)="onSendMessageClick()"
-                            style="margin-left: 20px;">Message
+                    <button class="btn btn-outline-default" type="button" (click)="onStartDirectChatClick()"
+                            style="margin-left: 20px;">Start Direct Chat
+                    </button>
+
+                    <button class="btn btn-outline-default" type="button" (click)="onStartSecretChatClick()"
+                            style="margin-left: 20px;">Start Secret Chat
                     </button>
                     <button *ngIf="currentOpenedUserIsContact" class="btn btn-outline-default text-danger" type="button"
                             (click)="onRemoveContactClick()"

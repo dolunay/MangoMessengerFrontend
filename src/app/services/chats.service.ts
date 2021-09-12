@@ -7,6 +7,7 @@ import {ICreateCommunityResponse} from "../../types/responses/ICreateCommunityRe
 import {CreateChannelCommand} from "../../types/requests/CreateChannelCommand";
 import {ApiRoute} from "../../consts/ApiRoute";
 import {IGetChatByIdResponse} from "../../types/responses/IGetChatByIdResponse";
+import {CreateChatCommand} from "../../types/requests/CreateChatCommand";
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +22,12 @@ export class ChatsService implements ICommunityService {
     return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute);
   }
 
-  createChat(userId: string): Observable<ICreateCommunityResponse> {
-    return this.httpClient.post<ICreateCommunityResponse>(ApiRoute.route + this.chatsRoute + userId, {});
+  createChat(request: CreateChatCommand): Observable<ICreateCommunityResponse> {
+    return this.httpClient.post<ICreateCommunityResponse>(ApiRoute.route + this.chatsRoute + 'chat', request);
   }
 
   createChannel(request: CreateChannelCommand): Observable<ICreateCommunityResponse> {
-    return this.httpClient.post<ICreateCommunityResponse>(ApiRoute.route + this.chatsRoute, request);
+    return this.httpClient.post<ICreateCommunityResponse>(ApiRoute.route + this.chatsRoute + 'channel', request);
   }
 
   searchChat(displayName: string): Observable<IGetUserChatsResponse> {

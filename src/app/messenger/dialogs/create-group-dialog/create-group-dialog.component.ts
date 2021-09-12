@@ -39,13 +39,13 @@ export class CreateGroupDialogComponent {
 
   private parseGroupType(): number {
     if (this.groupType === "Private Channel") {
-      return 2;
-    }
-
-    if (this.groupType === "Public Channel") {
       return 3;
     }
 
-    return 4;
+    if (this.groupType === "Public Channel") {
+      return 4;
+    }
+
+    return 5;
   }
 }

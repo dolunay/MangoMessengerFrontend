@@ -5,6 +5,8 @@ import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {ChatsService} from "../../services/chats.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {CreateChatCommand} from "../../../types/requests/CreateChatCommand";
+import {ChatType} from "../../../types/enums/ChatType";
 
 @Component({
   selector: 'app-contacts',
@@ -100,8 +102,20 @@ export class ContactsComponent implements OnInit {
     });
   }
 
-  onSendMessageClick() {
-    this.chatsService.createChat(this.currentOpenedUser.userId).subscribe(createChatResponse => {
+  onStartDirectChatClick() {
+    const userId = this.currentOpenedUser.userId;
+    const createDirectChatCommand = new CreateChatCommand(userId, ChatType.DirectChat);
+    this.chatsService.createChat(createDirectChatCommand).subscribe(createChatResponse => {
+      this.router.navigate(['main', {chatId: createChatResponse.chatId}]).then(r => r);
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  onStartSecretChatClick() {
+    const userId = this.currentOpenedUser.userId;
+    const createDirectChatCommand = new CreateChatCommand(userId, ChatType.SecretChat);
+    this.chatsService.createChat(createDirectChatCommand).subscribe(createChatResponse => {
       this.router.navigate(['main', {chatId: createChatResponse.chatId}]).then(r => r);
     }, error => {
       alert(error.error.ErrorMessage);
