@@ -105,7 +105,7 @@
               <!-- Chat Item Start -->
               <li *ngFor="let chat of chats">
                 <app-chat-item-active [chat]="chat"
-                                      (click)="loadChatAndMessages(chat.chatId)"
+                                      (click)="navigateToChat(chat.chatId)"
                                       [ngClass]="getMessageComponentClass(chat)">
                 </app-chat-item-active>
               </li>

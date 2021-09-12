@@ -102,7 +102,7 @@
               <li *ngFor="let chat of chats">
                 <app-chat-item-active
                   [chat]="chat"
-                  (click)="navigateToMain()"
+                  (click)="navigateToMain(chat.chatId)"
                   [ngClass]="'contacts-item friends'">
                 </app-chat-item-active>
               </li>

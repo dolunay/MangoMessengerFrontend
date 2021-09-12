@@ -58,8 +58,14 @@ export class MainComponent implements OnInit {
 
   initializeView(): void {
     this.chatService.getUserChats().subscribe(getUserChatsResponse => {
+      const routeChatId = this.route.snapshot.paramMap.get('chatId');
       this.chatFilter = 'All Chats';
       this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived);
+
+      if(routeChatId) {
+        this.loadChatAndMessages(routeChatId);
+        return;
+      }
 
       const firstChat = getUserChatsResponse.chats[0];
       if (firstChat) {
@@ -75,22 +81,29 @@ export class MainComponent implements OnInit {
     });
   }
 
-  loadChatAndMessages(chatId: string): void {
-    this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
-        this.messages = getMessagesResponse.messages;
-        this.activeChatId = chatId;
-        this.chatService.getChatById(chatId).subscribe(getChatByIdResponse => {
-          if (getChatByIdResponse) {
-            this.activeChat = getChatByIdResponse.chat;
-            this.scrollToEnd();
-          }
-        }, error => {
+  private loadChatAndMessages(chatId: string | null): void {
+    if (chatId != null) {
+      this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
+          this.messages = getMessagesResponse.messages;
+          this.activeChatId = chatId;
+          this.chatService.getChatById(chatId).subscribe(getChatByIdResponse => {
+            if (getChatByIdResponse) {
+              this.activeChat = getChatByIdResponse.chat;
+              this.scrollToEnd();
+            }
+          }, error => {
+            alert(error.error.ErrorMessage);
+          })
+        },
+        error => {
           alert(error.error.ErrorMessage);
-        })
-      },
-      error => {
-        alert(error.error.ErrorMessage);
-      });
+        });
+    }
+  }
+
+  navigateToChat(chatId: string): void {
+    this.router.navigate(['main', {chatId: chatId}]).then(r => r);
+    this.initializeView();
   }
 
   scrollToEnd(): void {
