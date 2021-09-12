@@ -5,51 +5,50 @@ import {Observable} from "rxjs";
 import {IBaseResponse} from "../../types/responses/IBaseResponse";
 import {ApiRoute} from "../../consts/ApiRoute";
 import {UsersService} from "./users.service";
+import {SessionService} from "./session.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CryptoService {
-  private commonSecret: string = '';
   private userRoute = 'api/users/public-key/'
-  private userId: string = '';
 
   constructor(private httpClient: HttpClient,
-              private userService: UsersService) {
-    this.userService.getCurrentUser().subscribe(response => {
-      this.userId = response.user.userId;
-    })
+              private userService: UsersService,
+              private sessionService: SessionService) {
   }
 
-  encryptUsingAES256(message: string): string {
-    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(message), this.commonSecret);
+  encryptUsingAES256(message: string, commonSecret: string): string {
+    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(message), commonSecret);
     return encrypted.toString();
   }
 
-  decryptUsingAES256(encryptedString: string): string {
-    const decrypted = CryptoJS.AES.decrypt(encryptedString, this.commonSecret);
+  decryptUsingAES256(encryptedMessage: string, commonSecret: string): string {
+    const decrypted = CryptoJS.AES.decrypt(encryptedMessage, commonSecret);
     return decrypted.toString(CryptoJS.enc.Utf8);
   }
 
   getSecretKey(): string | null {
-    let userAlias = this.userId + '_MangoSecret';
+    let userAlias = this.sessionService.getUserId() + '_UserSecret';
     return localStorage.getItem(userAlias);
   }
 
   writeSecretKey(secret: string): void {
-    this.userService.getCurrentUser().subscribe(response => {
-      const userAlias = response.user.userId + '_MangoSecret';
-      localStorage.setItem(userAlias, secret);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    })
-  }
-
-  setCommonSecret(commonSecret: string): void {
-    this.commonSecret = commonSecret;
+    let userAlias = this.sessionService.getUserId() + '_UserSecret';
+    localStorage.setItem(userAlias, secret);
   }
 
   updatePublicKey(publicKey: number): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.userRoute + publicKey, {});
+  }
+
+  writeChatCommonSecret(chatId: string, commonSecret: string) {
+    const chatAlias = chatId + '_ChatSecret';
+    localStorage.setItem(chatAlias, commonSecret);
+  }
+
+  getCommonChatSecret(chatId: string): string | null {
+    const chatAlias = chatId + '_ChatSecret';
+    return localStorage.getItem(chatAlias);
   }
 }

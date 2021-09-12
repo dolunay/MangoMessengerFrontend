@@ -12,15 +12,18 @@ export class LoginComponent {
   emailOrPhone = '';
   password = '';
 
-  constructor(private authService: SessionService, private route: ActivatedRoute, private router: Router) {
+  constructor(private authService: SessionService,
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
   login(): void {
-    this.authService.postSession(new LoginCommand(this.emailOrPhone, this.password)).subscribe(data =>
-    {
-      this.authService.writeAccessToken(data.accessToken);
-      this.authService.writeRefreshToken(data.refreshToken);
-      this.router.navigateByUrl('start').then(r => r);
-    }, error => alert(error.error.ErrorMessage));
+    this.authService.postSession(new LoginCommand(this.emailOrPhone, this.password))
+      .subscribe(data => {
+        this.authService.writeAccessToken(data.accessToken);
+        this.authService.writeRefreshToken(data.refreshToken);
+        this.authService.writeUserId(data.userId);
+        this.router.navigateByUrl('start').then(r => r);
+      }, error => alert(error.error.ErrorMessage));
   }
 }

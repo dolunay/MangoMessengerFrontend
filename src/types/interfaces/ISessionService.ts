@@ -24,4 +24,8 @@ export interface ISessionService {
   clearAccessToken(): void;
 
   clearRefreshToken(): void;
+
+  writeUserId(userId: string): void;
+
+  getUserId(): string | null;
 }

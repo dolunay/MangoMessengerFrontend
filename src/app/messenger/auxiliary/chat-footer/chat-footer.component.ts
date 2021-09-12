@@ -43,14 +43,21 @@ export class ChatFooterComponent implements OnInit {
 
     if (this.chat.communityType === CommunityType.SecretChat) {
       sendMessageCommand.isEncrypted = true;
-      const secret = this.cryptoService.getSecretKey();
+      const userSecret = this.cryptoService.getSecretKey();
 
-      if (secret != null) {
+      if (userSecret != null) {
         this.chatsService.getSecretChatPublicKey(this.chat.chatId).subscribe(response => {
-          const commonSecret = Math.pow(response.publicKey, Number(secret)) % Tokens.modulus;
-          console.log('common secret: ' + commonSecret);
-          this.cryptoService.setCommonSecret(commonSecret.toString());
-          sendMessageCommand.messageText = this.cryptoService.encryptUsingAES256(sendMessageCommand.messageText);
+          let commonSecret = this.cryptoService.getCommonChatSecret(this.chat.chatId);
+
+          if (!commonSecret) {
+            const calculateCommonSecret = Math.pow(response.publicKey, Number(userSecret)) % Tokens.modulus;
+            commonSecret = calculateCommonSecret.toString();
+            this.cryptoService.writeChatCommonSecret(this.chat.chatId, commonSecret);
+          }
+
+          console.log('common secret footer: ' + commonSecret);
+          sendMessageCommand.messageText = this.cryptoService
+            .encryptUsingAES256(sendMessageCommand.messageText, commonSecret);
 
           console.log(sendMessageCommand);
 
@@ -62,6 +69,13 @@ export class ChatFooterComponent implements OnInit {
           })
         })
       }
+    } else {
+      this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
+        this.currentMessageText = '';
+        this.notifyParentOnSendMessage.emit();
+      }, error => {
+        alert(error.error.ErrorMessage);
+      })
     }
   }
 

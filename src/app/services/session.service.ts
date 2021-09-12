@@ -57,4 +57,12 @@ export class SessionService implements ISessionService {
   clearRefreshToken(): void {
     localStorage.removeItem(Tokens.refreshToken);
   }
+
+  getUserId(): string | null {
+    return localStorage.getItem(Tokens.userId);
+  }
+
+  writeUserId(userId: string): void {
+    localStorage.setItem(Tokens.userId, userId);
+  }
 }

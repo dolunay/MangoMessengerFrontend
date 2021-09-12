@@ -15,6 +15,7 @@ export class ReceivedMessageComponent {
   }
 
   @Input() message: IMessage = {
+    chatId: "",
     messageAuthorPictureUrl: "",
     authorPublicKey: 0,
     isEncrypted: false,
@@ -36,12 +37,22 @@ export class ReceivedMessageComponent {
     })
   }
 
-  getMessageText() : string {
-    if (this.message.isEncrypted){
+  getMessageText(): string {
+    if (this.message.isEncrypted) {
       const secret = this.cryptoService.getSecretKey();
-      const commonSecret = Math.pow(this.message.authorPublicKey, Number(secret)) % Tokens.modulus;
-      this.cryptoService.setCommonSecret(commonSecret.toString());
-      return this.cryptoService.decryptUsingAES256(this.message.messageText);
+      console.log('secret: ' + secret);
+      let commonSecret = this.cryptoService.getCommonChatSecret(this.message.chatId);
+
+      if (!commonSecret) {
+        const messagePublicKey = this.message.authorPublicKey;
+        console.log('message public key: '+ messagePublicKey);
+        const calculateSecret = Math.pow(this.message.authorPublicKey, Number(secret)) % Tokens.modulus;
+        console.log('calculate common secret: ' + calculateSecret);
+        commonSecret = calculateSecret.toString();
+        this.cryptoService.writeChatCommonSecret(this.message.chatId, commonSecret);
+      }
+
+      return this.cryptoService.decryptUsingAES256(this.message.messageText, commonSecret);
     }
 
     return this.message.messageText;

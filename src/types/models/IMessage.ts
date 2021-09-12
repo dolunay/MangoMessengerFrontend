@@ -1,5 +1,6 @@
 ﻿export interface IMessage {
   messageId: string;
+  chatId: string;
   userDisplayName: string;
   messageText: string;
   createdAt: string;
