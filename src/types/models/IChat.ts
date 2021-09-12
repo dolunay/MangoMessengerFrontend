@@ -1,10 +1,10 @@
-﻿import {GroupType} from "../enums/GroupType";
-import {IMessage} from "./IMessage";
+﻿import {IMessage} from "./IMessage";
+import {CommunityType} from "../enums/CommunityType";
 
 export interface IChat {
   chatId: string;
   title: string;
-  chatType: GroupType;
+  communityType: CommunityType;
   chatLogoImageUrl: string;
   description: string;
   membersCount: number;

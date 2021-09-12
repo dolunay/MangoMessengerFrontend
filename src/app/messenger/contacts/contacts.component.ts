@@ -101,7 +101,7 @@ export class ContactsComponent implements OnInit {
   }
 
   onSendMessageClick() {
-    this.chatsService.createDirectChat(this.currentOpenedUser.userId).subscribe(createChatResponse => {
+    this.chatsService.createChat(this.currentOpenedUser.userId).subscribe(createChatResponse => {
       this.router.navigate(['main', {chatId: createChatResponse.chatId}]).then(r => r);
     }, error => {
       alert(error.error.ErrorMessage);

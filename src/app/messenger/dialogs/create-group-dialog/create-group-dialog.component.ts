@@ -1,8 +1,8 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ICreateChatResponse} from "../../../../types/responses/ICreateChatResponse";
+import {ICreateCommunityResponse} from "../../../../types/responses/ICreateCommunityResponse";
 import {ChatsService} from "../../../services/chats.service";
-import {CreateGroupCommand} from "../../../../types/requests/CreateGroupCommand";
+import {CreateChannelCommand} from "../../../../types/requests/CreateChannelCommand";
 
 @Component({
   selector: 'app-create-group-dialog',
@@ -12,7 +12,7 @@ import {CreateGroupCommand} from "../../../../types/requests/CreateGroupCommand"
 export class CreateGroupDialogComponent {
 
   constructor(public dialogRef: MatDialogRef<CreateGroupDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: ICreateChatResponse,
+              @Inject(MAT_DIALOG_DATA) public data: ICreateCommunityResponse,
               private chatService: ChatsService) {
   }
 
@@ -21,7 +21,7 @@ export class CreateGroupDialogComponent {
   groupTitle = '';
   groupDescription = '';
 
-  createChatResponse: ICreateChatResponse = {chatId: "", message: "", success: false};
+  createChatResponse: ICreateCommunityResponse = {chatId: "", message: "", success: false};
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -29,8 +29,8 @@ export class CreateGroupDialogComponent {
 
   onCreateGroupClick(): void {
     const groupType = this.parseGroupType();
-    const createGroupCommand = new CreateGroupCommand(groupType, this.groupTitle, this.groupDescription);
-    this.chatService.createGroup(createGroupCommand).subscribe(_ => {
+    const createGroupCommand = new CreateChannelCommand(groupType, this.groupTitle, this.groupDescription);
+    this.chatService.createChannel(createGroupCommand).subscribe(_ => {
       this.dialogRef.close();
     }, error => {
       alert(error.error.ErrorMessage);

@@ -1,18 +1,18 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {IChatsService} from "../../types/interfaces/IChatsService";
+import {ICommunityService} from "../../types/interfaces/ICommunityService";
 import {IGetUserChatsResponse} from "../../types/responses/IGetUserChatsResponse";
-import {ICreateChatResponse} from "../../types/responses/ICreateChatResponse";
-import {CreateGroupCommand} from "../../types/requests/CreateGroupCommand";
+import {ICreateCommunityResponse} from "../../types/responses/ICreateCommunityResponse";
+import {CreateChannelCommand} from "../../types/requests/CreateChannelCommand";
 import {ApiRoute} from "../../consts/ApiRoute";
 import {IGetChatByIdResponse} from "../../types/responses/IGetChatByIdResponse";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatsService implements IChatsService {
-  private chatsRoute = 'api/chats/'
+export class ChatsService implements ICommunityService {
+  private chatsRoute = 'api/communities/'
 
   constructor(private httpClient: HttpClient) {
   }
@@ -21,12 +21,12 @@ export class ChatsService implements IChatsService {
     return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute);
   }
 
-  createDirectChat(userId: string): Observable<ICreateChatResponse> {
-    return this.httpClient.post<ICreateChatResponse>(ApiRoute.route + this.chatsRoute + userId, {});
+  createChat(userId: string): Observable<ICreateCommunityResponse> {
+    return this.httpClient.post<ICreateCommunityResponse>(ApiRoute.route + this.chatsRoute + userId, {});
   }
 
-  createGroup(request: CreateGroupCommand): Observable<ICreateChatResponse> {
-    return this.httpClient.post<ICreateChatResponse>(ApiRoute.route + this.chatsRoute, request);
+  createChannel(request: CreateChannelCommand): Observable<ICreateCommunityResponse> {
+    return this.httpClient.post<ICreateCommunityResponse>(ApiRoute.route + this.chatsRoute, request);
   }
 
   searchChat(displayName: string): Observable<IGetUserChatsResponse> {

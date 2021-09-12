@@ -1,15 +1,15 @@
 ﻿import {Observable} from "rxjs";
 import {IGetUserChatsResponse} from "../responses/IGetUserChatsResponse";
-import {CreateGroupCommand} from "../requests/CreateGroupCommand";
-import {ICreateChatResponse} from "../responses/ICreateChatResponse";
+import {CreateChannelCommand} from "../requests/CreateChannelCommand";
+import {ICreateCommunityResponse} from "../responses/ICreateCommunityResponse";
 import {IGetChatByIdResponse} from "../responses/IGetChatByIdResponse";
 
-export interface IChatsService {
+export interface ICommunityService {
   getUserChats(): Observable<IGetUserChatsResponse>;
 
-  createGroup(request: CreateGroupCommand): Observable<ICreateChatResponse>;
+  createChannel(request: CreateChannelCommand): Observable<ICreateCommunityResponse>;
 
-  createDirectChat(userId: string): Observable<ICreateChatResponse>;
+  createChat(userId: string): Observable<ICreateCommunityResponse>;
 
   searchChat(displayName: string): Observable<IGetUserChatsResponse>;
 

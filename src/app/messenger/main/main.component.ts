@@ -5,12 +5,12 @@ import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
-import {GroupType} from "../../../types/enums/GroupType";
 import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
 import {CryptoService} from "../../services/crypto.service";
+import {CommunityType} from "../../../types/enums/CommunityType";
 
 @Component({
   selector: 'app-main',
@@ -24,10 +24,10 @@ export class MainComponent implements OnInit {
   activeChatId = '';
 
   activeChat: IChat = {
+    communityType: CommunityType.PublicChannel,
     lastMessage: null,
     description: "",
     chatId: "",
-    chatType: GroupType.DirectChat,
     chatLogoImageUrl: "",
     isArchived: false,
     isMember: false,
@@ -113,12 +113,12 @@ export class MainComponent implements OnInit {
           break;
         case 'Groups':
           console.log(getUserChatsResponse.chats);
-          this.chats = getUserChatsResponse.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel
-            || x.chatType === GroupType.PublicChannel
-            || x.chatType === GroupType.PrivateChannel);
+          this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.ReadOnlyChannel
+            || x.communityType === CommunityType.PublicChannel
+            || x.communityType === CommunityType.PrivateChannel);
           break;
         case 'Direct Chats':
-          this.chats = getUserChatsResponse.chats.filter(x => x.chatType === GroupType.DirectChat);
+          this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.DirectChat);
           break;
         case 'Archived':
           this.chats = getUserChatsResponse.chats.filter(x => x.isArchived);
