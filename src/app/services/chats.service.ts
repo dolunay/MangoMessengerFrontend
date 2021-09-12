@@ -8,6 +8,7 @@ import {CreateChannelCommand} from "../../types/requests/CreateChannelCommand";
 import {ApiRoute} from "../../consts/ApiRoute";
 import {IGetChatByIdResponse} from "../../types/responses/IGetChatByIdResponse";
 import {CreateChatCommand} from "../../types/requests/CreateChatCommand";
+import {IGetSecretChatPublicKeyResponse} from "../../types/responses/IGetSecretChatPublicKeyResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,10 @@ export class ChatsService implements ICommunityService {
 
   getChatById(chatId: string): Observable<IGetChatByIdResponse> {
     return this.httpClient.get<IGetChatByIdResponse>(ApiRoute.route + this.chatsRoute + chatId);
+  }
+
+  getSecretChatPublicKey(chatId: string): Observable<IGetSecretChatPublicKeyResponse> {
+    return this.httpClient.get<IGetSecretChatPublicKeyResponse>(ApiRoute.route + this.chatsRoute + 'chats/public-key/'
+      + chatId);
   }
 }

@@ -10,32 +10,29 @@ import {UsersService} from "./users.service";
   providedIn: 'root'
 })
 export class CryptoService {
-  private key: string = '';
+  private commonSecret: string = '';
   private userRoute = 'api/users/public-key/'
+  private userId: string = '';
 
   constructor(private httpClient: HttpClient,
               private userService: UsersService) {
+    this.userService.getCurrentUser().subscribe(response => {
+      this.userId = response.user.userId;
+    })
   }
 
   encryptUsingAES256(message: string): string {
-    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(message), this.key);
+    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(message), this.commonSecret);
     return encrypted.toString();
   }
 
   decryptUsingAES256(encryptedString: string): string {
-    const decrypted = CryptoJS.AES.decrypt(encryptedString, this.key);
+    const decrypted = CryptoJS.AES.decrypt(encryptedString, this.commonSecret);
     return decrypted.toString(CryptoJS.enc.Utf8);
   }
 
   getSecretKey(): string | null {
-    let userAlias: string = '';
-
-    this.userService.getCurrentUser().subscribe(response => {
-      userAlias = response.user.userId + '_MangoSecret';
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
+    let userAlias = this.userId + '_MangoSecret';
     return localStorage.getItem(userAlias);
   }
 
@@ -48,8 +45,8 @@ export class CryptoService {
     })
   }
 
-  setKey(key: string): void {
-    this.key = key;
+  setCommonSecret(commonSecret: string): void {
+    this.commonSecret = commonSecret;
   }
 
   updatePublicKey(publicKey: number): Observable<IBaseResponse> {

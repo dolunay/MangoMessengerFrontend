@@ -254,8 +254,8 @@
 
         <!-- Chat Footer Start-->
         <ng-container *ngIf="activeChat.isMember; else elseBlock">
-          <app-chat-footer [chatId]="activeChatId"
-                           (notifyParentOnSendMessage)="initializeView()">
+          <app-chat-footer [chat]="activeChat"
+                           (notifyParentOnSendMessage)="onMessageSendEvent()">
           </app-chat-footer>
         </ng-container>
         <ng-template #elseBlock>

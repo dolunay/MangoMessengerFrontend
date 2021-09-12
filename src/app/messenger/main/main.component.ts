@@ -62,7 +62,7 @@ export class MainComponent implements OnInit {
       this.chatFilter = 'All Chats';
       this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived);
 
-      if(routeChatId) {
+      if (routeChatId) {
         this.loadChatAndMessages(routeChatId);
         return;
       }
@@ -102,8 +102,9 @@ export class MainComponent implements OnInit {
   }
 
   navigateToChat(chatId: string): void {
-    this.router.navigate(['main', {chatId: chatId}]).then(r => r);
-    this.initializeView();
+    this.router.navigate(['main', {chatId: chatId}]).then(() => {
+      this.loadChatAndMessages(chatId);
+    });
   }
 
   scrollToEnd(): void {
@@ -118,11 +119,7 @@ export class MainComponent implements OnInit {
 
       switch (filer) {
         case 'All Chats':
-          this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived);
-          const firstChat = getUserChatsResponse.chats[0];
-          if (firstChat) {
-            this.loadChatAndMessages(firstChat.chatId);
-          }
+          this.initializeView();
           break;
         case 'Groups':
           console.log(getUserChatsResponse.chats);
@@ -187,6 +184,10 @@ export class MainComponent implements OnInit {
   }
 
   onJoinGroupEvent() {
+    this.initializeView();
+  }
+
+  onMessageSendEvent(){
     this.initializeView();
   }
 
