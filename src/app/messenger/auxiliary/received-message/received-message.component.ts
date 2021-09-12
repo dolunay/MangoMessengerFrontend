@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {IMessage} from "../../../../types/models/IMessage";
 import {MessagesService} from "../../../services/messages.service";
+import {CryptoService} from "../../../services/crypto.service";
+import {Tokens} from "../../../../consts/Tokens";
 
 @Component({
   selector: 'app-received-message',
@@ -8,7 +10,8 @@ import {MessagesService} from "../../../services/messages.service";
 })
 export class ReceivedMessageComponent {
 
-  constructor(private messageService: MessagesService) {
+  constructor(private messageService: MessagesService,
+              private cryptoService: CryptoService) {
   }
 
   @Input() message: IMessage = {
@@ -31,5 +34,16 @@ export class ReceivedMessageComponent {
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  getMessageText() : string {
+    if (this.message.isEncrypted){
+      const secret = this.cryptoService.getSecretKey();
+      const commonSecret = Math.pow(this.message.authorPublicKey, Number(secret)) % Tokens.modulus;
+      this.cryptoService.setCommonSecret(commonSecret.toString());
+      return this.cryptoService.decryptUsingAES256(this.message.messageText);
+    }
+
+    return this.message.messageText;
   }
 }
