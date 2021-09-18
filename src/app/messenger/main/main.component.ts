@@ -67,7 +67,6 @@ export class MainComponent implements OnInit {
     });
 
     connection.on("BroadcastMessage", () => {
-      console.log("signal r works");
       this.initializeView();
     });
   }
@@ -76,17 +75,19 @@ export class MainComponent implements OnInit {
     this.chatService.getUserChats().subscribe(getUserChatsResponse => {
       const routeChatId = this.route.snapshot.paramMap.get('chatId');
       this.chatFilter = 'All Chats';
-      this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
+
+      this.chats = getUserChatsResponse.chats
+        .filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
 
       if (routeChatId) {
-        this.loadChatAndMessages(routeChatId);
+        this.loadMessages(routeChatId);
         return;
       }
 
       const firstChat = getUserChatsResponse.chats[0];
 
       if (firstChat) {
-        this.loadChatAndMessages(firstChat.chatId);
+        this.loadMessages(firstChat.chatId);
       }
 
     }, error => {
@@ -99,19 +100,13 @@ export class MainComponent implements OnInit {
     });
   }
 
-  private loadChatAndMessages(chatId: string | null): void {
+  private loadMessages(chatId: string | null): void {
     if (chatId != null) {
       this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
           this.messages = getMessagesResponse.messages;
           this.activeChatId = chatId;
-          this.chatService.getChatById(chatId).subscribe(getChatByIdResponse => {
-            if (getChatByIdResponse) {
-              this.activeChat = getChatByIdResponse.chat;
-              this.scrollToEnd();
-            }
-          }, error => {
-            alert(error.error.ErrorMessage);
-          })
+          this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
+          this.scrollToEnd();
         },
         error => {
           alert(error.error.ErrorMessage);
@@ -121,7 +116,7 @@ export class MainComponent implements OnInit {
 
   navigateToChat(chatId: string): void {
     this.router.navigate(['main', {chatId: chatId}]).then(() => {
-      this.loadChatAndMessages(chatId);
+      this.loadMessages(chatId);
     });
   }
 
