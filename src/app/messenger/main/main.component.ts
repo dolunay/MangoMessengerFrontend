@@ -9,7 +9,6 @@ import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
-import {CryptoService} from "../../services/crypto.service";
 import {CommunityType} from "../../../types/enums/CommunityType";
 import * as signalR from '@microsoft/signalr';
 import {ApiRoute} from "../../../consts/ApiRoute";
@@ -46,8 +45,7 @@ export class MainComponent implements OnInit {
               private userChatsService: UserChatsService,
               private route: ActivatedRoute,
               private router: Router,
-              public dialog: MatDialog,
-              private cryptoService: CryptoService) {
+              public dialog: MatDialog) {
   }
 
   openCreateGroupDialog(): void {
@@ -69,7 +67,6 @@ export class MainComponent implements OnInit {
     });
 
     connection.on("BroadcastMessage", () => {
-      console.log("signal r works");
       this.initializeView();
     });
   }
@@ -78,17 +75,21 @@ export class MainComponent implements OnInit {
     this.chatService.getUserChats().subscribe(getUserChatsResponse => {
       const routeChatId = this.route.snapshot.paramMap.get('chatId');
       this.chatFilter = 'All Chats';
-      this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived);
+
+      this.chats = getUserChatsResponse.chats
+        .filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
 
       if (routeChatId) {
-        this.loadChatAndMessages(routeChatId);
+        this.loadMessages(routeChatId);
         return;
       }
 
       const firstChat = getUserChatsResponse.chats[0];
+
       if (firstChat) {
-        this.loadChatAndMessages(firstChat.chatId);
+        this.loadMessages(firstChat.chatId);
       }
+
     }, error => {
       if (error.status === 403) {
         this.router.navigateByUrl('login').then(r => r);
@@ -99,19 +100,13 @@ export class MainComponent implements OnInit {
     });
   }
 
-  private loadChatAndMessages(chatId: string | null): void {
+  private loadMessages(chatId: string | null): void {
     if (chatId != null) {
       this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
           this.messages = getMessagesResponse.messages;
           this.activeChatId = chatId;
-          this.chatService.getChatById(chatId).subscribe(getChatByIdResponse => {
-            if (getChatByIdResponse) {
-              this.activeChat = getChatByIdResponse.chat;
-              this.scrollToEnd();
-            }
-          }, error => {
-            alert(error.error.ErrorMessage);
-          })
+          this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
+          this.scrollToEnd();
         },
         error => {
           alert(error.error.ErrorMessage);
@@ -121,7 +116,7 @@ export class MainComponent implements OnInit {
 
   navigateToChat(chatId: string): void {
     this.router.navigate(['main', {chatId: chatId}]).then(() => {
-      this.loadChatAndMessages(chatId);
+      this.loadMessages(chatId);
     });
   }
 
@@ -186,7 +181,7 @@ export class MainComponent implements OnInit {
 
   onLeaveChatClick(): void {
     this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
-      this.router.navigate(['main']).then(r => this.initializeView());
+      this.router.navigate(['main']).then(() => this.initializeView());
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -202,10 +197,6 @@ export class MainComponent implements OnInit {
 
   onJoinGroupEvent() {
     this.initializeView();
-  }
-
-  onMessageSendEvent() {
-    //this.initializeView();
   }
 
   noActiveChat(): boolean {

@@ -54,7 +54,8 @@ export class ContactsComponent implements OnInit {
   initializeView(): void {
     this.contactsService.getCurrentUserContacts().subscribe(getContactsResponse => {
       this.contacts = getContactsResponse.contacts;
-      this.userService.getCurrentUser().subscribe(getUserResponse => {
+      const userId = this.contacts[0].userId;
+      this.userService.getUserById(userId).subscribe(getUserResponse => {
         this.currentOpenedUser = getUserResponse.user;
         this.currentOpenedUserIsContact = true;
         this.contactsFilter = 'All Contacts';
@@ -97,6 +98,7 @@ export class ContactsComponent implements OnInit {
     this.contactsService.postAddContact(this.currentOpenedUser.userId).subscribe(_ => {
       this.onFilterClick('All Contacts');
       this.contactsSearchQuery = '';
+      this.currentOpenedUserIsContact = true;
     }, error => {
       alert(error.error.ErrorMessage);
     });
@@ -105,17 +107,6 @@ export class ContactsComponent implements OnInit {
   onStartDirectChatClick() {
     const userId = this.currentOpenedUser.userId;
     const createDirectChatCommand = new CreateChatCommand(userId, ChatType.DirectChat);
-    this.chatsService.createChat(createDirectChatCommand).subscribe(createChatResponse => {
-      console.log(createChatResponse);
-      this.router.navigate(['main', {chatId: createChatResponse.chatId}]).then(r => r);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    })
-  }
-
-  onStartSecretChatClick() {
-    const userId = this.currentOpenedUser.userId;
-    const createDirectChatCommand = new CreateChatCommand(userId, ChatType.SecretChat);
     this.chatsService.createChat(createDirectChatCommand).subscribe(createChatResponse => {
       this.router.navigate(['main', {chatId: createChatResponse.chatId}]).then(r => r);
     }, error => {
