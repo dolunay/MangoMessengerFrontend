@@ -1,4 +1,4 @@
-﻿export class UpdateUserInformationCommand {
+﻿export class UpdateAccountInformationCommand {
   firstName: string | null;
   lastName: string | null;
   displayName: string | null;
@@ -9,16 +9,6 @@
   username: string | null;
   bio: string | null = null;
   address: string | null = null;
-  facebook: string | null = null;
-  twitter: string | null = null;
-  instagram: string | null = null;
-  linkedIn: string | null = null;
-
-  static CreateEmptyCommand(): UpdateUserInformationCommand {
-    return new UpdateUserInformationCommand(
-      null, null, null, null, null,
-      null, null, null, null);
-  }
 
   constructor(firstName: string | null,
               lastName: string | null,
@@ -26,6 +16,7 @@
               phoneNumber: string | null,
               birthdayDate: string | null,
               email: string | null,
+              website: string | null,
               username: string | null,
               bio: string | null,
               address: string | null) {
@@ -35,6 +26,7 @@
     this.phoneNumber = phoneNumber;
     this.birthdayDate = birthdayDate;
     this.email = email;
+    this.website = website;
     this.username = username;
     this.bio = bio;
     this.address = address;

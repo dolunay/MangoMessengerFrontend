@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ChatsService} from "../../services/chats.service";
-import {GroupType} from "../../../types/enums/GroupType";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
@@ -8,6 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {ActivatedRoute, Router} from "@angular/router";
+import {CommunityType} from "../../../types/enums/CommunityType";
 
 @Component({
   selector: 'app-start',
@@ -19,6 +19,7 @@ export class StartComponent implements OnInit {
   chats: IChat[] = [];
 
   user: IUser = {
+    pictureUrl: "",
     publicKey: 0,
     address: "",
     bio: "",
@@ -41,7 +42,7 @@ export class StartComponent implements OnInit {
   searchQuery = '';
 
   constructor(private chatService: ChatsService,
-              private userService: UsersService,
+              public userService: UsersService,
               private dialog: MatDialog,
               private route: ActivatedRoute,
               private router: Router) {
@@ -70,11 +71,11 @@ export class StartComponent implements OnInit {
           this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived);
           break;
         case 'Groups':
-          this.chats = getUserChatsResponse.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel
-            || x.chatType === GroupType.PublicChannel);
+          this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.ReadOnlyChannel
+            || x.communityType === CommunityType.PublicChannel);
           break;
         case 'Direct Chats':
-          this.chats = getUserChatsResponse.chats.filter(x => x.chatType === GroupType.DirectChat);
+          this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.DirectChat);
           break;
         case 'Archived':
           this.chats = getUserChatsResponse.chats.filter(x => x.isArchived);
@@ -108,7 +109,7 @@ export class StartComponent implements OnInit {
     this.router.navigateByUrl('contacts').then(r => r);
   }
 
-  navigateToChat(chatId: string): void {
+  navigateToMain(chatId: string): void {
     this.router.navigate(['main', {chatId: chatId}]).then(r => r);
   }
 }

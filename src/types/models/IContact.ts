@@ -4,4 +4,5 @@
   address: string;
   bio: string;
   isContact: boolean;
+  pictureUrl: string;
 }

@@ -5,6 +5,8 @@ import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {ChatsService} from "../../services/chats.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {CreateChatCommand} from "../../../types/requests/CreateChatCommand";
+import {ChatType} from "../../../types/enums/ChatType";
 
 @Component({
   selector: 'app-contacts',
@@ -12,14 +14,17 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class ContactsComponent implements OnInit {
 
-  constructor(private contactsService: ContactsService, private userService: UsersService,
-              private chatsService: ChatsService, private route: ActivatedRoute,
+  constructor(private contactsService: ContactsService,
+              public userService: UsersService,
+              private chatsService: ChatsService,
+              private route: ActivatedRoute,
               private router: Router) {
   }
 
   contacts: IContact[] = [];
 
   currentOpenedUser: IUser = {
+    pictureUrl: "",
     publicKey: 0,
     address: "",
     bio: "",
@@ -64,6 +69,7 @@ export class ContactsComponent implements OnInit {
     this.contactsFilter = filter;
     this.contactsService.getCurrentUserContacts().subscribe(getContactsResponse => {
       this.contacts = getContactsResponse.contacts;
+      this.contactsSearchQuery = '';
     }, error => {
       alert(error.error.ErrorMessage);
     });
@@ -96,8 +102,21 @@ export class ContactsComponent implements OnInit {
     });
   }
 
-  onSendMessageClick() {
-    this.chatsService.createDirectChat(this.currentOpenedUser.userId).subscribe(createChatResponse => {
+  onStartDirectChatClick() {
+    const userId = this.currentOpenedUser.userId;
+    const createDirectChatCommand = new CreateChatCommand(userId, ChatType.DirectChat);
+    this.chatsService.createChat(createDirectChatCommand).subscribe(createChatResponse => {
+      console.log(createChatResponse);
+      this.router.navigate(['main', {chatId: createChatResponse.chatId}]).then(r => r);
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  onStartSecretChatClick() {
+    const userId = this.currentOpenedUser.userId;
+    const createDirectChatCommand = new CreateChatCommand(userId, ChatType.SecretChat);
+    this.chatsService.createChat(createDirectChatCommand).subscribe(createChatResponse => {
       this.router.navigate(['main', {chatId: createChatResponse.chatId}]).then(r => r);
     }, error => {
       alert(error.error.ErrorMessage);
@@ -110,5 +129,9 @@ export class ContactsComponent implements OnInit {
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  getContactItemClass(userId: string): string {
+    return userId === this.currentOpenedUser.userId ? 'contacts-item active' : 'contacts-item';
   }
 }

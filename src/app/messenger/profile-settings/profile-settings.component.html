@@ -8,7 +8,7 @@
   <!-- Navigation End -->
 
   <!-- Sidebar Start -->
-  <app-profile-settings-sidebar [events]="eventsSubject.asObservable()"></app-profile-settings-sidebar>
+  <app-profile-settings-sidebar [user]="currentUser"></app-profile-settings-sidebar>
   <!-- Sidebar End -->
 
   <!-- Main Start-->
@@ -272,8 +272,31 @@
               </div>
 
               <div class="card-footer d-flex justify-content-end">
-                <button (click)="initializeView()" type="button" class="btn btn-link text-muted mx-1">Reset</button>
-                <button (click)="updatePublicKey()" type="button" class="btn btn-primary">Save Changes</button>
+                <button (click)="updatePublicKey()" type="button" class="btn btn-primary">Update</button>
+              </div>
+            </div>
+
+            <div class="card mb-3">
+              <div class="card-header">
+                <h3 class="mb-1">Update Profile picture</h3>
+                <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
+              </div>
+
+              <div class="card-body">
+                <form>
+                  <div class="row">
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <input type="file" class="btn btn-close-white" name="picture"
+                               (change)="onFileSelected($event)">
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="card-footer d-flex justify-content-end">
+                <button (click)="updateProfilePicture()" type="button" class="btn btn-primary">Update</button>
               </div>
             </div>
           </div>

@@ -1,10 +1,10 @@
 <div class="contacts-link">
-  <div class="avatar avatar-online">
-    <img src="assets/media/avatar/3.png" alt="avatar_example">
+  <div class="avatar">
+    <img src="{{getChatPictureUrl()}}" alt="">
   </div>
   <div class="contacts-content">
     <div class="contacts-info">
-      <div *ngIf="chat.chatType != 1; else elseDirect" class="chat-name text-truncate">
+      <div *ngIf="chat.communityType != 1 && chat.communityType != 2; else elseDirect" class="chat-name text-truncate">
         <div>
           <div style="display: inline-block; margin-right: 10px;">
             <mat-icon>group</mat-icon>
@@ -13,15 +13,18 @@
         </div>
       </div>
       <ng-template #elseDirect>
-        <div class="chat-name text-truncate">
-          {{chat.title}}
+        <div>
+          <div style="display: inline-block; margin-right: 10px;">
+            <mat-icon *ngIf="chat.communityType == 2">shield</mat-icon>
+          </div>
+          <div style="display: inline-block; vertical-align: top;">{{chat.title}}</div>
         </div>
       </ng-template>
-      <div class="chat-time">{{chat.lastMessageAt}}</div>
+      <div class="chat-time">{{chat.lastMessage?.createdAt}}</div>
     </div>
     <div class="contacts-texts">
       <p class="text-truncate" *ngIf="chatContainsMessages(); else elseBlock">
-        <strong>{{chat.lastMessageAuthor}}: </strong>{{chat.lastMessage}}
+        <strong>{{chat.lastMessage?.userDisplayName}}: </strong>{{chat.lastMessage?.messageText}}
       </p>
       <ng-template #elseBlock class="text-truncate">
         Chat is currently empty.

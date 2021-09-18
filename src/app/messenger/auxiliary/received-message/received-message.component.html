@@ -2,24 +2,41 @@
   <div class="message-wrapper">
     <div class="message-content">
       <div><strong>{{message.userDisplayName}}</strong></div>
-      <div>{{message.messageText}}</div>
+      <div>{{getMessageText()}}</div>
     </div>
   </div>
   <div class="message-options">
-    <div class="avatar avatar-sm">
-      <img src="assets/media/avatar/3.png" alt="avatar_image">
+    <div *ngIf="message.messageAuthorPictureUrl; else elsePicture" class="avatar avatar-sm">
+      <img src="{{message.messageAuthorPictureUrl}}" alt="avatar_image">
     </div>
-    <span class="message-date">{{message.sentAt}}</span>
+    <ng-template #elsePicture>
+      <div class="avatar avatar-sm">
+        <img src="assets/media/avatar/3.png" alt="avatar_image">
+      </div>
+    </ng-template>
+    <span class="message-date">{{message.createdAt}}</span>
     <div *ngIf="message.self" class="dropdown">
       <div class="text-muted" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <!-- Default :: Inline SVG -->
-        <svg class="hw-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="hw-18 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
         </svg>
       </div>
 
       <div class="dropdown-menu cursor-pointer">
+
+        <div class="dropdown-item d-flex align-items-center">
+          <!-- Default :: Inline SVG -->
+          <svg class="hw-18 mr-2" fill="none" viewBox="0 0 24 24"
+               stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+          </svg>
+          <span>Edit</span>
+        </div>
+
         <div class="dropdown-item d-flex align-items-center text-danger" (click)="deleteMessage()">
           <!-- Default :: Inline SVG -->
           <svg class="hw-18 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,6 +46,7 @@
           </svg>
           <span>Delete</span>
         </div>
+
       </div>
     </div>
   </div>

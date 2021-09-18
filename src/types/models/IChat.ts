@@ -1,15 +1,14 @@
-﻿import {GroupType} from "../enums/GroupType";
+﻿import {IMessage} from "./IMessage";
+import {CommunityType} from "../enums/CommunityType";
 
 export interface IChat {
   chatId: string;
   title: string;
-  image: string;
-  lastMessageAuthor: string;
+  communityType: CommunityType;
+  chatLogoImageUrl: string;
   description: string;
-  lastMessage: string;
-  lastMessageAt: string;
   membersCount: number;
-  chatType: GroupType;
   isArchived: boolean;
   isMember: boolean;
+  lastMessage: IMessage | null;
 }

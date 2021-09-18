@@ -105,7 +105,7 @@
               <!-- Chat Item Start -->
               <li *ngFor="let chat of chats">
                 <app-chat-item-active [chat]="chat"
-                                      (click)="loadChatAndMessages(chat.chatId)"
+                                      (click)="navigateToChat(chat.chatId)"
                                       [ngClass]="getMessageComponentClass(chat)">
                 </app-chat-item-active>
               </li>
@@ -155,7 +155,21 @@
           </div>
 
           <!-- Chat Options -->
-          <ul class="nav flex-nowrap">
+          <ul *ngIf="activeChat.isMember" class="nav flex-nowrap">
+
+            <li class="nav-item list-inline-item d-none d-sm-block mr-1">
+              <a class="nav-link text-muted px-1" data-toggle="collapse" data-target="#searchCollapse"
+                 href="#" aria-expanded="false">
+                <!-- Default :: Inline SVG -->
+                <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+
+                <!-- Alternate :: External File link -->
+                <!-- <img src="./../assets/media/heroicons/outline/search.svg" alt="" class="injectable hw-20"> -->
+              </a>
+            </li>
 
             <li class="nav-item list-inline-item d-none d-sm-block mr-0">
               <div class="dropdown">
@@ -197,6 +211,29 @@
         </div>
         <!-- Chat Header End-->
 
+        <div class="collapse border-bottom px-3" id="searchCollapse">
+          <div class="container-xl py-2 px-0 px-md-3">
+            <div class="input-group bg-light ">
+              <input type="text" class="form-control form-control-md border-right-0 transparent-bg pr-0"
+                     placeholder="Search...">
+              <div class="input-group-append">
+                                    <span class="input-group-text transparent-bg border-left-0">
+                                        <!-- Default :: Inline SVG -->
+                                        <svg class="hw-20 text-muted" fill="none" viewBox="0 0 24 24"
+                                             stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                        </svg>
+
+                                      <!-- Alternate :: External File link -->
+                                      <!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/search.svg" alt="Search icon"> -->
+                                    </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
         <!-- Chat Content Start-->
         <div class="chat-content p-2" id="messageBody">
           <div class="container">
@@ -217,8 +254,8 @@
 
         <!-- Chat Footer Start-->
         <ng-container *ngIf="activeChat.isMember; else elseBlock">
-          <app-chat-footer [chatId]="activeChatId"
-                           (notifyParentOnSendMessage)="initializeView()">
+          <app-chat-footer [chat]="activeChat"
+                           (notifyParentOnSendMessage)="onMessageSendEvent()">
           </app-chat-footer>
         </ng-container>
         <ng-template #elseBlock>

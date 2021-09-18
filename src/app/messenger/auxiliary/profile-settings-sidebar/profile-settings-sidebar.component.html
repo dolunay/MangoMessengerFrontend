@@ -20,12 +20,15 @@
 
                 <!-- Card Details Start -->
                 <div class="d-flex flex-column align-items-center">
-                  <div class="avatar avatar-lg mb-3">
-                    <img class="avatar-img" src="assets/media/avatar/3.png" alt="">
+                  <div *ngIf="user.pictureUrl; else elsePicture" class="avatar avatar-lg mb-3">
+                    <img class="avatar-img" src="{{user.pictureUrl}}" alt="">
                   </div>
+                  <ng-template #elsePicture>
+                    <img class="avatar-img" src="assets/media/avatar/3.png" alt="">
+                  </ng-template>
 
                   <div class="d-flex flex-column align-items-center">
-                    <h3>{{firstName}} {{lastName}}</h3>
+                    <h3>{{user.firstName}} {{user.lastName}}</h3>
                   </div>
 
                   <div class="d-flex">
@@ -45,11 +48,11 @@
                 <!-- List Group Start -->
                 <ul class="list-group list-group-flush">
                   <!-- List Group Item Start -->
-                  <li *ngIf="birthdayDate" class="list-group-item py-2">
+                  <li *ngIf="user.birthdayDate" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Birthdate</p>
-                        <p class="mb-0">{{birthdayDate}}</p>
+                        <p class="mb-0">{{user.birthdayDate}}</p>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" fill="none" viewBox="0 0 24 24"
@@ -64,11 +67,11 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li *ngIf="phoneNumber" class="list-group-item py-2">
+                  <li *ngIf="user.phoneNumber" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Phone</p>
-                        <p class="mb-0">{{phoneNumber}}</p>
+                        <p class="mb-0">{{user.phoneNumber}}</p>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" fill="none" viewBox="0 0 24 24"
@@ -82,11 +85,11 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li *ngIf="email" class="list-group-item py-2">
+                  <li *ngIf="user.email" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Email</p>
-                        <a class="mb-0" href="mailto:{{email}}">{{email}}</a>
+                        <a class="mb-0" href="mailto:{{user.email}}">{{user.email}}</a>
                       </div>
 
                       <!-- Default :: Inline SVG -->
@@ -102,11 +105,11 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li *ngIf="website" class="list-group-item py-2">
+                  <li *ngIf="user.website" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Website</p>
-                        <a class="mb-0" href="https://{{website}}" target="_blank">{{website}}</a>
+                        <a class="mb-0" href="https://{{user.website}}" target="_blank">{{user.website}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" fill="none" viewBox="0 0 24 24"
@@ -121,11 +124,11 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li *ngIf="address" class="list-group-item pt-2">
+                  <li *ngIf="user.address" class="list-group-item pt-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Address</p>
-                        <p class="mb-0">{{address}}</p>
+                        <p class="mb-0">{{user.address}}</p>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" fill="none" viewBox="0 0 24 24"
@@ -152,12 +155,12 @@
                 <ul class="list-group list-group-flush">
 
                   <!-- List Group Item Start -->
-                  <li *ngIf="facebook" class="list-group-item py-2">
+                  <li *ngIf="user.facebook" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Facebook</p>
                         <a class="font-size-sm font-weight-medium"
-                           href="https://www.facebook.com/{{facebook}}" target="_blank">@{{facebook}}</a>
+                           href="https://www.facebook.com/{{user.facebook}}" target="_blank">@{{user.facebook}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" viewBox="0 0 24 24" fill="none"
@@ -171,12 +174,12 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li *ngIf="twitter" class="list-group-item py-2">
+                  <li *ngIf="user.twitter" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Twitter</p>
                         <a class="font-size-sm font-weight-medium"
-                           href="https://twitter.com/{{twitter}}" target="_blank">@{{twitter}}</a>
+                           href="https://twitter.com/{{user.twitter}}" target="_blank">@{{user.twitter}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" viewBox="0 0 24 24" fill="none"
@@ -191,12 +194,12 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li *ngIf="instagram" class="list-group-item py-2">
+                  <li *ngIf="user.instagram" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Instagram</p>
                         <a class="font-size-sm font-weight-medium"
-                           href="https://www.instagram.com/{{instagram}}" target="_blank">@{{instagram}}</a>
+                           href="https://www.instagram.com/{{user.instagram}}" target="_blank">@{{user.instagram}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" viewBox="0 0 24 24" fill="none"
@@ -212,12 +215,12 @@
                   <!-- List Group Item End -->
 
                   <!-- List Group Item Start -->
-                  <li *ngIf="linkedIn" class="list-group-item py-2">
+                  <li *ngIf="user.linkedIn" class="list-group-item py-2">
                     <div class="media align-items-center">
                       <div class="media-body">
                         <p class="small text-muted mb-0">Linkedin</p>
                         <a class="font-size-sm font-weight-medium"
-                           href="https://www.linkedin.com/{{linkedIn}}" target="_blank">@{{linkedIn}}</a>
+                           href="https://www.linkedin.com/{{user.linkedIn}}" target="_blank">@{{user.linkedIn}}</a>
                       </div>
                       <!-- Default :: Inline SVG -->
                       <svg class="text-muted hw-20 ml-1" viewBox="0 0 24 24" fill="none"
