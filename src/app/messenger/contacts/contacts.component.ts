@@ -106,6 +106,7 @@ export class ContactsComponent implements OnInit {
     const userId = this.currentOpenedUser.userId;
     const createDirectChatCommand = new CreateChatCommand(userId, ChatType.DirectChat);
     this.chatsService.createChat(createDirectChatCommand).subscribe(createChatResponse => {
+      console.log(createChatResponse);
       this.router.navigate(['main', {chatId: createChatResponse.chatId}]).then(r => r);
     }, error => {
       alert(error.error.ErrorMessage);

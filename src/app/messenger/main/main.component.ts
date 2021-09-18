@@ -11,6 +11,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
 import {CryptoService} from "../../services/crypto.service";
 import {CommunityType} from "../../../types/enums/CommunityType";
+import * as signalR from '@microsoft/signalr';
+import {ApiRoute} from "../../../consts/ApiRoute";
 
 @Component({
   selector: 'app-main',
@@ -54,6 +56,22 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeView();
+
+    const connection = new signalR.HubConnectionBuilder()
+      .configureLogging(signalR.LogLevel.Information)
+      .withUrl(ApiRoute.route + 'notify')
+      .build();
+
+    connection.start().then(function () {
+      console.log('SignalR Connected!');
+    }).catch(function (err) {
+      return console.error(err.toString());
+    });
+
+    connection.on("BroadcastMessage", () => {
+      console.log("signal r works");
+      this.initializeView();
+    });
   }
 
   initializeView(): void {
@@ -168,8 +186,7 @@ export class MainComponent implements OnInit {
 
   onLeaveChatClick(): void {
     this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
-      this.activeChatId = '';
-      this.onChatFilerClick('All Chats');
+      this.router.navigate(['main']).then(r => this.initializeView());
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -187,8 +204,8 @@ export class MainComponent implements OnInit {
     this.initializeView();
   }
 
-  onMessageSendEvent(){
-    this.initializeView();
+  onMessageSendEvent() {
+    //this.initializeView();
   }
 
   noActiveChat(): boolean {
