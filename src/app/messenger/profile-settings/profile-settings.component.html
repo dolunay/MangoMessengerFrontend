@@ -247,37 +247,6 @@
 
             <div class="card mb-3">
               <div class="card-header">
-                <h3 class="mb-1">Update Public Key</h3>
-                <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
-              </div>
-
-              <div class="card-body">
-                <form>
-                  <div class="row">
-                    <div class="col-md-6 col-12">
-                      <div class="form-group">
-                        <label for="public-key">Public Key</label>
-                        <input [(ngModel)]="currentUser.publicKey"
-                               class="form-control form-control-md"
-                               id="public-key"
-                               placeholder="Public key"
-                               autocomplete="off"
-                               name="public-key"
-                               readonly
-                               value="{{currentUser.publicKey}}">
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-
-              <div class="card-footer d-flex justify-content-end">
-                <button (click)="updatePublicKey()" type="button" class="btn btn-primary">Update</button>
-              </div>
-            </div>
-
-            <div class="card mb-3">
-              <div class="card-header">
                 <h3 class="mb-1">Update Profile picture</h3>
                 <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
               </div>
