@@ -186,7 +186,7 @@ export class MainComponent implements OnInit {
 
   onLeaveChatClick(): void {
     this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
-      this.router.navigate(['main']).then(r => this.initializeView());
+      this.router.navigate(['main']).then(() => this.initializeView());
     }, error => {
       alert(error.error.ErrorMessage);
     })
