@@ -5,12 +5,14 @@ import {ChatsService} from "../../services/chats.service";
 import {MessagesService} from "../../services/messages.service";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
-import {GroupType} from "../../../types/enums/GroupType";
 import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
 import {CryptoService} from "../../services/crypto.service";
+import {CommunityType} from "../../../types/enums/CommunityType";
+import * as signalR from '@microsoft/signalr';
+import {ApiRoute} from "../../../consts/ApiRoute";
 
 @Component({
   selector: 'app-main',
@@ -24,15 +26,13 @@ export class MainComponent implements OnInit {
   activeChatId = '';
 
   activeChat: IChat = {
+    communityType: CommunityType.PublicChannel,
+    lastMessage: null,
     description: "",
     chatId: "",
-    chatType: GroupType.DirectChat,
-    image: "",
+    chatLogoImageUrl: "",
     isArchived: false,
     isMember: false,
-    lastMessage: "",
-    lastMessageAt: "",
-    lastMessageAuthor: "",
     membersCount: 0,
     title: ""
   };
@@ -56,6 +56,22 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeView();
+
+    const connection = new signalR.HubConnectionBuilder()
+      .configureLogging(signalR.LogLevel.Information)
+      .withUrl(ApiRoute.route + 'notify')
+      .build();
+
+    connection.start().then(function () {
+      console.log('SignalR Connected!');
+    }).catch(function (err) {
+      return console.error(err.toString());
+    });
+
+    connection.on("BroadcastMessage", () => {
+      console.log("signal r works");
+      this.initializeView();
+    });
   }
 
   initializeView(): void {
@@ -83,22 +99,30 @@ export class MainComponent implements OnInit {
     });
   }
 
-  loadChatAndMessages(chatId: string): void {
-    this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
-        this.messages = getMessagesResponse.messages;
-        this.activeChatId = chatId;
-        this.chatService.getChatById(chatId).subscribe(getChatByIdResponse => {
-          if (getChatByIdResponse) {
-            this.activeChat = getChatByIdResponse.chat;
-            this.scrollToEnd();
-          }
-        }, error => {
+  private loadChatAndMessages(chatId: string | null): void {
+    if (chatId != null) {
+      this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
+          this.messages = getMessagesResponse.messages;
+          this.activeChatId = chatId;
+          this.chatService.getChatById(chatId).subscribe(getChatByIdResponse => {
+            if (getChatByIdResponse) {
+              this.activeChat = getChatByIdResponse.chat;
+              this.scrollToEnd();
+            }
+          }, error => {
+            alert(error.error.ErrorMessage);
+          })
+        },
+        error => {
           alert(error.error.ErrorMessage);
-        })
-      },
-      error => {
-        alert(error.error.ErrorMessage);
-      });
+        });
+    }
+  }
+
+  navigateToChat(chatId: string): void {
+    this.router.navigate(['main', {chatId: chatId}]).then(() => {
+      this.loadChatAndMessages(chatId);
+    });
   }
 
   scrollToEnd(): void {
@@ -113,20 +137,16 @@ export class MainComponent implements OnInit {
 
       switch (filer) {
         case 'All Chats':
-          this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived);
-          const firstChat = getUserChatsResponse.chats[0];
-          if (firstChat) {
-            this.loadChatAndMessages(firstChat.chatId);
-          }
+          this.initializeView();
           break;
         case 'Groups':
           console.log(getUserChatsResponse.chats);
-          this.chats = getUserChatsResponse.chats.filter(x => x.chatType === GroupType.ReadOnlyChannel
-            || x.chatType === GroupType.PublicChannel
-            || x.chatType === GroupType.PrivateChannel);
+          this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.ReadOnlyChannel
+            || x.communityType === CommunityType.PublicChannel
+            || x.communityType === CommunityType.PrivateChannel);
           break;
         case 'Direct Chats':
-          this.chats = getUserChatsResponse.chats.filter(x => x.chatType === GroupType.DirectChat);
+          this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.DirectChat);
           break;
         case 'Archived':
           this.chats = getUserChatsResponse.chats.filter(x => x.isArchived);
@@ -144,8 +164,6 @@ export class MainComponent implements OnInit {
     this.chatService.searchChat(this.searchQuery).subscribe(getUserChatsResponse => {
       this.chats = getUserChatsResponse.chats;
       this.chatFilter = 'Search Results';
-      console.log(this.noActiveChat());
-      console.log(this.activeChatId);
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -157,12 +175,6 @@ export class MainComponent implements OnInit {
       const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
 
       this.userChatsService.putArchiveChat(command).subscribe(_ => {
-
-        if (chat.isArchived) {
-          this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
-          return;
-        }
-
         this.initializeView();
       }, error => {
         alert(error.error.ErrorMessage);
@@ -174,8 +186,7 @@ export class MainComponent implements OnInit {
 
   onLeaveChatClick(): void {
     this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
-      this.activeChatId = '';
-      this.onChatFilerClick('All Chats');
+      this.router.navigate(['main']).then(r => this.initializeView());
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -190,7 +201,11 @@ export class MainComponent implements OnInit {
   }
 
   onJoinGroupEvent() {
-    this.router.navigate(['main', {chatId: this.activeChatId}]).then(_ => this.initializeView());
+    this.initializeView();
+  }
+
+  onMessageSendEvent() {
+    //this.initializeView();
   }
 
   noActiveChat(): boolean {

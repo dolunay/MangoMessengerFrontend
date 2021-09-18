@@ -1,12 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
-import {UpdateUserInformationCommand} from "../../../types/requests/UpdateUserInformationCommand";
+import {UpdateAccountInformationCommand} from "../../../types/requests/UpdateAccountInformationCommand";
 import {ChangePasswordCommand} from "../../../types/requests/ChangePasswordCommand";
 import {IUser} from "../../../types/models/IUser";
 import {Subject} from "rxjs";
 import {CryptoService} from "../../services/crypto.service";
 import {Tokens} from "../../../consts/Tokens";
 import {RandomGeneratorService} from "../../services/random-generator.service";
+import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocialsCommand";
+import {DocumentsService} from "../../services/documents.service";
 
 @Component({
   selector: 'app-profile-settings',
@@ -14,13 +16,16 @@ import {RandomGeneratorService} from "../../services/random-generator.service";
 })
 export class ProfileSettingsComponent implements OnInit {
 
-  constructor(private userService: UsersService, private cryptoService: CryptoService,
+  constructor(private userService: UsersService,
+              private documentService: DocumentsService,
+              private cryptoService: CryptoService,
               private randomGenerator: RandomGeneratorService) {
   }
 
   eventsSubject: Subject<void> = new Subject<void>();
 
   currentUser: IUser = {
+    pictureUrl: "",
     publicKey: 0,
     address: "",
     bio: "",
@@ -44,6 +49,9 @@ export class ProfileSettingsComponent implements OnInit {
   repeatNewPassword = '';
 
   privateKey = 0;
+  fileName = '';
+
+  file!: File;
 
   ngOnInit(): void {
     this.initializeView();
@@ -62,21 +70,19 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   saveAccountInfo(): void {
-    const command = new UpdateUserInformationCommand(this.currentUser.firstName,
+    const command = new UpdateAccountInformationCommand(
+      this.currentUser.firstName,
       this.currentUser.lastName,
       this.currentUser.displayName,
       this.currentUser.phoneNumber,
       this.currentUser.birthdayDate,
       this.currentUser.email,
+      this.currentUser.website,
       this.currentUser.username,
       this.currentUser.bio,
       this.currentUser.address);
 
-    command.website = this.currentUser.website;
-
-    this.userService.putUpdateUserInformation(command).subscribe(response => {
-      this.eventsSubject.next();
-      this.initializeView();
+    this.userService.updateUserAccountInformation(command).subscribe(response => {
       alert(response.message);
     }, error => {
       alert(error.error.ErrorMessage);
@@ -84,14 +90,13 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   saveSocialMediaInfo(): void {
-    const command = UpdateUserInformationCommand.CreateEmptyCommand();
-    command.facebook = this.currentUser.facebook;
-    command.twitter = this.currentUser.twitter;
-    command.instagram = this.currentUser.instagram;
-    command.linkedIn = this.currentUser.linkedIn;
+    const command = new UpdateUserSocialsCommand(this.currentUser.facebook,
+      this.currentUser.twitter,
+      this.currentUser.instagram,
+      this.currentUser.linkedIn);
 
-    this.userService.putUpdateUserInformation(command).subscribe(_ => {
-      this.eventsSubject.next();
+    this.userService.updateUserSocials(command).subscribe(response => {
+      alert(response.message);
     }, error => {
       alert(error.error.ErrorMessage);
     })
@@ -119,8 +124,8 @@ export class ProfileSettingsComponent implements OnInit {
   updatePublicKey(): void {
     const base = Tokens.base;
     const modulus = Tokens.modulus;
-    const privateKey = this.randomGenerator.generateRandomNumber();
-    const newPubicKey = Math.pow(base, privateKey) % modulus;
+    const privateKey: number = this.randomGenerator.getRandomInt(1, 10);
+    const newPubicKey: number = Math.pow(base, privateKey) % modulus;
     this.cryptoService.updatePublicKey(newPubicKey).subscribe(data => {
       this.cryptoService.writeSecretKey(privateKey.toString());
       this.initializeView();
@@ -128,5 +133,28 @@ export class ProfileSettingsComponent implements OnInit {
     }, error => {
       alert(error.error.ErrorMessage);
     })
+  }
+
+  updateProfilePicture(): void {
+    const formData = new FormData();
+    formData.append("formFile", this.file);
+    this.documentService.uploadDocument(formData).subscribe(uploadResponse => {
+      this.userService.updateProfilePicture(uploadResponse.fileName).subscribe(updateResponse => {
+        alert(updateResponse.message);
+        this.initializeView();
+      })
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  onFileSelected(event: any) {
+
+    const file: File = event.target.files[0];
+
+    if (file) {
+      this.file = file;
+      this.fileName = file.name;
+    }
   }
 }

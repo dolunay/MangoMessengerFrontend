@@ -15,4 +15,5 @@
   instagram: string;
   linkedIn: string;
   publicKey: number;
+  pictureUrl: string;
 }

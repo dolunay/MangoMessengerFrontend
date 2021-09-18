@@ -70,11 +70,9 @@
           <!-- Friends Contact List Start -->
           <div class="contacts-list" id="friendsTab">
             <div *ngFor="let contact of contacts">
-              <app-contact-item [contactName]="contact.displayName"
-                                [contactAddress]="contact.address"
-                                [contactBio]="contact.bio"
+              <app-contact-item [contact]="contact"
                                 (click)="onContactClick(contact)"
-                                [ngClass]="contact.userId === currentOpenedUser.userId ? 'contacts-item active' : 'contacts-item'">
+                                [ngClass]="getContactItemClass(contact.userId)">
               </app-contact-item>
             </div>
           </div>
@@ -96,7 +94,7 @@
             <div class="card card-body card-bg-1 mb-3">
               <div class="d-flex flex-column align-items-center">
                 <div class="avatar avatar-lg mb-3">
-                  <img class="avatar-img" src="assets/media/avatar/3.png" alt="">
+                  <img class="avatar-img" src="{{userService.getUserProfilePicture(currentOpenedUser)}}" alt="">
                 </div>
 
                 <div class="d-flex flex-column align-items-center">
@@ -108,8 +106,12 @@
                             (click)="onAddContactClick()">
                       Add Contact
                     </button>
-                    <button class="btn btn-outline-default" type="button" (click)="onSendMessageClick()"
-                            style="margin-left: 20px;">Message
+                    <button class="btn btn-outline-default" type="button" (click)="onStartDirectChatClick()"
+                            style="margin-left: 20px;">Start Direct Chat
+                    </button>
+
+                    <button class="btn btn-outline-default" type="button" (click)="onStartSecretChatClick()"
+                            style="margin-left: 20px;">Start Secret Chat
                     </button>
                     <button *ngIf="currentOpenedUserIsContact" class="btn btn-outline-default text-danger" type="button"
                             (click)="onRemoveContactClick()"

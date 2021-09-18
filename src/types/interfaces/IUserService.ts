@@ -2,10 +2,12 @@
 import {IGetUserResponse} from "../responses/IGetUserResponse";
 import {RegisterCommand} from "../requests/RegisterCommand";
 import {VerifyEmailCommand} from "../requests/VerifyEmailCommand";
-import {UpdateUserInformationCommand} from "../requests/UpdateUserInformationCommand";
+import {UpdateAccountInformationCommand} from "../requests/UpdateAccountInformationCommand";
 import {ChangePasswordCommand} from "../requests/ChangePasswordCommand";
 import {ITokensResponse} from "../responses/ITokensResponse";
 import {IBaseResponse} from "../responses/IBaseResponse";
+import {UpdateUserSocialsCommand} from "../requests/UpdateUserSocialsCommand";
+import {IUser} from "../models/IUser";
 
 export interface IUserService {
   postUser(command: RegisterCommand): Observable<ITokensResponse>;
@@ -18,7 +20,13 @@ export interface IUserService {
 
   putEmailConfirmation(request: VerifyEmailCommand): Observable<IBaseResponse>;
 
-  putUpdateUserInformation(request: UpdateUserInformationCommand): Observable<IBaseResponse>;
+  updateUserAccountInformation(request: UpdateAccountInformationCommand): Observable<IBaseResponse>;
 
   putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse>;
+
+  updateUserSocials(request: UpdateUserSocialsCommand): Observable<IBaseResponse>;
+
+  getUserProfilePicture(user: IUser): string;
+
+  updateProfilePicture(image: string): Observable<IBaseResponse>;
 }
