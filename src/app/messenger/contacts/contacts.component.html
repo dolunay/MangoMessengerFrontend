@@ -102,17 +102,16 @@
                   <h4 class="mb-1">{{currentOpenedUser.bio}}</h4>
                   <!-- <p class="text-white rounded px-2 bg-primary">+01-202-265462</p> -->
                   <div class="d-flex mt-2">
+
                     <button *ngIf="!currentOpenedUserIsContact" class="btn btn-outline-default" type="button"
                             (click)="onAddContactClick()">
                       Add Contact
                     </button>
+
                     <button class="btn btn-outline-default" type="button" (click)="onStartDirectChatClick()"
                             style="margin-left: 20px;">Start Direct Chat
                     </button>
 
-                    <button class="btn btn-outline-default" type="button" (click)="onStartSecretChatClick()"
-                            style="margin-left: 20px;">Start Secret Chat
-                    </button>
                     <button *ngIf="currentOpenedUserIsContact" class="btn btn-outline-default text-danger" type="button"
                             (click)="onRemoveContactClick()"
                             style="margin-left: 20px;">

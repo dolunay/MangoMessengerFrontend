@@ -9,7 +9,6 @@ import {UserChatsService} from "../../services/user-chats.service";
 import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
-import {CryptoService} from "../../services/crypto.service";
 import {CommunityType} from "../../../types/enums/CommunityType";
 import * as signalR from '@microsoft/signalr';
 import {ApiRoute} from "../../../consts/ApiRoute";
@@ -46,8 +45,7 @@ export class MainComponent implements OnInit {
               private userChatsService: UserChatsService,
               private route: ActivatedRoute,
               private router: Router,
-              public dialog: MatDialog,
-              private cryptoService: CryptoService) {
+              public dialog: MatDialog) {
   }
 
   openCreateGroupDialog(): void {
@@ -78,7 +76,7 @@ export class MainComponent implements OnInit {
     this.chatService.getUserChats().subscribe(getUserChatsResponse => {
       const routeChatId = this.route.snapshot.paramMap.get('chatId');
       this.chatFilter = 'All Chats';
-      this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived);
+      this.chats = getUserChatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
 
       if (routeChatId) {
         this.loadChatAndMessages(routeChatId);
@@ -86,9 +84,11 @@ export class MainComponent implements OnInit {
       }
 
       const firstChat = getUserChatsResponse.chats[0];
+
       if (firstChat) {
         this.loadChatAndMessages(firstChat.chatId);
       }
+
     }, error => {
       if (error.status === 403) {
         this.router.navigateByUrl('login').then(r => r);
@@ -202,10 +202,6 @@ export class MainComponent implements OnInit {
 
   onJoinGroupEvent() {
     this.initializeView();
-  }
-
-  onMessageSendEvent() {
-    //this.initializeView();
   }
 
   noActiveChat(): boolean {
