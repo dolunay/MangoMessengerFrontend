@@ -60,14 +60,27 @@ export class MainComponent implements OnInit {
       .withUrl(ApiRoute.route + 'notify')
       .build();
 
-    connection.start().then(function () {
-      console.log('SignalR Connected!');
+    connection.start().then(() => {
+      this.chats.forEach(x => {
+        console.log('joining chat group ' + x.chatId);
+        connection.invoke("JoinChatGroup", x.chatId).then(r => r);
+      })
     }).catch(function (err) {
       return console.error(err.toString());
     });
 
-    connection.on("BroadcastMessage", () => {
-      this.initializeView();
+    connection.on("BroadcastMessage", (message: IMessage) => {
+      console.log(message);
+      let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
+      chat.lastMessage = message;
+      this.chats = this.chats.filter(x => x.chatId !== message.chatId);
+      this.chats = [chat, ...this.chats];
+
+      if (message.chatId === this.activeChatId) {
+        this.messages.push(message);
+      }
+
+      this.scrollToEnd();
     });
   }
 
