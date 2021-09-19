@@ -1,14 +1,14 @@
 ﻿import {ChannelType} from "../enums/ChannelType";
 
 export class CreateChannelCommand {
-  groupType: ChannelType | number;
-  groupTitle: string;
-  groupDescription: string;
+  channelType: ChannelType | number;
+  channelTitle: string;
+  channelDescription: string;
 
 
   constructor(groupType: ChannelType | number, groupTitle: string, groupDescription: string) {
-    this.groupType = groupType;
-    this.groupTitle = groupTitle;
-    this.groupDescription = groupDescription;
+    this.channelType = groupType;
+    this.channelTitle = groupTitle;
+    this.channelDescription = groupDescription;
   }
 }
