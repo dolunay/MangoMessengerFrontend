@@ -34,4 +34,9 @@ export class MessagesService implements IMessagesService {
   editMessage(request: EditMessageCommand): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.messagesRoute, request);
   }
+
+  searchMessages(chatId: string, text: string): Observable<IGetChatMessagesResponse> {
+    return this.httpClient.get<IGetChatMessagesResponse>(ApiRoute.route + this.messagesRoute +
+      'searches/' + chatId + '?messageText=' + text);
+  }
 }

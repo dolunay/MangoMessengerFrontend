@@ -73,9 +73,9 @@
                 <!-- Sidebar Search Start -->
                 <form class="form-inline">
                   <div class="input-group">
-                    <input [(ngModel)]="searchQuery" name="searchQuery" type="text"
+                    <input [(ngModel)]="chatSearchQuery" name="searchQuery" type="text"
                            class="form-control search border-right-0 transparent-bg pr-0 text-white"
-                           placeholder="Search chats..." value="{{searchQuery}}"
+                           placeholder="Search chats..." value="{{chatSearchQuery}}"
                            (keyup.enter)="onSearchClick()">
                     <div class="input-group-append">
                       <div class="input-group-text transparent-bg border-left-0" role="button"
@@ -142,8 +142,8 @@
 
           <!-- Chat participant's Name -->
           <div class="media chat-name align-items-center text-truncate">
-            <div class="avatar avatar-online d-none d-sm-inline-block mr-3">
-              <img src="assets/media/avatar/3.png" alt="avatar_example">
+            <div class="avatar d-none d-sm-inline-block mr-3">
+              <img src="{{getChatImageUrl()}}" alt="avatar_example">
             </div>
 
             <div class="media-body align-self-center">
@@ -157,7 +157,7 @@
           <!-- Chat Options -->
           <ul *ngIf="activeChat.isMember" class="nav flex-nowrap">
 
-            <li class="nav-item list-inline-item d-none d-sm-block mr-1">
+            <li class="nav-item list-inline-item d-none d-sm-block mr-1" (click)="onFilterMessageDropdownClick()">
               <a class="nav-link text-muted px-1" data-toggle="collapse" data-target="#searchCollapse"
                  href="#" aria-expanded="false">
                 <!-- Default :: Inline SVG -->
@@ -211,15 +211,20 @@
         </div>
         <!-- Chat Header End-->
 
+        <!-- Search Start -->
         <div class="collapse border-bottom px-3" id="searchCollapse">
           <div class="container-xl py-2 px-0 px-md-3">
             <div class="input-group bg-light ">
-              <input type="text" class="form-control form-control-md border-right-0 transparent-bg pr-0"
-                     placeholder="Search...">
+              <input [(ngModel)]="messageSearchQuery"
+                     (keyup.enter)="filterMessages()"
+                     name="messageSearchQuery"
+                     type="text"
+                     class="form-control form-control-md border-right-0 transparent-bg pr-0"
+                     placeholder="Search messages...">
               <div class="input-group-append">
-                <span class="input-group-text transparent-bg border-left-0">
+                <span class="input-group-text transparent-bg border-left-0" (click)="filterMessages()">
                                         <!-- Default :: Inline SVG -->
-                  <svg class="hw-20 text-muted" fill="none" viewBox="0 0 24 24"
+                  <svg class="hw-20 text-muted cursor-pointer" fill="none" viewBox="0 0 24 24"
                        stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -230,6 +235,7 @@
           </div>
 
         </div>
+        <!-- Search End -->
 
         <!-- Chat Content Start-->
         <div class="chat-content p-2" id="messageBody">

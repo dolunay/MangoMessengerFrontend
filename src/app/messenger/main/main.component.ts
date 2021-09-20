@@ -37,7 +37,8 @@ export class MainComponent implements OnInit {
   };
 
   chatFilter = 'All Chats';
-  searchQuery = '';
+  chatSearchQuery = '';
+  messageSearchQuery = '';
 
   constructor(private sessionService: SessionService,
               private chatService: ChatsService,
@@ -62,7 +63,6 @@ export class MainComponent implements OnInit {
 
     connection.start().then(() => {
       this.chats.forEach(x => {
-        console.log('joining chat group ' + x.chatId);
         connection.invoke("JoinChatGroup", x.chatId).then(r => r);
       })
     }).catch(function (err) {
@@ -70,7 +70,8 @@ export class MainComponent implements OnInit {
     });
 
     connection.on("BroadcastMessage", (message: IMessage) => {
-      console.log(message);
+      const userId = this.sessionService.getUserId();
+      message.self = message.userId == userId;
       let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
       chat.lastMessage = message;
       this.chats = this.chats.filter(x => x.chatId !== message.chatId);
@@ -164,12 +165,12 @@ export class MainComponent implements OnInit {
       }
 
       this.chatFilter = filer;
-      this.searchQuery = '';
+      this.chatSearchQuery = '';
     });
   }
 
   onSearchClick(): void {
-    this.chatService.searchChat(this.searchQuery).subscribe(getUserChatsResponse => {
+    this.chatService.searchChat(this.chatSearchQuery).subscribe(getUserChatsResponse => {
       this.chats = getUserChatsResponse.chats;
       this.chatFilter = 'Search Results';
     }, error => {
@@ -214,5 +215,22 @@ export class MainComponent implements OnInit {
 
   noActiveChat(): boolean {
     return this.activeChatId !== '';
+  }
+
+  getChatImageUrl(): string {
+    return this.activeChat.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
+  }
+
+  filterMessages(): void {
+    this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
+      this.messages = response.messages;
+      this.messageSearchQuery = '';
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  onFilterMessageDropdownClick(): void {
+    this.loadMessages(this.activeChatId);
   }
 }

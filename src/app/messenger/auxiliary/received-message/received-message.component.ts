@@ -12,6 +12,7 @@ export class ReceivedMessageComponent {
   }
 
   @Input() message: IMessage = {
+    userId: "",
     chatId: "",
     messageAuthorPictureUrl: "",
     authorPublicKey: 0,
