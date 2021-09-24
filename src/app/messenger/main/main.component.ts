@@ -72,6 +72,7 @@ export class MainComponent implements OnInit {
     connection.on("BroadcastMessage", (message: IMessage) => {
       const userId = this.sessionService.getUserId();
       message.self = message.userId == userId;
+      console.log(message);
       let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
       chat.lastMessage = message;
       this.chats = this.chats.filter(x => x.chatId !== message.chatId);

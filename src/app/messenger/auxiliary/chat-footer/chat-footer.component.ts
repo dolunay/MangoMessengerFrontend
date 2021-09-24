@@ -33,32 +33,33 @@ export class ChatFooterComponent {
   }
 
   onMessageSendClick(): void {
-    let attachmentUrl: string | null = null;
-
     if (this.attachment) {
       const formData = new FormData();
       formData.append("formFile", this.attachment);
       this.documentService.uploadDocument(formData).subscribe(response => {
-        attachmentUrl = response.fileUrl;
+        const fileName = response.fileName;
+        console.log(fileName);
+        const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
+        sendMessageCommand.setAttachmentUrl(fileName);
+        this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
+          this.currentMessageText = '';
+          this.attachmentName = null;
+          this.attachment = null;
+        }, error => {
+          alert(error.error.ErrorMessage);
+        })
       }, error => {
         alert(error.error.ErrorMessage);
       })
     }
-
-    const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
-
-    if (attachmentUrl) {
-      sendMessageCommand.setAttachmentUrl(attachmentUrl);
+    else {
+      const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
+      this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
+        this.currentMessageText = '';
+      }, error => {
+        alert(error.error.ErrorMessage);
+      })
     }
-
-    this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
-      this.currentMessageText = '';
-      this.attachmentName = null;
-      this.attachment = null;
-    }, error => {
-      alert(error.error.ErrorMessage);
-    })
-
   }
 
   attachDocument(event: any): void {

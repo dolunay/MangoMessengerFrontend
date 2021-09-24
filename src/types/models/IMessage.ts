@@ -10,4 +10,5 @@
   isEncrypted: boolean;
   authorPublicKey: number;
   messageAuthorPictureUrl: string;
+  messageAttachmentUrl: string;
 }
