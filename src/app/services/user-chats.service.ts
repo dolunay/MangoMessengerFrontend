@@ -19,8 +19,8 @@ export class UserChatsService implements IUserChatsService {
     return this.httpClient.post<IBaseResponse>(ApiRoute.route + this.userChatsRoute + chatId, {});
   }
 
-  putArchiveChat(request: ArchiveChatCommand): Observable<IBaseResponse> {
-    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.userChatsRoute, request);
+  putArchiveChat(chatId: string): Observable<IBaseResponse> {
+    return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.userChatsRoute + chatId, {});
   }
 
   deleteLeaveChat(chatId: string): Observable<IBaseResponse> {

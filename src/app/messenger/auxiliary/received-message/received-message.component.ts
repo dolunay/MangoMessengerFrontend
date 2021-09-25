@@ -12,6 +12,8 @@ export class ReceivedMessageComponent {
   }
 
   @Input() message: IMessage = {
+    messageAttachmentUrl: "",
+    userId: "",
     chatId: "",
     messageAuthorPictureUrl: "",
     authorPublicKey: 0,
@@ -36,5 +38,6 @@ export class ReceivedMessageComponent {
 
   getMessageText(): string {
     return this.message.messageText;
+
   }
 }
