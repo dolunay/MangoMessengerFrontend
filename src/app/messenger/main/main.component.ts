@@ -64,7 +64,10 @@ export class MainComponent implements OnInit {
     connection.start().then(() => {
       this.chats.forEach(x => {
         connection.invoke("JoinChatGroup", x.chatId).then(r => r);
-      })
+      });
+
+      const userId = this.sessionService.getUserId();
+      connection.invoke("ConnectUser", userId).then(r => r);
     }).catch(function (err) {
       return console.error(err.toString());
     });
@@ -72,7 +75,6 @@ export class MainComponent implements OnInit {
     connection.on("BroadcastMessage", (message: IMessage) => {
       const userId = this.sessionService.getUserId();
       message.self = message.userId == userId;
-      console.log(message);
       let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
       chat.lastMessage = message;
       this.chats = this.chats.filter(x => x.chatId !== message.chatId);
@@ -84,6 +86,10 @@ export class MainComponent implements OnInit {
 
       this.scrollToEnd();
     });
+
+    connection.on("UpdateUserChats", (chat: IChat) => {
+      this.chats.push(chat);
+    })
   }
 
   initializeView(): void {

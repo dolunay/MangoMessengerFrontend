@@ -38,7 +38,6 @@ export class ChatFooterComponent {
       formData.append("formFile", this.attachment);
       this.documentService.uploadDocument(formData).subscribe(response => {
         const fileName = response.fileName;
-        console.log(fileName);
         const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
         sendMessageCommand.setAttachmentUrl(fileName);
         this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
@@ -68,7 +67,6 @@ export class ChatFooterComponent {
     if (file) {
       this.attachment = file;
       this.attachmentName = file.name;
-      console.log(this.attachment);
     }
   }
 }
