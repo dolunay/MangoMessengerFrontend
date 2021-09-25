@@ -6,7 +6,6 @@ import {MessagesService} from "../../services/messages.service";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
 import {UserChatsService} from "../../services/user-chats.service";
-import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
 import {CommunityType} from "../../../types/enums/CommunityType";
@@ -186,11 +185,8 @@ export class MainComponent implements OnInit {
   }
 
   onArchiveChatClick(): void {
-    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
-      const chat = getUserChatsResponse.chats.filter(x => x.chatId === this.activeChatId)[0];
-      const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
-
-      this.userChatsService.putArchiveChat(command).subscribe(_ => {
+    this.chatService.getUserChats().subscribe(_ => {
+      this.userChatsService.putArchiveChat(this.activeChatId).subscribe(_ => {
         this.initializeView();
       }, error => {
         alert(error.error.ErrorMessage);
