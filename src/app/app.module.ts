@@ -27,10 +27,12 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {CreateGroupDialogComponent} from './messenger/dialogs/create-group-dialog/create-group-dialog.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
-import { MatIconModule } from '@angular/material/icon'
+import {MatIconModule} from '@angular/material/icon'
 import {MatInputModule} from "@angular/material/input";
 import {StartComponent} from './messenger/start/start.component';
 import {VerifyEmailNoteComponent} from './messenger/auxiliary/verify-email-note/verify-email-note.component';
+import {PasswordRestoreRequestComponent} from './messenger/password-restore-request/password-restore-request.component';
+import { PasswordRestoreFormComponent } from './messenger/password-restore-form/password-restore-form.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import {VerifyEmailNoteComponent} from './messenger/auxiliary/verify-email-note/
     CreateGroupDialogComponent,
     StartComponent,
     VerifyEmailNoteComponent,
+    PasswordRestoreRequestComponent,
+    PasswordRestoreFormComponent,
   ],
   imports: [
     HttpClientModule,
@@ -69,6 +73,9 @@ import {VerifyEmailNoteComponent} from './messenger/auxiliary/verify-email-note/
       {path: 'contacts', component: ContactsComponent},
       {path: 'profile-settings', component: ProfileSettingsComponent},
       {path: 'verify-email-note', component: VerifyEmailNoteComponent},
+      {path: 'restore-password-request', component: PasswordRestoreRequestComponent},
+      {path: 'restore-password-form', component: PasswordRestoreFormComponent},
+      {path: 'restore-password-form/:requestId', component: PasswordRestoreFormComponent},
       {path: '', redirectTo: '/login', pathMatch: 'full'},
     ]),
     AppRoutingModule,

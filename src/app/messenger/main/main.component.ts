@@ -6,7 +6,6 @@ import {MessagesService} from "../../services/messages.service";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
 import {UserChatsService} from "../../services/user-chats.service";
-import {ArchiveChatCommand} from "../../../types/requests/ArchiveChatCommand";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
 import {CommunityType} from "../../../types/enums/CommunityType";
@@ -37,7 +36,8 @@ export class MainComponent implements OnInit {
   };
 
   chatFilter = 'All Chats';
-  searchQuery = '';
+  chatSearchQuery = '';
+  messageSearchQuery = '';
 
   constructor(private sessionService: SessionService,
               private chatService: ChatsService,
@@ -62,15 +62,18 @@ export class MainComponent implements OnInit {
 
     connection.start().then(() => {
       this.chats.forEach(x => {
-        console.log('joining chat group ' + x.chatId);
         connection.invoke("JoinChatGroup", x.chatId).then(r => r);
-      })
+      });
+
+      const userId = this.sessionService.getUserId();
+      connection.invoke("ConnectUser", userId).then(r => r);
     }).catch(function (err) {
       return console.error(err.toString());
     });
 
     connection.on("BroadcastMessage", (message: IMessage) => {
-      console.log(message);
+      const userId = this.sessionService.getUserId();
+      message.self = message.userId == userId;
       let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
       chat.lastMessage = message;
       this.chats = this.chats.filter(x => x.chatId !== message.chatId);
@@ -82,6 +85,10 @@ export class MainComponent implements OnInit {
 
       this.scrollToEnd();
     });
+
+    connection.on("UpdateUserChats", (chat: IChat) => {
+      this.chats.push(chat);
+    })
   }
 
   initializeView(): void {
@@ -164,12 +171,12 @@ export class MainComponent implements OnInit {
       }
 
       this.chatFilter = filer;
-      this.searchQuery = '';
+      this.chatSearchQuery = '';
     });
   }
 
   onSearchClick(): void {
-    this.chatService.searchChat(this.searchQuery).subscribe(getUserChatsResponse => {
+    this.chatService.searchChat(this.chatSearchQuery).subscribe(getUserChatsResponse => {
       this.chats = getUserChatsResponse.chats;
       this.chatFilter = 'Search Results';
     }, error => {
@@ -178,11 +185,8 @@ export class MainComponent implements OnInit {
   }
 
   onArchiveChatClick(): void {
-    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
-      const chat = getUserChatsResponse.chats.filter(x => x.chatId === this.activeChatId)[0];
-      const command = new ArchiveChatCommand(this.activeChatId, !chat.isArchived);
-
-      this.userChatsService.putArchiveChat(command).subscribe(_ => {
+    this.chatService.getUserChats().subscribe(_ => {
+      this.userChatsService.putArchiveChat(this.activeChatId).subscribe(_ => {
         this.initializeView();
       }, error => {
         alert(error.error.ErrorMessage);
@@ -214,5 +218,22 @@ export class MainComponent implements OnInit {
 
   noActiveChat(): boolean {
     return this.activeChatId !== '';
+  }
+
+  getChatImageUrl(): string {
+    return this.activeChat.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
+  }
+
+  filterMessages(): void {
+    this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
+      this.messages = response.messages;
+      this.messageSearchQuery = '';
+    }, error => {
+      alert(error.error.ErrorMessage);
+    })
+  }
+
+  onFilterMessageDropdownClick(): void {
+    this.loadMessages(this.activeChatId);
   }
 }

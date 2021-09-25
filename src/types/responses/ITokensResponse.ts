@@ -4,4 +4,5 @@ export interface ITokensResponse extends IBaseResponse {
   accessToken: string;
   refreshToken: string;
   userId: string;
+  expires: number;
 }
