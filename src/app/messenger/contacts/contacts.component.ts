@@ -7,6 +7,7 @@ import {ChatsService} from "../../services/chats.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CreateChatCommand} from "../../../types/requests/CreateChatCommand";
 import {ChatType} from "../../../types/enums/ChatType";
+import {SessionService} from "../../services/session.service";
 
 @Component({
   selector: 'app-contacts',
@@ -17,6 +18,7 @@ export class ContactsComponent implements OnInit {
   constructor(private contactsService: ContactsService,
               public userService: UsersService,
               private chatsService: ChatsService,
+              private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router) {
   }
@@ -55,6 +57,8 @@ export class ContactsComponent implements OnInit {
     this.contactsService.getCurrentUserContacts().subscribe(getContactsResponse => {
       this.contacts = getContactsResponse.contacts;
       const userId = this.contacts[0].userId;
+      console.log(userId);
+      console.log(this.sessionService.getUserId());
       this.userService.getUserById(userId).subscribe(getUserResponse => {
         this.currentOpenedUser = getUserResponse.user;
         this.currentOpenedUserIsContact = true;
@@ -77,6 +81,8 @@ export class ContactsComponent implements OnInit {
   }
 
   onUserSearchClick(): void {
+    console.log(this.contactsSearchQuery);
+
     this.contactsService.searchContacts(this.contactsSearchQuery).subscribe(searchContactsResponse => {
       this.contacts = searchContactsResponse.contacts;
       this.contactsFilter = 'Search Results';

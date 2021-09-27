@@ -62,7 +62,9 @@
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="mobileNumber">Mobile number</label>
-                      <input [(ngModel)]="currentUser.phoneNumber" type="text" class="form-control form-control-md"
+                      <input [(ngModel)]="currentUser.phoneNumber"
+                             type="number"
+                             class="form-control form-control-md"
                              id="mobileNumber"
                              placeholder="Type your mobile number" value="{{currentUser.phoneNumber}}">
                     </div>
@@ -78,7 +80,9 @@
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="emailAddress">Email address</label>
-                      <input [(ngModel)]="currentUser.email" type="email" class="form-control form-control-md"
+                      <input [(ngModel)]="currentUser.email"
+                             type="email"
+                             class="form-control form-control-md"
                              id="emailAddress"
                              placeholder="Type your email address"
                              value="{{currentUser.email}}">

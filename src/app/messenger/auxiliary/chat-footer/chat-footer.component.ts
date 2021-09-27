@@ -50,8 +50,7 @@ export class ChatFooterComponent {
       }, error => {
         alert(error.error.ErrorMessage);
       })
-    }
-    else {
+    } else {
       const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
       this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
         this.currentMessageText = '';
@@ -68,5 +67,10 @@ export class ChatFooterComponent {
       this.attachment = file;
       this.attachmentName = file.name;
     }
+  }
+
+  deleteAttachment(): void {
+    this.attachment = null;
+    this.attachmentName = null;
   }
 }

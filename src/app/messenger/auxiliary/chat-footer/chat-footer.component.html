@@ -41,8 +41,8 @@
         </textarea>
         <!-- Textarea End -->
       </div>
-      <div>
-        {{attachmentName}}
+      <div *ngIf="attachmentName">
+        {{attachmentName}} <button (click)="deleteAttachment()" class="btn-close"></button>
       </div>
     </div>
     <!-- Chat Input Group End -->

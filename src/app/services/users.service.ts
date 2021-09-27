@@ -31,7 +31,7 @@ export class UsersService implements IUserService {
     return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute);
   }
 
-  getUserById(userId: string): Observable<IGetUserResponse> {
+  getUserById(userId: string | null): Observable<IGetUserResponse> {
     return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute + userId);
   }
 
