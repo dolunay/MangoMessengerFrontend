@@ -14,7 +14,7 @@ export interface IUserService {
 
   putPhoneConfirmation(phoneCode: number): Observable<IBaseResponse>;
 
-  getUserById(userId: string): Observable<IGetUserResponse>;
+  getUserById(userId: string | null): Observable<IGetUserResponse>;
 
   getCurrentUser(): Observable<IGetUserResponse>;
 

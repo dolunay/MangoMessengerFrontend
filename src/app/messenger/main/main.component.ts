@@ -39,6 +39,13 @@ export class MainComponent implements OnInit {
   chatSearchQuery = '';
   messageSearchQuery = '';
 
+  private connectionBuilder: signalR.HubConnectionBuilder = new signalR.HubConnectionBuilder();
+
+  private connection: signalR.HubConnection = this.connectionBuilder
+    .configureLogging(signalR.LogLevel.Information)
+    .withUrl(ApiRoute.route + 'notify')
+    .build();
+
   constructor(private sessionService: SessionService,
               private chatService: ChatsService,
               private messageService: MessagesService,
@@ -55,23 +62,18 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.initializeView();
 
-    const connection = new signalR.HubConnectionBuilder()
-      .configureLogging(signalR.LogLevel.Information)
-      .withUrl(ApiRoute.route + 'notify')
-      .build();
-
-    connection.start().then(() => {
+    this.connection.start().then(() => {
       this.chats.forEach(x => {
-        connection.invoke("JoinChatGroup", x.chatId).then(r => r);
+        this.connection.invoke("JoinChatGroup", x.chatId).then(r => r);
       });
 
       const userId = this.sessionService.getUserId();
-      connection.invoke("ConnectUser", userId).then(r => r);
+      this.connection.invoke("ConnectUser", userId).then(r => r);
     }).catch(function (err) {
       return console.error(err.toString());
     });
 
-    connection.on("BroadcastMessage", (message: IMessage) => {
+    this.connection.on("BroadcastMessage", (message: IMessage) => {
       const userId = this.sessionService.getUserId();
       message.self = message.userId == userId;
       let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
@@ -86,7 +88,7 @@ export class MainComponent implements OnInit {
       this.scrollToEnd();
     });
 
-    connection.on("UpdateUserChats", (chat: IChat) => {
+    this.connection.on("UpdateUserChats", (chat: IChat) => {
       this.chats.push(chat);
     })
   }
@@ -213,7 +215,8 @@ export class MainComponent implements OnInit {
   }
 
   onJoinGroupEvent() {
-    this.initializeView();
+    this.activeChat.isMember = true;
+    this.connection.invoke("JoinChatGroup", this.activeChatId).then(r => r);
   }
 
   noActiveChat(): boolean {
