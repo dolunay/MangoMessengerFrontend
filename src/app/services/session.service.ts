@@ -59,7 +59,7 @@ export class SessionService implements ISessionService {
   }
 
   getUserId(): string | null {
-    return localStorage.getItem(Tokens.userId);
+    return localStorage.getItem('MangoUserID');
   }
 
   writeUserId(userId: string): void {

@@ -69,7 +69,7 @@ export class ProfileSettingsComponent implements OnInit {
       this.currentUser.firstName,
       this.currentUser.lastName,
       this.currentUser.displayName,
-      this.currentUser.phoneNumber,
+      this.currentUser.phoneNumber.toString(),
       this.currentUser.birthdayDate,
       this.currentUser.email,
       this.currentUser.website,
