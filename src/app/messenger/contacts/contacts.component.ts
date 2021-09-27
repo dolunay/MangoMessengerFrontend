@@ -54,11 +54,17 @@ export class ContactsComponent implements OnInit {
   }
 
   initializeView(): void {
+    const currentUserId = this.sessionService.getUserId();
     this.contactsService.getCurrentUserContacts().subscribe(getContactsResponse => {
       this.contacts = getContactsResponse.contacts;
-      const userId = this.contacts[0].userId;
-      console.log(userId);
-      console.log(this.sessionService.getUserId());
+      let userId: string | null = '';
+
+      if (this.contacts.length > 0) {
+        userId = this.contacts[0].userId;
+      } else {
+        userId = currentUserId;
+      }
+
       this.userService.getUserById(userId).subscribe(getUserResponse => {
         this.currentOpenedUser = getUserResponse.user;
         this.currentOpenedUserIsContact = true;
