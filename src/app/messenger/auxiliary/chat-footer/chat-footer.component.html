@@ -13,7 +13,7 @@
 
         </button>
         <div class="dropdown-menu cursor-pointer">
-          <input type="file" id="attachment" class="dropdown-item" (change)="attachDocument($event)">
+          <input type="file" #fileInput id="attachment" class="dropdown-item" (change)="attachDocument($event)">
           <!-- Default :: Inline SVG -->
           <!--            <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24"-->
           <!--                 stroke="currentColor">-->
@@ -32,7 +32,7 @@
 
         <!-- Textarea Start-->
         <textarea [(ngModel)]="currentMessageText"
-                  (keyup.enter)="onMessageSendClick()"
+                  (keydown.enter)="onMessageSendClick($event)"
                   name="currentMessageText"
                   class="form-control transparent-bg border-0 no-resize hide-scrollbar text-white"
                   placeholder="Write your message..."
@@ -42,13 +42,14 @@
         <!-- Textarea End -->
       </div>
       <div *ngIf="attachmentName">
-        {{attachmentName}} <button (click)="deleteAttachment()" class="btn-close"></button>
+        {{attachmentName}}
+        <button (click)="deleteAttachment()" class="btn-close"></button>
       </div>
     </div>
     <!-- Chat Input Group End -->
 
     <!-- Submit Button Start -->
-    <div class="col-auto" (click)="onMessageSendClick()">
+    <div class="col-auto" (click)="onMessageSendClick($event)">
       <div class="btn btn-primary btn-icon rounded-circle text-light mb-1" role="button">
         <!-- Default :: Inline SVG -->
         <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
