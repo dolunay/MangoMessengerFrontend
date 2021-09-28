@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {MessagesService} from "../../../services/messages.service";
 import {SendMessageCommand} from "../../../../types/requests/SendMessageCommand";
 import {IChat} from "../../../../types/models/IChat";
@@ -14,6 +14,9 @@ export class ChatFooterComponent {
   constructor(private messageService: MessagesService,
               private documentService: DocumentsService) {
   }
+
+  // @ts-ignore
+  @ViewChild('fileInput') fileInput;
 
   currentMessageText: string = '';
   attachmentName: string | null = '';
@@ -32,7 +35,8 @@ export class ChatFooterComponent {
     title: ""
   }
 
-  onMessageSendClick(): void {
+  onMessageSendClick(event: any): void {
+    event.preventDefault();
     if (this.attachment) {
       const formData = new FormData();
       formData.append("formFile", this.attachment);
@@ -70,6 +74,7 @@ export class ChatFooterComponent {
   }
 
   deleteAttachment(): void {
+    this.fileInput.nativeElement.value = "";
     this.attachment = null;
     this.attachmentName = null;
   }
