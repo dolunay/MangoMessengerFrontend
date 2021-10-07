@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
 import {UpdateAccountInformationCommand} from "../../../types/requests/UpdateAccountInformationCommand";
 import {ChangePasswordCommand} from "../../../types/requests/ChangePasswordCommand";
 import {IUser} from "../../../types/models/IUser";
-import {Subject} from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocialsCommand";
 import {DocumentsService} from "../../services/documents.service";
 
@@ -11,10 +11,16 @@ import {DocumentsService} from "../../services/documents.service";
   selector: 'app-profile-settings',
   templateUrl: './profile-settings.component.html'
 })
-export class ProfileSettingsComponent implements OnInit {
+export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UsersService,
               private documentService: DocumentsService) {
+  }
+
+  subscriptions: Subscription[] = [];
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
   eventsSubject: Subject<void> = new Subject<void>();
@@ -53,7 +59,7 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   initializeView(): void {
-    this.userService.getCurrentUser().subscribe(getUserResponse => {
+    let currentSub = this.userService.getCurrentUser().subscribe(getUserResponse => {
       this.currentUser = getUserResponse.user;
       this.currentPassword = '';
       this.newPassword = '';
@@ -61,7 +67,9 @@ export class ProfileSettingsComponent implements OnInit {
       this.privateKey = 0;
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+
+    this.subscriptions.push(currentSub);
   }
 
   saveAccountInfo(): void {
@@ -77,11 +85,13 @@ export class ProfileSettingsComponent implements OnInit {
       this.currentUser.bio,
       this.currentUser.address);
 
-    this.userService.updateUserAccountInformation(command).subscribe(response => {
+    let updateSub = this.userService.updateUserAccountInformation(command).subscribe(response => {
       alert(response.message);
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+
+    this.subscriptions.push(updateSub);
   }
 
   saveSocialMediaInfo(): void {
@@ -90,11 +100,13 @@ export class ProfileSettingsComponent implements OnInit {
       this.currentUser.instagram,
       this.currentUser.linkedIn);
 
-    this.userService.updateUserSocials(command).subscribe(response => {
+    let socialsSub = this.userService.updateUserSocials(command).subscribe(response => {
       alert(response.message);
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+
+    this.subscriptions.push(socialsSub);
   }
 
   changePassword(): void {
@@ -109,24 +121,31 @@ export class ProfileSettingsComponent implements OnInit {
     }
 
     const command = new ChangePasswordCommand(this.currentPassword, this.newPassword);
-    this.userService.putChangePassword(command).subscribe(data => {
+    let changeSub = this.userService.putChangePassword(command).subscribe(data => {
       alert(data.message);
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+
+    this.subscriptions.push(changeSub);
   }
 
   updateProfilePicture(): void {
     const formData = new FormData();
     formData.append("formFile", this.file);
-    this.documentService.uploadDocument(formData).subscribe(uploadResponse => {
-      this.userService.updateProfilePicture(uploadResponse.fileName).subscribe(updateResponse => {
+
+    let docSub = this.documentService.uploadDocument(formData).subscribe(uploadResponse => {
+      let profileSub = this.userService.updateProfilePicture(uploadResponse.fileName).subscribe(updateResponse => {
         alert(updateResponse.message);
         this.initializeView();
-      })
+      });
+
+      this.subscriptions.push(profileSub);
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+
+    this.subscriptions.push(docSub);
   }
 
   onFileSelected(event: any) {

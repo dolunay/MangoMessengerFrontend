@@ -1,14 +1,15 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnDestroy} from '@angular/core';
 import {SessionService} from "../../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UsersService} from "../../../services/users.service";
 import {IUser} from "../../../../types/models/IUser";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-profile-settings-sidebar',
   templateUrl: './profile-settings-sidebar.component.html'
 })
-export class ProfileSettingsSidebarComponent {
+export class ProfileSettingsSidebarComponent implements OnDestroy {
 
   constructor(private sessionService: SessionService,
               private userService: UsersService,
@@ -17,10 +18,11 @@ export class ProfileSettingsSidebarComponent {
   }
 
   @Input() user!: IUser;
+  subscriptions: Subscription[] = [];
 
   logout(): void {
     let refreshToken = this.sessionService.getRefreshToken();
-    this.sessionService.deleteSession(refreshToken)
+    let deleteSession = this.sessionService.deleteSession(refreshToken)
       .subscribe((_) => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
@@ -29,12 +31,14 @@ export class ProfileSettingsSidebarComponent {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
         this.router.navigateByUrl('login').then(r => r);
-      })
+      });
+
+    this.subscriptions.push(deleteSession);
   }
 
   logoutAll(): void {
     let refreshToken = this.sessionService.getRefreshToken();
-    this.sessionService.deleteAllSessions(refreshToken)
+    let deleteAllSub = this.sessionService.deleteAllSessions(refreshToken)
       .subscribe((_) => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
@@ -43,7 +47,12 @@ export class ProfileSettingsSidebarComponent {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
         this.router.navigateByUrl('login').then(r => r);
-      })
+      });
+
+    this.subscriptions.push(deleteAllSub);
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(x => x.unsubscribe());
+  }
 }

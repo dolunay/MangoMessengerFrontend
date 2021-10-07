@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ChatsService} from "../../services/chats.service";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
@@ -8,15 +8,17 @@ import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CommunityType} from "../../../types/enums/CommunityType";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-start',
   templateUrl: './start.component.html'
 })
-export class StartComponent implements OnInit {
+export class StartComponent implements OnInit, OnDestroy {
 
   messages: IMessage[] = [];
   chats: IChat[] = [];
+  subscriptions: Subscription[] = [];
 
   user: IUser = {
     pictureUrl: "",
@@ -48,11 +50,17 @@ export class StartComponent implements OnInit {
               private router: Router) {
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(x => x.unsubscribe());
+  }
+
   ngOnInit(): void {
-    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
+    let chatsSub = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
       this.getUserDisplayName();
       this.chats = getUserChatsResponse.chats;
     });
+
+    this.subscriptions.push(chatsSub);
   }
 
   chatsAny(): boolean {
@@ -64,7 +72,7 @@ export class StartComponent implements OnInit {
   }
 
   onChatFilerClick(filter: string): void {
-    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
+    let getChatsSub = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
 
       switch (filter) {
         case 'All Chats':
@@ -88,21 +96,27 @@ export class StartComponent implements OnInit {
       this.searchQuery = '';
 
     });
+
+    this.subscriptions.push(getChatsSub);
   }
 
   onSearchClick(): void {
-    this.chatService.searchChat(this.searchQuery).subscribe(getUserChatsResponse => {
+    let searchSub = this.chatService.searchChat(this.searchQuery).subscribe(getUserChatsResponse => {
       this.chats = getUserChatsResponse.chats;
       this.chatFilter = 'Search Results';
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+
+    this.subscriptions.push(searchSub);
   }
 
   getUserDisplayName(): void {
-    this.userService.getCurrentUser().subscribe(getUserResponse => {
+    let getCurrentSub = this.userService.getCurrentUser().subscribe(getUserResponse => {
       this.user = getUserResponse.user;
     });
+
+    this.subscriptions.push(getCurrentSub);
   }
 
   navigateContacts(): void {
