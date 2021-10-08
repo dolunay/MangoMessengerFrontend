@@ -67,10 +67,42 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeView();
+  }
+
+  initializeView(): void {
+    let chatSubscription = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
+      const routeChatId = this.route.snapshot.paramMap.get('chatId');
+      this.chatFilter = 'All Chats';
+
+      this.chats = getUserChatsResponse.chats
+        .filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
+
+      if (routeChatId) {
+        this.loadMessages(routeChatId);
+        return;
+      }
+
+      const firstChat = this.chats[0];
+
+      if (firstChat) {
+        this.loadMessages(firstChat.chatId);
+      }
+
+    }, error => {
+      if (error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+        return;
+      }
+
+      alert(error.error.ErrorMessage);
+    });
+
+    this.subscriptions.push(chatSubscription);
 
     this.connection.start().then(() => {
       this.chats.forEach(x => {
-        this.connection.invoke("JoinChatGroup", x.chatId).then(r => r);
+        this.connection.invoke("JoinChatGroup", x.chatId)
+          .then(() => console.log(`realtime joined chat: ${x.chatId}`));
       });
 
       const userId = this.sessionService.getUserId();
@@ -96,39 +128,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
     this.connection.on("UpdateUserChats", (chat: IChat) => {
       this.chats.push(chat);
-    })
-  }
-
-  initializeView(): void {
-    let chatSubscription = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
-      const routeChatId = this.route.snapshot.paramMap.get('chatId');
-      this.chatFilter = 'All Chats';
-
-      this.chats = getUserChatsResponse.chats
-        .filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
-
-      if (routeChatId) {
-        this.loadMessages(routeChatId);
-        return;
-      }
-
-      const firstChat = this.chats[0];
-      console.log(firstChat);
-
-      if (firstChat) {
-        this.loadMessages(firstChat.chatId);
-      }
-
-    }, error => {
-      if (error.status === 403) {
-        this.router.navigateByUrl('login').then(r => r);
-        return;
-      }
-
-      alert(error.error.ErrorMessage);
     });
-
-    this.subscriptions.push(chatSubscription);
   }
 
   private loadMessages(chatId: string | null): void {
