@@ -59,6 +59,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(x => x.unsubscribe());
+    this.connection.stop().then(r => r);
   }
 
   openCreateGroupDialog(): void {
@@ -101,12 +102,12 @@ export class MainComponent implements OnInit, OnDestroy {
 
     this.connection.start().then(() => {
       this.chats.forEach(x => {
-        this.connection.invoke("JoinChatGroup", x.chatId)
+        this.connection.invoke("JoinGroup", x.chatId)
           .then(() => console.log(`realtime joined chat: ${x.chatId}`));
       });
 
       const userId = this.sessionService.getUserId();
-      this.connection.invoke("ConnectUser", userId).then(r => r);
+      this.connection.invoke("JoinGroup", userId).then(() => console.log(`realtime joined user group: ${userId}`));
     }).catch(function (err) {
       return console.error(err.toString());
     });
