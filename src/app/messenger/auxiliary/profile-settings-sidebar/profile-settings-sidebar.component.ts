@@ -18,6 +18,7 @@ export class ProfileSettingsSidebarComponent implements OnDestroy {
   }
 
   @Input() user!: IUser;
+  @Input() phoneNumber!: string;
   subscriptions: Subscription[] = [];
 
   logout(): void {

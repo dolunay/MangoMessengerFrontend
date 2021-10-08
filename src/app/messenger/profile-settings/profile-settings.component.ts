@@ -19,6 +19,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
+  phoneNumber = '';
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(x => x.unsubscribe());
   }
@@ -65,6 +67,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.newPassword = '';
       this.repeatNewPassword = '';
       this.privateKey = 0;
+      this.phoneNumber = this.currentUser.phoneNumber;
     }, error => {
       alert(error.error.ErrorMessage);
     });
@@ -87,6 +90,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     let updateSub = this.userService.updateUserAccountInformation(command).subscribe(response => {
       alert(response.message);
+      this.phoneNumber = this.currentUser.phoneNumber;
     }, error => {
       alert(error.error.ErrorMessage);
     });
