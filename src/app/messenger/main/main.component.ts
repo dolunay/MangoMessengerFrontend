@@ -26,6 +26,8 @@ export class MainComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   realTimeConnections: string[] = [];
 
+  isLoaded = false;
+
   currentUser: IUser = {
     address: "",
     bio: "",
@@ -131,6 +133,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (routeChatId) {
         this.loadMessages(routeChatId);
+        this.isLoaded = true;
         return;
       }
 
@@ -147,6 +150,8 @@ export class MainComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(userSub);
       }
+
+      this.isLoaded = true;
 
     }, error => {
       if (error.status === 403) {

@@ -27,6 +27,8 @@ export class ContactsComponent implements OnInit, OnDestroy {
   contacts: IContact[] = [];
   subscriptions: Subscription[] = [];
 
+  isLoaded = false;
+
   currentOpenedUser: IUser = {
     pictureUrl: "",
     publicKey: 0,
@@ -73,6 +75,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
         this.contactsFilter = 'All Contacts';
         this.contactsSearchQuery = '';
       });
+      this.isLoaded = true;
 
       this.subscriptions.push(userSub);
     }, error => {
