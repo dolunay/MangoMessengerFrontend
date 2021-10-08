@@ -2,7 +2,7 @@
   <div class="message-wrapper">
     <div class="message-content">
       <div><strong>{{message.userDisplayName}}</strong></div>
-      <div>{{getMessageText()}}</div>
+      <div style="word-wrap: break-word">{{getMessageText()}}</div>
       <div *ngIf="message.messageAttachmentUrl">
         <br>
         <a class="link-warning" href="{{message.messageAttachmentUrl}}">Attachment</a>

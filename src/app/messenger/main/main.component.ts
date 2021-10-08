@@ -112,7 +112,8 @@ export class MainComponent implements OnInit, OnDestroy {
         return;
       }
 
-      const firstChat = getUserChatsResponse.chats[0];
+      const firstChat = this.chats[0];
+      console.log(firstChat);
 
       if (firstChat) {
         this.loadMessages(firstChat.chatId);
