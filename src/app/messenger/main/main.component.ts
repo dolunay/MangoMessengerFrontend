@@ -22,6 +22,7 @@ export class MainComponent implements OnInit, OnDestroy {
   messages: IMessage[] = [];
   chats: IChat[] = [];
   subscriptions: Subscription[] = [];
+  realTimeConnections: string[] = [];
 
   activeChatId = '';
 
@@ -71,12 +72,39 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
+
     let chatSubscription = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
       const routeChatId = this.route.snapshot.paramMap.get('chatId');
       this.chatFilter = 'All Chats';
 
       this.chats = getUserChatsResponse.chats
         .filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
+
+      this.connection.start().then(() => {
+        this.chats.forEach(x => {
+          if (this.realTimeConnections.includes(x.chatId)) {
+            return;
+          }
+
+          this.connection.invoke("JoinGroup", x.chatId)
+            .then(() => {
+              console.log(`realtime joined chat: ${x.chatId}`);
+              this.realTimeConnections.push(x.chatId);
+            });
+        });
+
+        const userId = this.sessionService.getUserId();
+
+        if (userId != null && this.realTimeConnections.includes(userId)) {
+          return;
+        }
+
+        this.connection.invoke("JoinGroup", userId)
+          .then(() => console.log(`realtime joined user group: ${userId}`));
+
+      }).catch(function (err) {
+        return console.error(err.toString());
+      });
 
       if (routeChatId) {
         this.loadMessages(routeChatId);
@@ -99,18 +127,6 @@ export class MainComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions.push(chatSubscription);
-
-    this.connection.start().then(() => {
-      this.chats.forEach(x => {
-        this.connection.invoke("JoinGroup", x.chatId)
-          .then(() => console.log(`realtime joined chat: ${x.chatId}`));
-      });
-
-      const userId = this.sessionService.getUserId();
-      this.connection.invoke("JoinGroup", userId).then(() => console.log(`realtime joined user group: ${userId}`));
-    }).catch(function (err) {
-      return console.error(err.toString());
-    });
 
     this.connection.on("BroadcastMessage", (message: IMessage) => {
       const userId = this.sessionService.getUserId();
@@ -155,6 +171,14 @@ export class MainComponent implements OnInit, OnDestroy {
 
     this.router.navigate(['main', {chatId: chatId}]).then(() => {
       this.loadMessages(chatId);
+
+      if (!this.realTimeConnections.includes(chatId)) {
+        this.connection.invoke("JoinGroup", chatId).then(() => {
+          console.log('missing group connected to realtime.');
+          this.realTimeConnections.push(chatId);
+        });
+      }
+
     });
   }
 
@@ -236,7 +260,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onJoinGroupEvent() {
     this.activeChat.isMember = true;
-    this.connection.invoke("JoinChatGroup", this.activeChatId).then(r => r);
+    this.connection.invoke("JoinGroup", this.activeChatId).then(r => r);
   }
 
   noActiveChat(): boolean {
