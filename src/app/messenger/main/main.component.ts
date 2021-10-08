@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
 import {ChatsService} from "../../services/chats.service";
@@ -11,15 +11,18 @@ import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-
 import {CommunityType} from "../../../types/enums/CommunityType";
 import * as signalR from '@microsoft/signalr';
 import {ApiRoute} from "../../../consts/ApiRoute";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html'
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
 
   messages: IMessage[] = [];
   chats: IChat[] = [];
+  subscriptions: Subscription[] = [];
+  realTimeConnections: string[] = [];
 
   activeChatId = '';
 
@@ -55,23 +58,75 @@ export class MainComponent implements OnInit {
               public dialog: MatDialog) {
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(x => x.unsubscribe());
+    this.connection.stop().then(r => r);
+  }
+
   openCreateGroupDialog(): void {
     this.dialog.open(CreateGroupDialogComponent);
   }
 
   ngOnInit(): void {
     this.initializeView();
+  }
 
-    this.connection.start().then(() => {
-      this.chats.forEach(x => {
-        this.connection.invoke("JoinChatGroup", x.chatId).then(r => r);
+  initializeView(): void {
+
+    let chatSubscription = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
+      const routeChatId = this.route.snapshot.paramMap.get('chatId');
+      this.chatFilter = 'All Chats';
+
+      this.chats = getUserChatsResponse.chats
+        .filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
+
+      this.connection.start().then(() => {
+        this.chats.forEach(x => {
+          if (this.realTimeConnections.includes(x.chatId)) {
+            return;
+          }
+
+          this.connection.invoke("JoinGroup", x.chatId)
+            .then(() => {
+              console.log(`realtime joined chat: ${x.chatId}`);
+              this.realTimeConnections.push(x.chatId);
+            });
+        });
+
+        const userId = this.sessionService.getUserId();
+
+        if (userId != null && this.realTimeConnections.includes(userId)) {
+          return;
+        }
+
+        this.connection.invoke("JoinGroup", userId)
+          .then(() => console.log(`realtime joined user group: ${userId}`));
+
+      }).catch(function (err) {
+        return console.error(err.toString());
       });
 
-      const userId = this.sessionService.getUserId();
-      this.connection.invoke("ConnectUser", userId).then(r => r);
-    }).catch(function (err) {
-      return console.error(err.toString());
+      if (routeChatId) {
+        this.loadMessages(routeChatId);
+        return;
+      }
+
+      const firstChat = this.chats[0];
+
+      if (firstChat) {
+        this.loadMessages(firstChat.chatId);
+      }
+
+    }, error => {
+      if (error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+        return;
+      }
+
+      alert(error.error.ErrorMessage);
     });
+
+    this.subscriptions.push(chatSubscription);
 
     this.connection.on("BroadcastMessage", (message: IMessage) => {
       const userId = this.sessionService.getUserId();
@@ -90,41 +145,12 @@ export class MainComponent implements OnInit {
 
     this.connection.on("UpdateUserChats", (chat: IChat) => {
       this.chats.push(chat);
-    })
-  }
-
-  initializeView(): void {
-    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
-      const routeChatId = this.route.snapshot.paramMap.get('chatId');
-      this.chatFilter = 'All Chats';
-
-      this.chats = getUserChatsResponse.chats
-        .filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
-
-      if (routeChatId) {
-        this.loadMessages(routeChatId);
-        return;
-      }
-
-      const firstChat = getUserChatsResponse.chats[0];
-
-      if (firstChat) {
-        this.loadMessages(firstChat.chatId);
-      }
-
-    }, error => {
-      if (error.status === 403) {
-        this.router.navigateByUrl('login').then(r => r);
-        return;
-      }
-
-      alert(error.error.ErrorMessage);
     });
   }
 
   private loadMessages(chatId: string | null): void {
     if (chatId != null) {
-      this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
+      let messagesSub = this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
           this.messages = getMessagesResponse.messages;
           this.activeChatId = chatId;
           this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
@@ -133,12 +159,26 @@ export class MainComponent implements OnInit {
         error => {
           alert(error.error.ErrorMessage);
         });
+
+      this.subscriptions.push(messagesSub);
     }
   }
 
   navigateToChat(chatId: string): void {
+    if (this.activeChatId === chatId) {
+      return;
+    }
+
     this.router.navigate(['main', {chatId: chatId}]).then(() => {
       this.loadMessages(chatId);
+
+      if (!this.realTimeConnections.includes(chatId)) {
+        this.connection.invoke("JoinGroup", chatId).then(() => {
+          console.log('missing group connected to realtime.');
+          this.realTimeConnections.push(chatId);
+        });
+      }
+
     });
   }
 
@@ -150,7 +190,7 @@ export class MainComponent implements OnInit {
   }
 
   onChatFilerClick(filer: string): void {
-    this.chatService.getUserChats().subscribe(getUserChatsResponse => {
+    let chatsSub = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
 
       switch (filer) {
         case 'All Chats':
@@ -175,35 +215,39 @@ export class MainComponent implements OnInit {
       this.chatFilter = filer;
       this.chatSearchQuery = '';
     });
+
+    this.subscriptions.push(chatsSub);
   }
 
   onSearchClick(): void {
-    this.chatService.searchChat(this.chatSearchQuery).subscribe(getUserChatsResponse => {
+    let searchSub = this.chatService.searchChat(this.chatSearchQuery).subscribe(getUserChatsResponse => {
       this.chats = getUserChatsResponse.chats;
       this.chatFilter = 'Search Results';
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+
+    this.subscriptions.push(searchSub);
   }
 
   onArchiveChatClick(): void {
-    this.chatService.getUserChats().subscribe(_ => {
-      this.userChatsService.putArchiveChat(this.activeChatId).subscribe(_ => {
-        this.initializeView();
-      }, error => {
-        alert(error.error.ErrorMessage);
-      })
+    let archiveSub = this.userChatsService.putArchiveChat(this.activeChatId).subscribe(_ => {
+      this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+
+    this.subscriptions.push(archiveSub);
   }
 
   onLeaveChatClick(): void {
-    this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
+    let deleteSub = this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
       this.router.navigate(['main']).then(() => this.initializeView());
     }, error => {
       alert(error.error.ErrorMessage);
-    })
+    });
+
+    this.subscriptions.push(deleteSub);
   }
 
   getMessageComponentClass(chat: IChat): string {
@@ -216,7 +260,7 @@ export class MainComponent implements OnInit {
 
   onJoinGroupEvent() {
     this.activeChat.isMember = true;
-    this.connection.invoke("JoinChatGroup", this.activeChatId).then(r => r);
+    this.connection.invoke("JoinGroup", this.activeChatId).then(r => r);
   }
 
   noActiveChat(): boolean {
@@ -228,12 +272,15 @@ export class MainComponent implements OnInit {
   }
 
   filterMessages(): void {
-    this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
-      this.messages = response.messages;
-      this.messageSearchQuery = '';
-    }, error => {
-      alert(error.error.ErrorMessage);
-    })
+    let searchMessageSub = this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery)
+      .subscribe(response => {
+        this.messages = response.messages;
+        this.messageSearchQuery = '';
+      }, error => {
+        alert(error.error.ErrorMessage);
+      });
+
+    this.subscriptions.push(searchMessageSub);
   }
 
   onFilterMessageDropdownClick(): void {

@@ -1,6 +1,5 @@
 import {Component, Input} from '@angular/core';
 import {IContact} from "../../../../types/models/IContact";
-import {UsersService} from "../../../services/users.service";
 
 @Component({
   selector: 'app-contact-item',
@@ -8,7 +7,7 @@ import {UsersService} from "../../../services/users.service";
 })
 export class ContactItemComponent {
 
-  constructor(public userService: UsersService) {
+  constructor() {
   }
 
   @Input() contactName = '';
