@@ -281,6 +281,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (this.chats[0]) {
         this.activeChatId = this.chats[0].chatId;
+        this.router.navigateByUrl('main').then(r => r);
         this.loadMessages(this.activeChatId);
         return;
       }
