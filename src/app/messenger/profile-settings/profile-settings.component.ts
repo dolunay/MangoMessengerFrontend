@@ -19,13 +19,11 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  phoneNumber = '';
-
   ngOnDestroy(): void {
     this.subscriptions.forEach(x => x.unsubscribe());
   }
 
-  eventsSubject: Subject<void> = new Subject<void>();
+  eventsSubject: Subject<IUser> = new Subject<IUser>();
 
   currentUser: IUser = {
     pictureUrl: "",
@@ -47,6 +45,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     website: ""
   };
 
+  cloneUser!: IUser;
+
   currentPassword = '';
   newPassword = '';
   repeatNewPassword = '';
@@ -60,6 +60,10 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     this.initializeView();
   }
 
+  emitEventToChild(user: IUser): void {
+    this.eventsSubject.next(user);
+  }
+
   initializeView(): void {
     let currentSub = this.userService.getCurrentUser().subscribe(getUserResponse => {
       this.currentUser = getUserResponse.user;
@@ -67,7 +71,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.newPassword = '';
       this.repeatNewPassword = '';
       this.privateKey = 0;
-      this.phoneNumber = this.currentUser.phoneNumber;
+      this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
+      this.emitEventToChild(this.cloneUser);
     }, error => {
       alert(error.error.ErrorMessage);
     });
@@ -90,7 +95,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     let updateSub = this.userService.updateUserAccountInformation(command).subscribe(response => {
       alert(response.message);
-      this.phoneNumber = this.currentUser.phoneNumber;
+      this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
+      this.emitEventToChild(this.cloneUser);
     }, error => {
       alert(error.error.ErrorMessage);
     });
@@ -106,6 +112,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     let socialsSub = this.userService.updateUserSocials(command).subscribe(response => {
       alert(response.message);
+      this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
+      this.emitEventToChild(this.cloneUser);
     }, error => {
       alert(error.error.ErrorMessage);
     });
@@ -140,8 +148,11 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     let docSub = this.documentService.uploadDocument(formData).subscribe(uploadResponse => {
       let profileSub = this.userService.updateProfilePicture(uploadResponse.fileName).subscribe(updateResponse => {
+        console.log(uploadResponse);
         alert(updateResponse.message);
-        this.initializeView();
+        this.currentUser.pictureUrl = uploadResponse.fileUrl;
+        this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
+        this.emitEventToChild(this.cloneUser);
       });
 
       this.subscriptions.push(profileSub);
