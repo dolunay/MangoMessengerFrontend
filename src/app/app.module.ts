@@ -29,10 +29,10 @@ import {CreateGroupDialogComponent} from './messenger/dialogs/create-group-dialo
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from '@angular/material/icon'
 import {MatInputModule} from "@angular/material/input";
-import {StartComponent} from './messenger/start/start.component';
 import {VerifyEmailNoteComponent} from './messenger/auxiliary/verify-email-note/verify-email-note.component';
 import {PasswordRestoreRequestComponent} from './messenger/password-restore-request/password-restore-request.component';
-import { PasswordRestoreFormComponent } from './messenger/password-restore-form/password-restore-form.component';
+import {PasswordRestoreFormComponent} from './messenger/password-restore-form/password-restore-form.component';
+import {PickerModule} from "@ctrl/ngx-emoji-mart";
 
 @NgModule({
   declarations: [
@@ -53,12 +53,12 @@ import { PasswordRestoreFormComponent } from './messenger/password-restore-form/
     ContactItemComponent,
     JoinGroupComponent,
     CreateGroupDialogComponent,
-    StartComponent,
     VerifyEmailNoteComponent,
     PasswordRestoreRequestComponent,
     PasswordRestoreFormComponent,
   ],
   imports: [
+    PickerModule,
     HttpClientModule,
     MatDialogModule,
     BrowserModule,
@@ -69,7 +69,6 @@ import { PasswordRestoreFormComponent } from './messenger/password-restore-form/
       {path: 'verify-email', component: VerifyEmailComponent},
       {path: 'main', component: MainComponent},
       {path: 'main/:chatId', component: MainComponent},
-      {path: 'start', component: StartComponent},
       {path: 'contacts', component: ContactsComponent},
       {path: 'profile-settings', component: ProfileSettingsComponent},
       {path: 'verify-email-note', component: VerifyEmailNoteComponent},

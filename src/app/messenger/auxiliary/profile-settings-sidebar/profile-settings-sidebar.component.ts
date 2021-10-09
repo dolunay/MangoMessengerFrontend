@@ -1,15 +1,15 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {SessionService} from "../../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UsersService} from "../../../services/users.service";
 import {IUser} from "../../../../types/models/IUser";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-profile-settings-sidebar',
   templateUrl: './profile-settings-sidebar.component.html'
 })
-export class ProfileSettingsSidebarComponent implements OnDestroy {
+export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
 
   constructor(private sessionService: SessionService,
               private userService: UsersService,
@@ -17,8 +17,38 @@ export class ProfileSettingsSidebarComponent implements OnDestroy {
               private router: Router) {
   }
 
-  @Input() user!: IUser;
+  ngOnInit(): void {
+    this.eventsSubscription = this.events.subscribe(data => {
+      this.user = data;
+    });
+
+    this.subscriptions.push(this.eventsSubscription);
+  }
+
+  user: IUser = {
+    address: "",
+    bio: "",
+    birthdayDate: "",
+    displayName: "",
+    email: "",
+    facebook: "",
+    firstName: "",
+    instagram: "",
+    lastName: "",
+    linkedIn: "",
+    phoneNumber: "",
+    pictureUrl: "",
+    publicKey: 0,
+    twitter: "",
+    userId: "",
+    username: "",
+    website: ""
+  }
+
+  @Input() events!: Observable<IUser>;
   subscriptions: Subscription[] = [];
+
+  private eventsSubscription!: Subscription;
 
   logout(): void {
     let refreshToken = this.sessionService.getRefreshToken();
@@ -26,10 +56,12 @@ export class ProfileSettingsSidebarComponent implements OnDestroy {
       .subscribe((_) => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
+        this.sessionService.clearUserId();
         this.router.navigateByUrl('login').then(r => r);
       }, _ => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
+        this.sessionService.clearUserId();
         this.router.navigateByUrl('login').then(r => r);
       });
 
@@ -42,10 +74,12 @@ export class ProfileSettingsSidebarComponent implements OnDestroy {
       .subscribe((_) => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
+        this.sessionService.clearUserId();
         this.router.navigateByUrl('login').then(r => r);
       }, _ => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
+        this.sessionService.clearUserId();
         this.router.navigateByUrl('login').then(r => r);
       });
 

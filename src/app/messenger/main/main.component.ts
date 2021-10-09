@@ -12,6 +12,8 @@ import {CommunityType} from "../../../types/enums/CommunityType";
 import * as signalR from '@microsoft/signalr';
 import {ApiRoute} from "../../../consts/ApiRoute";
 import {Subscription} from "rxjs";
+import {IUser} from "../../../types/models/IUser";
+import {UsersService} from "../../services/users.service";
 
 @Component({
   selector: 'app-main',
@@ -23,6 +25,28 @@ export class MainComponent implements OnInit, OnDestroy {
   chats: IChat[] = [];
   subscriptions: Subscription[] = [];
   realTimeConnections: string[] = [];
+
+  isLoaded = false;
+
+  currentUser: IUser = {
+    address: "",
+    bio: "",
+    birthdayDate: "",
+    displayName: "",
+    email: "",
+    facebook: "",
+    firstName: "",
+    instagram: "",
+    lastName: "",
+    linkedIn: "",
+    phoneNumber: "",
+    pictureUrl: "",
+    publicKey: 0,
+    twitter: "",
+    userId: "",
+    username: "",
+    website: ""
+  }
 
   activeChatId = '';
 
@@ -53,6 +77,7 @@ export class MainComponent implements OnInit, OnDestroy {
               private chatService: ChatsService,
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
+              public userService: UsersService,
               private route: ActivatedRoute,
               private router: Router,
               public dialog: MatDialog) {
@@ -108,6 +133,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (routeChatId) {
         this.loadMessages(routeChatId);
+        this.isLoaded = true;
         return;
       }
 
@@ -115,7 +141,20 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (firstChat) {
         this.loadMessages(firstChat.chatId);
+        this.isLoaded = true;
+        return;
+
       }
+
+      if (this.activeChatId === '') {
+        let userSub = this.userService.getCurrentUser().subscribe(data => {
+          this.currentUser = data.user;
+        });
+
+        this.subscriptions.push(userSub);
+      }
+
+      this.isLoaded = true;
 
     }, error => {
       if (error.status === 403) {
@@ -146,6 +185,10 @@ export class MainComponent implements OnInit, OnDestroy {
     this.connection.on("UpdateUserChats", (chat: IChat) => {
       this.chats.push(chat);
     });
+  }
+
+  navigateContacts(): void {
+    this.router.navigateByUrl('contacts').then(r => r);
   }
 
   private loadMessages(chatId: string | null): void {
@@ -242,7 +285,24 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onLeaveChatClick(): void {
     let deleteSub = this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
-      this.router.navigate(['main']).then(() => this.initializeView());
+      this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
+
+      if (this.chats[0]) {
+        this.activeChatId = this.chats[0].chatId;
+        this.router.navigateByUrl('main').then(r => r);
+        this.loadMessages(this.activeChatId);
+        return;
+      }
+
+      this.activeChatId = '';
+      let userSub = this.userService.getCurrentUser().subscribe(data => {
+        this.currentUser = data.user;
+      });
+
+      this.subscriptions.push(userSub);
+      this.subscriptions.push(deleteSub);
+
+      this.router.navigateByUrl('main').then(r => r);
     }, error => {
       alert(error.error.ErrorMessage);
     });
@@ -263,12 +323,8 @@ export class MainComponent implements OnInit, OnDestroy {
     this.connection.invoke("JoinGroup", this.activeChatId).then(r => r);
   }
 
-  noActiveChat(): boolean {
-    return this.activeChatId !== '';
-  }
-
   getChatImageUrl(): string {
-    return this.activeChat.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
+    return this.activeChat?.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
   }
 
   filterMessages(): void {
@@ -285,5 +341,9 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onFilterMessageDropdownClick(): void {
     this.loadMessages(this.activeChatId);
+  }
+
+  hasActiveChat(): boolean {
+    return this.activeChatId !== '';
   }
 }
