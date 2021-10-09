@@ -34,6 +34,7 @@
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@ctrl/ngx-emoji-mart/picker.css",
               "src/assets/webfonts/inter/inter.css",
               "src/assets/css/app.min.css",
               "src/assets/css/skins/dark-skin.min.css"

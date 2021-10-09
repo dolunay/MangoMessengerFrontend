@@ -30,6 +30,8 @@ export class ChatFooterComponent implements OnDestroy {
 
   subscriptions: Subscription[] = [];
 
+  isEmojiPickerVisible = false;
+
   @Input() chat: IChat = {
     chatId: "",
     chatLogoImageUrl: "",
@@ -76,6 +78,11 @@ export class ChatFooterComponent implements OnDestroy {
 
       this.subscriptions.push(sendSub);
     }
+  }
+
+  public addEmoji(event: any): void {
+    this.currentMessageText = `${this.currentMessageText}${event.emoji.native}`;
+    this.isEmojiPickerVisible = false;
   }
 
   attachDocument(event: any): void {

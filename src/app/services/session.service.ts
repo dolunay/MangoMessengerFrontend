@@ -65,4 +65,8 @@ export class SessionService implements ISessionService {
   writeUserId(userId: string): void {
     localStorage.setItem(Tokens.userId, userId);
   }
+
+  clearUserId(): void {
+    localStorage.removeItem(Tokens.userId);
+  }
 }
