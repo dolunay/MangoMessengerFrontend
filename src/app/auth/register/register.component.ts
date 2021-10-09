@@ -11,12 +11,12 @@ import {RegisterCommand} from "../../../types/requests/RegisterCommand";
 })
 export class RegisterComponent {
 
-  phoneNumber = '';
-  email = '';
-  password = '';
+  phoneNumber = '380974913851980';
+  email = 'kolosovp94@gmail.com';
+  password = 'z[?6dMR#xmp=nr6q';
+  displayName = 'FrontEnd TestAccount';
   verificationMethod = VerificationMethod.Email;
-  termsAccepted = false;
-  displayName = '';
+  termsAccepted = true;
 
   verificationMethods = [VerificationMethod.Phone, VerificationMethod.Email];
 
@@ -33,6 +33,7 @@ export class RegisterComponent {
     this.usersService.postUser(command).subscribe((data) => {
       this.sessionService.writeAccessToken(data.accessToken);
       this.sessionService.writeRefreshToken(data.refreshToken);
+      this.sessionService.writeUserId(data.userId);
       if (this.verificationMethod === VerificationMethod.Phone) {
         this.router.navigateByUrl('verify-phone').then(r => r);
         return;

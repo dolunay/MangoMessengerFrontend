@@ -3,6 +3,7 @@ import {SessionService} from "../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {VerifyEmailCommand} from "../../../types/requests/VerifyEmailCommand";
 import {UsersService} from "../../services/users.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-verify-email',
@@ -16,27 +17,36 @@ export class VerifyEmailComponent implements OnInit {
 
   success = false;
   message = '';
+  subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      const userId = params['userId'];
+      const emailCode = params['emailCode'];
       const email = params['email'];
-      const refreshToken = this.sessionService.getRefreshToken();
-      this.usersService.putEmailConfirmation(new VerifyEmailCommand(email, userId))
-        .subscribe((_) => {
-          this.success = true;
-          this.sessionService.postRefreshSession(refreshToken).subscribe(result => {
-            this.sessionService.writeRefreshToken(result.refreshToken);
-            this.sessionService.writeAccessToken(result.accessToken);
-          })
+      let putSubscribe = this.usersService.putEmailConfirmation(new VerifyEmailCommand(email, emailCode))
+        .subscribe(data => {
+          this.success = data.success;
+
         }, error => {
           this.message = error.error.ErrorMessage;
           alert(error.error.ErrorMessage);
         });
+
+      this.subscriptions.push(putSubscribe);
     });
   }
 
   proceedToStart(): void {
-    this.router.navigateByUrl('start').then(_ => _);
+    const refreshToken = this.sessionService.getRefreshToken();
+    let refreshSub = this.sessionService.postRefreshSession(refreshToken).subscribe(result => {
+      this.sessionService.writeRefreshToken(result.refreshToken);
+      this.sessionService.writeAccessToken(result.accessToken);
+      this.sessionService.writeUserId(result.userId);
+      this.router.navigateByUrl('start').then(_ => _);
+    }, error => {
+      alert(error.error.ErrorMessage);
+    });
+
+    this.subscriptions.push(refreshSub);
   }
 }
