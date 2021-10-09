@@ -82,12 +82,15 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   saveAccountInfo(): void {
 
+    const phone = this.currentUser.phoneNumber == null
+      ? ""
+      : this.currentUser.phoneNumber.toString();
 
     const command = new UpdateAccountInformationCommand(
       this.currentUser.firstName,
       this.currentUser.lastName,
       this.currentUser.displayName,
-      this.currentUser.phoneNumber ?? '',
+      phone,
       this.currentUser.birthdayDate,
       this.currentUser.email,
       this.currentUser.website,
