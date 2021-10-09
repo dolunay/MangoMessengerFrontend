@@ -32,6 +32,7 @@ import {MatInputModule} from "@angular/material/input";
 import {VerifyEmailNoteComponent} from './messenger/auxiliary/verify-email-note/verify-email-note.component';
 import {PasswordRestoreRequestComponent} from './messenger/password-restore-request/password-restore-request.component';
 import {PasswordRestoreFormComponent} from './messenger/password-restore-form/password-restore-form.component';
+import {PickerModule} from "@ctrl/ngx-emoji-mart";
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {PasswordRestoreFormComponent} from './messenger/password-restore-form/pa
     PasswordRestoreFormComponent,
   ],
   imports: [
+    PickerModule,
     HttpClientModule,
     MatDialogModule,
     BrowserModule,
