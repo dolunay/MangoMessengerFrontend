@@ -24,15 +24,16 @@ export class VerifyPhoneComponent implements OnDestroy {
   }
 
   verifyPhone(): void {
-    let phoneSub = this.usersService.putPhoneConfirmation(this.phoneCode).subscribe(_ => {
+    let phoneSub = this.usersService.putPhoneConfirmation(this.phoneCode).subscribe(confirm => {
       const refreshToken = this.sessionService.getRefreshToken();
       let refreshSub = this.sessionService.postRefreshSession(refreshToken).subscribe(refreshResp => {
         this.sessionService.writeAccessToken(refreshResp.accessToken);
         this.sessionService.writeRefreshToken(refreshResp.refreshToken);
         this.subscriptions.push(refreshSub);
       });
+
       this.subscriptions.push(phoneSub);
-      this.router.navigateByUrl('start').then(r => r);
+      this.router.navigateByUrl('main').then(() => alert(confirm.message));
     }, error => {
       alert(error.error.ErrorMessage);
     });
