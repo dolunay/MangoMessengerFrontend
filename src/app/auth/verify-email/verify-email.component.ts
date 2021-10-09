@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SessionService} from "../../services/session.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {VerifyEmailCommand} from "../../../types/requests/VerifyEmailCommand";
@@ -9,10 +9,14 @@ import {Subscription} from "rxjs";
   selector: 'app-verify-email',
   templateUrl: './verify-email.component.html'
 })
-export class VerifyEmailComponent implements OnInit {
+export class VerifyEmailComponent implements OnInit, OnDestroy {
 
   constructor(private sessionService: SessionService, private route: ActivatedRoute,
               private router: Router, private usersService: UsersService) {
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
   success = false;
@@ -41,8 +45,7 @@ export class VerifyEmailComponent implements OnInit {
     let refreshSub = this.sessionService.postRefreshSession(refreshToken).subscribe(result => {
       this.sessionService.writeRefreshToken(result.refreshToken);
       this.sessionService.writeAccessToken(result.accessToken);
-      this.sessionService.writeUserId(result.userId);
-      this.router.navigateByUrl('start').then(_ => _);
+      this.router.navigateByUrl('main').then(_ => _);
     }, error => {
       alert(error.error.ErrorMessage);
     });
