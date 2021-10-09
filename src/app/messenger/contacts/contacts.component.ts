@@ -58,18 +58,10 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
-    const currentUserId = this.sessionService.getUserId();
     let initialSub = this.contactsService.getCurrentUserContacts().subscribe(getContactsResponse => {
       this.contacts = getContactsResponse.contacts;
-      let userId: string | null = '';
 
-      if (this.contacts.length > 0) {
-        userId = this.contacts[0].userId;
-      } else {
-        userId = currentUserId;
-      }
-
-      let userSub = this.userService.getUserById(userId).subscribe(getUserResponse => {
+      let userSub = this.userService.getCurrentUser().subscribe(getUserResponse => {
         this.currentOpenedUser = getUserResponse.user;
         this.currentOpenedUserIsContact = true;
         this.contactsFilter = 'All Contacts';
