@@ -56,10 +56,12 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
       .subscribe((_) => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
+        this.sessionService.clearUserId();
         this.router.navigateByUrl('login').then(r => r);
       }, _ => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
+        this.sessionService.clearUserId();
         this.router.navigateByUrl('login').then(r => r);
       });
 
@@ -72,10 +74,12 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
       .subscribe((_) => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
+        this.sessionService.clearUserId();
         this.router.navigateByUrl('login').then(r => r);
       }, _ => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();
+        this.sessionService.clearUserId();
         this.router.navigateByUrl('login').then(r => r);
       });
 

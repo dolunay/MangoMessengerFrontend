@@ -1,31 +1,38 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {UsersService} from "../../services/users.service";
 import {SessionService} from "../../services/session.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-verify-phone',
   templateUrl: './verify-phone.component.html'
 })
-export class VerifyPhoneComponent {
+export class VerifyPhoneComponent implements OnDestroy {
 
   phoneCode!: number;
+  subscriptions: Subscription[] = [];
 
-  constructor(private usersService: UsersService, private route: ActivatedRoute, private router: Router,
+  constructor(private usersService: UsersService,
+              private route: ActivatedRoute,
+              private router: Router,
               private sessionService: SessionService) {
   }
 
-  verifyPhone(): void {
-    this.usersService.putPhoneConfirmation(this.phoneCode).subscribe((phoneConfirmResponse) => {
-      const refreshToken = this.sessionService.getRefreshToken();
-      this.sessionService.postRefreshSession(refreshToken).subscribe((refreshTokenResponse) => {
-        this.sessionService.writeAccessToken(refreshTokenResponse.accessToken);
-        this.sessionService.writeRefreshToken(refreshTokenResponse.refreshToken);
-      }, error => {
-        this.router.navigateByUrl('login').then(_ => alert(error.error.ErrorMessage));
-      })
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(x => x.unsubscribe());
+  }
 
-      this.router.navigateByUrl('start').then(_ => alert(phoneConfirmResponse.message));
+  verifyPhone(): void {
+    let phoneSub = this.usersService.putPhoneConfirmation(this.phoneCode).subscribe(_ => {
+      const refreshToken = this.sessionService.getRefreshToken();
+      let refreshSub = this.sessionService.postRefreshSession(refreshToken).subscribe(refreshResp => {
+        this.sessionService.writeAccessToken(refreshResp.accessToken);
+        this.sessionService.writeRefreshToken(refreshResp.refreshToken);
+        this.subscriptions.push(refreshSub);
+      });
+      this.subscriptions.push(phoneSub);
+      this.router.navigateByUrl('start').then(r => r);
     }, error => {
       alert(error.error.ErrorMessage);
     });
