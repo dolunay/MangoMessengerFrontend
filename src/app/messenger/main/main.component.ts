@@ -141,6 +141,9 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (firstChat) {
         this.loadMessages(firstChat.chatId);
+        this.isLoaded = true;
+        return;
+
       }
 
       if (this.activeChatId === '') {

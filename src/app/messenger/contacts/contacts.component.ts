@@ -63,11 +63,11 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
       let userSub = this.userService.getCurrentUser().subscribe(getUserResponse => {
         this.currentOpenedUser = getUserResponse.user;
+        this.isLoaded = true;
         this.currentOpenedUserIsContact = true;
         this.contactsFilter = 'All Contacts';
         this.contactsSearchQuery = '';
       });
-      this.isLoaded = true;
 
       this.subscriptions.push(userSub);
     }, error => {
