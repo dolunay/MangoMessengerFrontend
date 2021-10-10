@@ -246,7 +246,6 @@
 
               <div *ngFor="let message of messages">
                 <app-received-message [message]="message"
-                                      (notifyParentOnDeleteMessage)="onDeleteMessageEvent($event)"
                                       (notifyParentOnEditMessage)="onEditMessageEvent($event)">
                 </app-received-message>
               </div>

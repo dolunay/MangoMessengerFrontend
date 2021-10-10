@@ -187,6 +187,18 @@ export class MainComponent implements OnInit, OnDestroy {
     this.connection.on("UpdateUserChats", (chat: IChat) => {
       this.chats.push(chat);
     });
+
+    this.connection.on('NotifyOnMessageDelete', (messageId: string) => {
+      this.messages = this.messages.filter(x => x.messageId !== messageId);
+    });
+
+    this.connection.on('NotifyOnMessageEdit', (request: EditMessageCommand) => {
+      let message = this.messages.filter(x => x.messageId === request.messageId)[0];
+
+      if (message) {
+        message.messageText = request.modifiedText;
+      }
+    });
   }
 
   navigateContacts(): void {
@@ -314,10 +326,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
   getMessageComponentClass(chat: IChat): string {
     return chat.chatId === this.activeChatId ? 'contacts-item friends active' : 'contacts-item friends';
-  }
-
-  onDeleteMessageEvent(messageId: string) {
-    this.messages = this.messages.filter(x => x.messageId !== messageId);
   }
 
   onEditMessageEvent(event: any) {

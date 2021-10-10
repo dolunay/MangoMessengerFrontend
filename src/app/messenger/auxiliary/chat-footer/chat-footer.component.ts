@@ -18,7 +18,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.editMessageRequest = changes.editMessageRequest.currentValue;
+    this.editMessageRequest = changes.editMessageRequest?.currentValue;
     if (this.editMessageRequest != null) {
       this.currentMessageText = this.editMessageRequest.modifiedText;
     }
@@ -63,7 +63,8 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
       this.editMessageRequest.modifiedText = this.currentMessageText;
 
       let editSub = this.messageService.editMessage(this.editMessageRequest).subscribe(resp => {
-        alert('Edited');
+        this.editMessageRequest = null;
+        this.currentMessageText = '';
       }, error => {
         alert(error.error.ErrorMessage);
       })
