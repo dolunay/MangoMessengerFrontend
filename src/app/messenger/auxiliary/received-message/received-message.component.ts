@@ -34,6 +34,7 @@ export class ReceivedMessageComponent implements OnDestroy {
   };
 
   @Output() notifyParentOnDeleteMessage = new EventEmitter<string>();
+  @Output() notifyParentOnEditMessage = new EventEmitter<any>();
 
   deleteMessage(): void {
     let deleteSub = this.messageService.deleteMessage(this.message.messageId).subscribe(data => {
@@ -43,6 +44,15 @@ export class ReceivedMessageComponent implements OnDestroy {
     });
 
     this.subscriptions.push(deleteSub);
+  }
+
+  editMessage(): void {
+    const body = {
+      messageId: this.message.messageId,
+      messageText: this.message.messageText
+    }
+
+    this.notifyParentOnEditMessage.emit(body);
   }
 
   getMessageText(): string {

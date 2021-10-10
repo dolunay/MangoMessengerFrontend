@@ -318,6 +318,10 @@ export class MainComponent implements OnInit, OnDestroy {
     this.messages = this.messages.filter(x => x.messageId !== messageId);
   }
 
+  onEditMessageEvent(event: any) {
+    console.log(`edit message event sent: ${event.messageId}, ${event.messageText}`);
+  }
+
   onJoinGroupEvent() {
     this.activeChat.isMember = true;
     this.connection.invoke("JoinGroup", this.activeChatId).then(r => r);
