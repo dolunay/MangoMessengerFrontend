@@ -19,7 +19,9 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.editMessageRequest = changes.editMessageRequest.currentValue;
-    this.currentMessageText = this.editMessageRequest!.modifiedText;
+    if (this.editMessageRequest != null) {
+      this.currentMessageText = this.editMessageRequest.modifiedText;
+    }
   }
 
   ngOnDestroy(): void {
