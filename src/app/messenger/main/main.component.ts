@@ -330,7 +330,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
     console.log(`edit message event sent to main: ${event.messageId}, ${event.messageText}`);
     this.editMessageRequest = new EditMessageCommand(messageId, messageText);
-    console.log(this.editMessageRequest);
   }
 
   onJoinGroupEvent() {

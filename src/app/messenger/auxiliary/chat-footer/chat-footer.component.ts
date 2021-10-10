@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
 import {MessagesService} from "../../../services/messages.service";
 import {SendMessageCommand} from "../../../../types/requests/SendMessageCommand";
 import {IChat} from "../../../../types/models/IChat";
@@ -15,7 +15,6 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
 
   constructor(private messageService: MessagesService,
               private documentService: DocumentsService) {
-    console.log('initialized');
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -57,6 +56,19 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   onMessageSendClick(event: any): void {
 
     event.preventDefault();
+
+    if (this.editMessageRequest != null) {
+      this.editMessageRequest.modifiedText = this.currentMessageText;
+
+      let editSub = this.messageService.editMessage(this.editMessageRequest).subscribe(resp => {
+        alert('Edited');
+      }, error => {
+        alert(error.error.ErrorMessage);
+      })
+
+      this.subscriptions.push(editSub);
+      return;
+    }
 
     if (this.attachment) {
       const formData = new FormData();
