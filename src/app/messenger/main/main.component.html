@@ -1,7 +1,7 @@
 <body class="chats-tab-open">
 
 <!-- Main Layout Start -->
-<div class="main-layout">
+<div *ngIf="isLoaded" class="main-layout">
   <!-- Navigation Start -->
   <app-navigation-bar [activeRoute]="'chats'"></app-navigation-bar>
   <!-- Navigation End -->
