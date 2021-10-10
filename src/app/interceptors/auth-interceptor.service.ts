@@ -27,6 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return refreshTokenResponse.pipe(switchMap((loginData) => {
         this.authService.writeAccessToken(loginData.accessToken);
         this.authService.writeRefreshToken(loginData.refreshToken);
+        this.authService.writeUserId(loginData.userId);
         return next.handle(request.clone({
           setHeaders: {
             Authorization: 'Bearer ' + loginData.accessToken
@@ -52,5 +53,5 @@ export class AuthInterceptor implements HttpInterceptor {
 
     }))
   }
-  
+
 }

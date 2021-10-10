@@ -14,6 +14,7 @@ import {ApiRoute} from "../../../consts/ApiRoute";
 import {Subscription} from "rxjs";
 import {IUser} from "../../../types/models/IUser";
 import {UsersService} from "../../services/users.service";
+import {EditMessageCommand} from "../../../types/requests/EditMessageCommand";
 
 @Component({
   selector: 'app-main',
@@ -25,6 +26,7 @@ export class MainComponent implements OnInit, OnDestroy {
   chats: IChat[] = [];
   subscriptions: Subscription[] = [];
   realTimeConnections: string[] = [];
+  editMessageRequest: EditMessageCommand | null = null;
 
   isLoaded = false;
 
@@ -185,6 +187,18 @@ export class MainComponent implements OnInit, OnDestroy {
     this.connection.on("UpdateUserChats", (chat: IChat) => {
       this.chats.push(chat);
     });
+
+    this.connection.on('NotifyOnMessageDelete', (messageId: string) => {
+      this.messages = this.messages.filter(x => x.messageId !== messageId);
+    });
+
+    this.connection.on('NotifyOnMessageEdit', (request: EditMessageCommand) => {
+      let message = this.messages.filter(x => x.messageId === request.messageId)[0];
+
+      if (message) {
+        message.messageText = request.modifiedText;
+      }
+    });
   }
 
   navigateContacts(): void {
@@ -314,8 +328,16 @@ export class MainComponent implements OnInit, OnDestroy {
     return chat.chatId === this.activeChatId ? 'contacts-item friends active' : 'contacts-item friends';
   }
 
-  onDeleteMessageEvent(messageId: string) {
-    this.messages = this.messages.filter(x => x.messageId !== messageId);
+  onEditMessageEvent(event: any) {
+    const messageId = event.messageId;
+    const messageText = event.messageText;
+
+    if (!messageId || !messageText) {
+      return;
+    }
+
+    console.log(`edit message event sent to main: ${event.messageId}, ${event.messageText}`);
+    this.editMessageRequest = new EditMessageCommand(messageId, messageText);
   }
 
   onJoinGroupEvent() {

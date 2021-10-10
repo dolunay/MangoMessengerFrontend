@@ -33,6 +33,8 @@ import {VerifyEmailNoteComponent} from './messenger/auxiliary/verify-email-note/
 import {PasswordRestoreRequestComponent} from './messenger/password-restore-request/password-restore-request.component';
 import {PasswordRestoreFormComponent} from './messenger/password-restore-form/password-restore-form.component';
 import {PickerModule} from "@ctrl/ngx-emoji-mart";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -58,6 +60,7 @@ import {PickerModule} from "@ctrl/ngx-emoji-mart";
     PasswordRestoreFormComponent,
   ],
   imports: [
+    MatNativeDateModule,
     PickerModule,
     HttpClientModule,
     MatDialogModule,
@@ -84,7 +87,8 @@ import {PickerModule} from "@ctrl/ngx-emoji-mart";
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatDatepickerModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: RequestHeaderInterceptor, multi: true},

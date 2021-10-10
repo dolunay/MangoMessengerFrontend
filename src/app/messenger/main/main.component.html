@@ -1,7 +1,7 @@
 <body class="chats-tab-open">
 
 <!-- Main Layout Start -->
-<div class="main-layout">
+<div *ngIf="isLoaded" class="main-layout">
   <!-- Navigation Start -->
   <app-navigation-bar [activeRoute]="'chats'"></app-navigation-bar>
   <!-- Navigation End -->
@@ -246,7 +246,7 @@
 
               <div *ngFor="let message of messages">
                 <app-received-message [message]="message"
-                                      (notifyParentOnDeleteMessage)="onDeleteMessageEvent($event)">
+                                      (notifyParentOnEditMessage)="onEditMessageEvent($event)">
                 </app-received-message>
               </div>
             </div>
@@ -258,7 +258,7 @@
         <!-- Chat Footer Start-->
         <div *ngIf="hasActiveChat() && isLoaded">
           <ng-container *ngIf="activeChat.isMember; else elseBlock">
-            <app-chat-footer [chat]="activeChat">
+            <app-chat-footer [chat]="activeChat" [editMessageRequest]="editMessageRequest">
             </app-chat-footer>
           </ng-container>
           <ng-template #elseBlock>

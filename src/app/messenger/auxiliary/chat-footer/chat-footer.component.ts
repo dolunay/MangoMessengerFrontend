@@ -1,19 +1,27 @@
-import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
 import {MessagesService} from "../../../services/messages.service";
 import {SendMessageCommand} from "../../../../types/requests/SendMessageCommand";
 import {IChat} from "../../../../types/models/IChat";
 import {CommunityType} from "../../../../types/enums/CommunityType";
 import {DocumentsService} from "../../../services/documents.service";
 import {Subscription} from "rxjs";
+import {EditMessageCommand} from "../../../../types/requests/EditMessageCommand";
 
 @Component({
   selector: 'app-chat-footer',
   templateUrl: './chat-footer.component.html'
 })
-export class ChatFooterComponent implements OnDestroy {
+export class ChatFooterComponent implements OnChanges, OnDestroy {
 
   constructor(private messageService: MessagesService,
               private documentService: DocumentsService) {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.editMessageRequest = changes.editMessageRequest?.currentValue;
+    if (this.editMessageRequest != null) {
+      this.currentMessageText = this.editMessageRequest.modifiedText;
+    }
   }
 
   ngOnDestroy(): void {
@@ -23,7 +31,10 @@ export class ChatFooterComponent implements OnDestroy {
   // @ts-ignore
   @ViewChild('fileInput') fileInput;
 
+  @Input() editMessageRequest: EditMessageCommand | null = null;
+
   currentMessageText: string = '';
+
   attachmentName: string | null = '';
 
   attachment!: File | null;
@@ -47,6 +58,20 @@ export class ChatFooterComponent implements OnDestroy {
   onMessageSendClick(event: any): void {
 
     event.preventDefault();
+
+    if (this.editMessageRequest != null) {
+      this.editMessageRequest.modifiedText = this.currentMessageText;
+
+      let editSub = this.messageService.editMessage(this.editMessageRequest).subscribe(resp => {
+        this.editMessageRequest = null;
+        this.currentMessageText = '';
+      }, error => {
+        alert(error.error.ErrorMessage);
+      })
+
+      this.subscriptions.push(editSub);
+      return;
+    }
 
     if (this.attachment) {
       const formData = new FormData();

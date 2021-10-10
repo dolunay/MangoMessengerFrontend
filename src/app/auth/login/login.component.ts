@@ -10,8 +10,8 @@ import {Subscription} from "rxjs";
 })
 export class LoginComponent implements OnDestroy {
 
-  emailOrPhone = '';
-  password = '';
+  emailOrPhone = 'kolosovp94@gmail.com';
+  password = 'z[?6dMR#xmp=nr6q';
 
   subscriptions: Subscription[] = [];
 
@@ -30,6 +30,7 @@ export class LoginComponent implements OnDestroy {
         this.authService.writeAccessToken(data.accessToken);
         this.authService.writeRefreshToken(data.refreshToken);
         this.authService.writeUserId(data.userId);
+        console.log(data);
         this.router.navigateByUrl('main').then(r => r);
       }, error => {
         alert(error.error.ErrorMessage)
