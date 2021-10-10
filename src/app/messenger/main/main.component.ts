@@ -14,6 +14,7 @@ import {ApiRoute} from "../../../consts/ApiRoute";
 import {Subscription} from "rxjs";
 import {IUser} from "../../../types/models/IUser";
 import {UsersService} from "../../services/users.service";
+import {EditMessageCommand} from "../../../types/requests/EditMessageCommand";
 
 @Component({
   selector: 'app-main',
@@ -25,6 +26,7 @@ export class MainComponent implements OnInit, OnDestroy {
   chats: IChat[] = [];
   subscriptions: Subscription[] = [];
   realTimeConnections: string[] = [];
+  editMessageRequest: EditMessageCommand | null = null;
 
   isLoaded = false;
 
@@ -319,7 +321,16 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onEditMessageEvent(event: any) {
-    console.log(`edit message event sent: ${event.messageId}, ${event.messageText}`);
+    const messageId = event.messageId;
+    const messageText = event.messageText;
+
+    if (!messageId || !messageText) {
+      return;
+    }
+
+    console.log(`edit message event sent to main: ${event.messageId}, ${event.messageText}`);
+    this.editMessageRequest = new EditMessageCommand(messageId, messageText);
+    console.log(this.editMessageRequest);
   }
 
   onJoinGroupEvent() {

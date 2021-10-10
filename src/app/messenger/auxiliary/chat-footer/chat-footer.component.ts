@@ -1,19 +1,26 @@
-import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {MessagesService} from "../../../services/messages.service";
 import {SendMessageCommand} from "../../../../types/requests/SendMessageCommand";
 import {IChat} from "../../../../types/models/IChat";
 import {CommunityType} from "../../../../types/enums/CommunityType";
 import {DocumentsService} from "../../../services/documents.service";
 import {Subscription} from "rxjs";
+import {EditMessageCommand} from "../../../../types/requests/EditMessageCommand";
 
 @Component({
   selector: 'app-chat-footer',
   templateUrl: './chat-footer.component.html'
 })
-export class ChatFooterComponent implements OnDestroy {
+export class ChatFooterComponent implements OnChanges, OnDestroy {
 
   constructor(private messageService: MessagesService,
               private documentService: DocumentsService) {
+    console.log('initialized');
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.editMessageRequest = changes.editMessageRequest.currentValue;
+    this.currentMessageText = this.editMessageRequest!.modifiedText;
   }
 
   ngOnDestroy(): void {
@@ -23,7 +30,10 @@ export class ChatFooterComponent implements OnDestroy {
   // @ts-ignore
   @ViewChild('fileInput') fileInput;
 
+  @Input() editMessageRequest: EditMessageCommand | null = null;
+
   currentMessageText: string = '';
+
   attachmentName: string | null = '';
 
   attachment!: File | null;

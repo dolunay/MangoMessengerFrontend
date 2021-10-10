@@ -259,7 +259,7 @@
         <!-- Chat Footer Start-->
         <div *ngIf="hasActiveChat() && isLoaded">
           <ng-container *ngIf="activeChat.isMember; else elseBlock">
-            <app-chat-footer [chat]="activeChat">
+            <app-chat-footer [chat]="activeChat" [editMessageRequest]="editMessageRequest">
             </app-chat-footer>
           </ng-container>
           <ng-template #elseBlock>
