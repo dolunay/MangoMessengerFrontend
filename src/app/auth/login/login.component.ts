@@ -10,8 +10,8 @@ import {Subscription} from "rxjs";
 })
 export class LoginComponent implements OnDestroy {
 
-  emailOrPhone = 'kolosovp94@gmail.com';
-  password = 'z[?6dMR#xmp=nr6q';
+  emailOrPhone = '';
+  password = '';
 
   subscriptions: Subscription[] = [];
 
