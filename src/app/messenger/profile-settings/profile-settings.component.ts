@@ -87,8 +87,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       : this.currentUser.phoneNumber.toString();
 
     const command = new UpdateAccountInformationCommand(
-      this.currentUser.firstName,
-      this.currentUser.lastName,
       this.currentUser.displayName,
       phone,
       this.currentUser.birthdayDate,
