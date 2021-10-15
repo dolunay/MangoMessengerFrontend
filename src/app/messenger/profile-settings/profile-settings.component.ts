@@ -25,6 +25,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   eventsSubject: Subject<IUser> = new Subject<IUser>();
 
+  isLoaded = false;
+
   currentUser: IUser = {
     pictureUrl: "",
     publicKey: 0,
@@ -65,6 +67,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
+    debugger;
     let currentSub = this.userService.getCurrentUser().subscribe(getUserResponse => {
       this.currentUser = getUserResponse.user;
       this.currentPassword = '';
@@ -73,6 +76,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.privateKey = 0;
       this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
       this.emitEventToChild(this.cloneUser);
+      this.isLoaded = true;
     }, error => {
       alert(error.error.ErrorMessage);
     });
