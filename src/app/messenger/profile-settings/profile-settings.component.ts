@@ -25,6 +25,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   eventsSubject: Subject<IUser> = new Subject<IUser>();
 
+  isLoaded = false;
+
   currentUser: IUser = {
     pictureUrl: "",
     publicKey: 0,
@@ -73,6 +75,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.privateKey = 0;
       this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
       this.emitEventToChild(this.cloneUser);
+      this.isLoaded = true;
     }, error => {
       alert(error.error.ErrorMessage);
     });
@@ -87,8 +90,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       : this.currentUser.phoneNumber.toString();
 
     const command = new UpdateAccountInformationCommand(
-      this.currentUser.firstName,
-      this.currentUser.lastName,
       this.currentUser.displayName,
       phone,
       this.currentUser.birthdayDate,
