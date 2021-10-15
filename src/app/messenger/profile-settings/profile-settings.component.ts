@@ -67,7 +67,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
-    debugger;
     let currentSub = this.userService.getCurrentUser().subscribe(getUserResponse => {
       this.currentUser = getUserResponse.user;
       this.currentPassword = '';
