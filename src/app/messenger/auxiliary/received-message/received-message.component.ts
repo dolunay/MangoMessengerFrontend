@@ -19,6 +19,8 @@ export class ReceivedMessageComponent implements OnDestroy {
   }
 
   @Input() message: IMessage = {
+    inReplayToAuthor: "",
+    inReplayToText: "",
     messageAttachmentUrl: "",
     userId: "",
     chatId: "",

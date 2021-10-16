@@ -29,7 +29,9 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
     if (changes.replayMessageObject?.currentValue) {
       const author = changes.replayMessageObject?.currentValue.messageAuthor;
       const messageText = changes.replayMessageObject?.currentValue.messageText;
-      this.currentMessageText = `In reply to\n ${author}: ${messageText}`;
+      this.inReplayAuthor = author;
+      this.inReplayText = messageText;
+      // this.currentMessageText = `In reply to\n ${author}: ${messageText}`;
     }
   }
 
@@ -44,6 +46,9 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   @Input() replayMessageObject: any | null = null;
 
   currentMessageText: string = '';
+
+  inReplayAuthor: string | null = null;
+  inReplayText: string | null = null;
 
   attachmentName: string | null = '';
 
@@ -105,8 +110,15 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
     } else {
       const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
 
+      if (this.inReplayText && this.inReplayAuthor) {
+        sendMessageCommand.setReplayToAuthor(this.inReplayAuthor);
+        sendMessageCommand.setReplayToText(this.inReplayText);
+      }
+
       let sendSub = this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
         this.currentMessageText = '';
+        this.inReplayText = null;
+        this.inReplayAuthor = null;
       }, error => {
         alert(error.error.ErrorMessage);
       });
@@ -133,5 +145,10 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
     this.fileInput.nativeElement.value = "";
     this.attachment = null;
     this.attachmentName = null;
+  }
+
+  clearInReplay(): void {
+    this.inReplayAuthor = null;
+    this.inReplayText = null;
   }
 }
