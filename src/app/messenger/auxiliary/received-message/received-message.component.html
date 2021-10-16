@@ -2,7 +2,10 @@
   <div class="message-wrapper">
     <div class="message-content">
       <div><strong>{{message.userDisplayName}}</strong></div>
-      <div style="word-wrap: break-word">{{getMessageText()}}</div>
+      <div *ngIf="message.inReplayToAuthor && message.inReplayToText" style="padding-bottom: 10px; color: #ffb74d">
+        In reply to <strong>{{message.inReplayToAuthor}}:</strong> {{message.inReplayToText}}
+      </div>
+      <div style="word-wrap: break-word;">{{getMessageText()}}</div>
       <div *ngIf="message.messageAttachmentUrl">
         <br>
         <a class="link-warning" href="{{message.messageAttachmentUrl}}" target="_blank">Attachment</a>
@@ -19,7 +22,7 @@
       </div>
     </ng-template>
     <span class="message-date">{{message.createdAt}}</span>
-    <div *ngIf="message.self" class="dropdown">
+    <div class="dropdown">
       <div class="text-muted" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <!-- Default :: Inline SVG -->
         <svg class="hw-18 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -30,7 +33,7 @@
 
       <div class="dropdown-menu cursor-pointer">
 
-        <div class="dropdown-item d-flex align-items-center" (click)="editMessage()">
+        <div *ngIf="message.self" class="dropdown-item d-flex align-items-center" (click)="editMessage()">
           <!-- Default :: Inline SVG -->
           <svg class="hw-18 mr-2" fill="none" viewBox="0 0 24 24"
                stroke="currentColor">
@@ -41,7 +44,16 @@
           <span>Edit</span>
         </div>
 
-        <div class="dropdown-item d-flex align-items-center text-danger" (click)="deleteMessage()">
+        <div class="dropdown-item d-flex align-items-center" (click)="replayMessage()">
+          <!-- Default :: Inline SVG -->
+          <svg class="hw-18 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+          </svg>
+          <span>Replay</span>
+        </div>
+
+        <div *ngIf="message.self" class="dropdown-item d-flex align-items-center text-danger" (click)="deleteMessage()">
           <!-- Default :: Inline SVG -->
           <svg class="hw-18 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round"

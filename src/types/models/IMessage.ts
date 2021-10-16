@@ -11,4 +11,6 @@
   authorPublicKey: number;
   messageAuthorPictureUrl: string;
   messageAttachmentUrl: string;
+  inReplayToAuthor: string,
+  inReplayToText: string,
 }

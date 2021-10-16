@@ -246,7 +246,8 @@
 
               <div *ngFor="let message of messages">
                 <app-received-message [message]="message"
-                                      (notifyParentOnEditMessage)="onEditMessageEvent($event)">
+                                      (notifyParentOnEditMessage)="onEditMessageEvent($event)"
+                                      (notifyParentOnReplayMessage)="onReplayMessageClick($event)">
                 </app-received-message>
               </div>
             </div>
@@ -258,7 +259,8 @@
         <!-- Chat Footer Start-->
         <div *ngIf="hasActiveChat() && isLoaded">
           <ng-container *ngIf="activeChat.isMember; else elseBlock">
-            <app-chat-footer [chat]="activeChat" [editMessageRequest]="editMessageRequest">
+            <app-chat-footer [chat]="activeChat" [editMessageRequest]="editMessageRequest"
+                             [replayMessageObject]="replayMessageObject">
             </app-chat-footer>
           </ng-container>
           <ng-template #elseBlock>

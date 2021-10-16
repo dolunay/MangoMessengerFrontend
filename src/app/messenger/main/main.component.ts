@@ -28,6 +28,8 @@ export class MainComponent implements OnInit, OnDestroy {
   realTimeConnections: string[] = [];
   editMessageRequest: EditMessageCommand | null = null;
 
+  replayMessageObject: any | null = null;
+
   isLoaded = false;
 
   currentUser: IUser = {
@@ -336,7 +338,6 @@ export class MainComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log(`edit message event sent to main: ${event.messageId}, ${event.messageText}`);
     this.editMessageRequest = new EditMessageCommand(messageId, messageText);
   }
 
@@ -363,6 +364,17 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onFilterMessageDropdownClick(): void {
     this.loadMessages(this.activeChatId);
+  }
+
+  onReplayMessageClick(event: any): void {
+    console.log('event', event);
+
+    this.replayMessageObject = {
+      messageAuthor: event.messageAuthor,
+      messageText: event.messageText
+    };
+
+    console.log('main replay user name', this.replayMessageObject.messageAuthor)
   }
 
   hasActiveChat(): boolean {
