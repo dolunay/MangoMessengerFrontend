@@ -15,6 +15,7 @@ import {Subscription} from "rxjs";
 import {IUser} from "../../../types/models/IUser";
 import {UsersService} from "../../services/users.service";
 import {EditMessageCommand} from "../../../types/requests/EditMessageCommand";
+import {IEditMessageNotification} from "../../../types/models/IEditMessageNotification";
 
 @Component({
   selector: 'app-main',
@@ -194,11 +195,12 @@ export class MainComponent implements OnInit, OnDestroy {
       this.messages = this.messages.filter(x => x.messageId !== messageId);
     });
 
-    this.connection.on('NotifyOnMessageEdit', (request: EditMessageCommand) => {
+    this.connection.on('NotifyOnMessageEdit', (request: IEditMessageNotification) => {
       let message = this.messages.filter(x => x.messageId === request.messageId)[0];
 
       if (message) {
         message.messageText = request.modifiedText;
+        message.updatedAt = request.updatedAt;
       }
     });
   }
