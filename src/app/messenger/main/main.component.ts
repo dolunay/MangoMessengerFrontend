@@ -383,4 +383,9 @@ export class MainComponent implements OnInit, OnDestroy {
   hasActiveChat(): boolean {
     return this.activeChatId !== '';
   }
+
+  onChangePictureClick(): void {
+    const dialog = document.getElementById('change-chat-logo');
+    dialog?.click();
+  }
 }
