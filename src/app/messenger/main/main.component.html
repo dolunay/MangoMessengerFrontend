@@ -142,8 +142,12 @@
 
           <!-- Chat participant's Name -->
           <div class="media chat-name align-items-center text-truncate">
-            <div class="avatar d-none d-sm-inline-block mr-3">
-              <img src="{{getChatImageUrl()}}" alt="avatar_example">
+            <div class="avatar d-none d-sm-inline-block mr-3 cursor-pointer">
+              <img src="{{getChatImageUrl()}}" (click)="onChangePictureClick()" alt="avatar_example">
+              <input #chatLogoInput type="file" id="change-chat-logo" class="btn btn-close-white change-picture"
+                     style="visibility: hidden; width: 1px; height: 1px"
+                     (change)="onChatLogoChange($event)"
+                     name="picture">
             </div>
 
             <div class="media-body align-self-center">
@@ -259,7 +263,8 @@
         <!-- Chat Footer Start-->
         <div *ngIf="hasActiveChat() && isLoaded">
           <ng-container *ngIf="activeChat.isMember; else elseBlock">
-            <app-chat-footer [chat]="activeChat" [editMessageRequest]="editMessageRequest"
+            <app-chat-footer [chat]="activeChat"
+                             [editMessageRequest]="editMessageRequest"
                              [replayMessageObject]="replayMessageObject">
             </app-chat-footer>
           </ng-container>

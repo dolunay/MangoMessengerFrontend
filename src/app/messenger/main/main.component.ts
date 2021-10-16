@@ -15,6 +15,9 @@ import {Subscription} from "rxjs";
 import {IUser} from "../../../types/models/IUser";
 import {UsersService} from "../../services/users.service";
 import {EditMessageCommand} from "../../../types/requests/EditMessageCommand";
+import {IEditMessageNotification} from "../../../types/models/IEditMessageNotification";
+import {DocumentsService} from "../../services/documents.service";
+import {UpdateChatLogoCommand} from "../../../types/requests/UpdateChatLogoCommand";
 
 @Component({
   selector: 'app-main',
@@ -55,6 +58,7 @@ export class MainComponent implements OnInit, OnDestroy {
   activeChatId = '';
 
   activeChat: IChat = {
+    roleId: 1,
     communityType: CommunityType.PublicChannel,
     lastMessage: null,
     description: "",
@@ -83,6 +87,7 @@ export class MainComponent implements OnInit, OnDestroy {
               private userChatsService: UserChatsService,
               public userService: UsersService,
               private route: ActivatedRoute,
+              private documentService: DocumentsService,
               private router: Router,
               public dialog: MatDialog) {
   }
@@ -194,11 +199,12 @@ export class MainComponent implements OnInit, OnDestroy {
       this.messages = this.messages.filter(x => x.messageId !== messageId);
     });
 
-    this.connection.on('NotifyOnMessageEdit', (request: EditMessageCommand) => {
+    this.connection.on('NotifyOnMessageEdit', (request: IEditMessageNotification) => {
       let message = this.messages.filter(x => x.messageId === request.messageId)[0];
 
       if (message) {
         message.messageText = request.modifiedText;
+        message.updatedAt = request.updatedAt;
       }
     });
   }
@@ -339,6 +345,7 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
     this.editMessageRequest = new EditMessageCommand(messageId, messageText);
+    console.log('main edit event command', this.editMessageRequest);
   }
 
   onJoinGroupEvent() {
@@ -379,5 +386,52 @@ export class MainComponent implements OnInit, OnDestroy {
 
   hasActiveChat(): boolean {
     return this.activeChatId !== '';
+  }
+
+  onChangePictureClick(): void {
+    const validChat = this.activeChat.communityType === CommunityType.PublicChannel
+      || this.activeChat.communityType === CommunityType.PrivateChannel
+      || this.activeChat.communityType === CommunityType.ReadOnlyChannel;
+
+    const validRole = this.activeChat.roleId > 1;
+
+    if (!validChat || !validRole) {
+      return;
+    }
+
+    const dialog = document.getElementById('change-chat-logo');
+    dialog?.click();
+  }
+
+  onChatLogoChange(event: any): void {
+    const file: File = event.target.files[0];
+
+    const properFileFormat = file.name.includes('.jpg')
+      || file.name.includes('.png')
+      || file.name.includes('.JPG')
+      || file.name.includes('.PNG');
+
+    if (!properFileFormat) {
+      alert('Wrong file format.');
+      return;
+    }
+
+    const form = new FormData();
+    form.append("formFile", file);
+    const uploadDocSub = this.documentService.uploadDocument(form).subscribe(uploadResponse => {
+      const chatId = this.activeChatId;
+      const image = uploadResponse.fileName;
+      const updateChatLogoCommand = new UpdateChatLogoCommand(chatId, image);
+      const updateChatLogoSub = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
+        this.activeChat.chatLogoImageUrl = uploadResponse.fileUrl;
+        alert(response.message);
+      }, error => {
+        alert(error.error.ErrorMessage);
+      });
+
+      this.subscriptions.push(updateChatLogoSub);
+    });
+
+    this.subscriptions.push(uploadDocSub);
   }
 }
