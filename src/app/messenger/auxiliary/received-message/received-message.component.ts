@@ -54,7 +54,7 @@ export class ReceivedMessageComponent implements OnDestroy {
       messageText: this.message.messageText
     }
 
-    this.notifyParentOnReplayMessage.emit(body);
+    this.notifyParentOnEditMessage.emit(body);
   }
 
   replayMessage(): void {

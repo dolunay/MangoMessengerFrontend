@@ -339,6 +339,7 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
     this.editMessageRequest = new EditMessageCommand(messageId, messageText);
+    console.log('main edit event command', this.editMessageRequest);
   }
 
   onJoinGroupEvent() {

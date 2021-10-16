@@ -22,6 +22,7 @@
       </div>
     </ng-template>
     <span class="message-date">{{message.createdAt}}</span>
+    <span *ngIf="message.updatedAt" class="message-status">Edited</span>
     <div class="dropdown">
       <div class="text-muted" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <!-- Default :: Inline SVG -->
