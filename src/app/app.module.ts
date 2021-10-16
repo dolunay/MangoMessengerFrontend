@@ -78,7 +78,7 @@ import {MatNativeDateModule} from "@angular/material/core";
       {path: 'restore-password-request', component: PasswordRestoreRequestComponent},
       {path: 'restore-password-form', component: PasswordRestoreFormComponent},
       {path: 'restore-password-form/:requestId', component: PasswordRestoreFormComponent},
-      {path: '', redirectTo: '/login', pathMatch: 'full'},
+      {path: '', redirectTo: '/main', pathMatch: 'full'},
     ]),
     AppRoutingModule,
     ReactiveFormsModule,

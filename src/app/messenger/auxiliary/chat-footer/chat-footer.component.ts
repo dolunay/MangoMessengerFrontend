@@ -18,9 +18,18 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('on changes in footer');
     this.editMessageRequest = changes.editMessageRequest?.currentValue;
+
     if (this.editMessageRequest != null) {
       this.currentMessageText = this.editMessageRequest.modifiedText;
+      return;
+    }
+
+    if (changes.replayMessageObject?.currentValue) {
+      const author = changes.replayMessageObject?.currentValue.messageAuthor;
+      const messageText = changes.replayMessageObject?.currentValue.messageText;
+      this.currentMessageText = `In reply to\n ${author}: ${messageText}`;
     }
   }
 
@@ -32,6 +41,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   @ViewChild('fileInput') fileInput;
 
   @Input() editMessageRequest: EditMessageCommand | null = null;
+  @Input() replayMessageObject: any | null = null;
 
   currentMessageText: string = '';
 

@@ -34,6 +34,7 @@ export class ReceivedMessageComponent implements OnDestroy {
   };
 
   @Output() notifyParentOnEditMessage = new EventEmitter<any>();
+  @Output() notifyParentOnReplayMessage = new EventEmitter<any>();
 
   deleteMessage(): void {
     let deleteSub = this.messageService.deleteMessage(this.message.messageId).subscribe(_ => {
@@ -51,7 +52,18 @@ export class ReceivedMessageComponent implements OnDestroy {
       messageText: this.message.messageText
     }
 
-    this.notifyParentOnEditMessage.emit(body);
+    this.notifyParentOnReplayMessage.emit(body);
+  }
+
+  replayMessage(): void {
+    const body = {
+      messageAuthor: this.message.userDisplayName,
+      messageText: this.message.messageText,
+    }
+
+    console.log('received message user name', body.messageAuthor);
+
+    this.notifyParentOnReplayMessage.emit(body);
   }
 
   getMessageText(): string {
