@@ -9,6 +9,7 @@ import {CommunityType} from "../../../../types/enums/CommunityType";
 export class ChatItemActiveComponent {
 
   @Input() chat: IChat = {
+    roleId: 1,
     communityType: CommunityType.DirectChat,
     lastMessage: null,
     description: "",

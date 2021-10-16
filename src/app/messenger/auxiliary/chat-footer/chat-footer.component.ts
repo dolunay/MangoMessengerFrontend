@@ -59,6 +59,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   isEmojiPickerVisible = false;
 
   @Input() chat: IChat = {
+    roleId: 1,
     chatId: "",
     chatLogoImageUrl: "",
     communityType: CommunityType.DirectChat,

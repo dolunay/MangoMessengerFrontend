@@ -144,8 +144,9 @@
           <div class="media chat-name align-items-center text-truncate">
             <div class="avatar d-none d-sm-inline-block mr-3 cursor-pointer">
               <img src="{{getChatImageUrl()}}" (click)="onChangePictureClick()" alt="avatar_example">
-              <input type="file" id="change-chat-logo" class="btn btn-close-white change-picture"
+              <input #chatLogoInput type="file" id="change-chat-logo" class="btn btn-close-white change-picture"
                      style="visibility: hidden; width: 1px; height: 1px"
+                     (change)="onChatLogoChange($event)"
                      name="picture">
             </div>
 
