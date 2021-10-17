@@ -9,7 +9,9 @@ import {CreateChatCommand} from "../../../types/requests/CreateChatCommand";
 import {ChatType} from "../../../types/enums/ChatType";
 import {SessionService} from "../../services/session.service";
 import {Subscription} from "rxjs";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-contacts',
   templateUrl: './contacts.component.html'
