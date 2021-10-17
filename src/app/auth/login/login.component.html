@@ -1,6 +1,5 @@
 <body class="authentication-page">
 
-<!-- Main Layout Start -->
 <div class="main-layout card-bg-1">
   <div class="container d-flex flex-column">
     <div class="row no-gutters text-center align-items-center justify-content-center min-vh-100">
@@ -10,12 +9,14 @@
         <form class="mb-3">
           <div class="form-group">
             <label for="email" class="sr-only">Email address or Phone number</label>
-            <input [(ngModel)]="emailOrPhone" name="Email" type="email" class="form-control form-control-md" id="email"
+            <input [(ngModel)]="loginCommand.emailOrPhone" name="Email" type="email"
+                   class="form-control form-control-md" id="email"
                    placeholder="Enter your email or phone">
           </div>
           <div class="form-group">
             <label for="password" class="sr-only">Password</label>
-            <input [(ngModel)]="password" name="Password" type="password" class="form-control form-control-md"
+            <input [(ngModel)]="loginCommand.password" name="Password" type="password"
+                   class="form-control form-control-md"
                    id="password"
                    placeholder="Enter your password">
           </div>
