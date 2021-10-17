@@ -6,7 +6,9 @@ import {IUser} from "../../../types/models/IUser";
 import {Subject, Subscription} from "rxjs";
 import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocialsCommand";
 import {DocumentsService} from "../../services/documents.service";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-profile-settings',
   templateUrl: './profile-settings.component.html'
@@ -17,17 +19,23 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
               private documentService: DocumentsService) {
   }
 
-  subscriptions: Subscription[] = [];
+  protected getCurrentUserSub$!: Subscription;
+  protected updateAccountInfoSub$!: Subscription;
+  protected updateUserSocialsSub$!: Subscription;
+  protected changePasswordSub$!: Subscription;
+  protected uploadDocumentSub$!: Subscription;
+  protected updateProfilePictureSub$!: Subscription;
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
-  }
+  public eventsSubject: Subject<IUser> = new Subject<IUser>();
+  public isLoaded = false;
+  public cloneUser!: IUser;
+  public currentPassword = '';
+  public newPassword = '';
+  public repeatNewPassword = '';
+  public fileName = '';
+  public file!: File;
 
-  eventsSubject: Subject<IUser> = new Subject<IUser>();
-
-  isLoaded = false;
-
-  currentUser: IUser = {
+  public currentUser: IUser = {
     pictureUrl: "",
     publicKey: 0,
     address: "",
@@ -47,40 +55,17 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     website: ""
   };
 
-  cloneUser!: IUser;
-
-  currentPassword = '';
-  newPassword = '';
-  repeatNewPassword = '';
-
-  privateKey = 0;
-  fileName = '';
-
-  file!: File;
-
   ngOnInit(): void {
     this.initializeView();
   }
 
-  emitEventToChild(user: IUser): void {
-    this.eventsSubject.next(user);
-  }
-
   initializeView(): void {
-    let currentSub = this.userService.getCurrentUser().subscribe(getUserResponse => {
+    this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(getUserResponse => {
       this.currentUser = getUserResponse.user;
-      this.currentPassword = '';
-      this.newPassword = '';
-      this.repeatNewPassword = '';
-      this.privateKey = 0;
-      this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
+      this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
       this.isLoaded = true;
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(currentSub);
+    }, error => alert(error.error.ErrorMessage));
   }
 
   saveAccountInfo(): void {
@@ -99,15 +84,11 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.currentUser.bio,
       this.currentUser.address);
 
-    let updateSub = this.userService.updateUserAccountInformation(command).subscribe(response => {
+    this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(response => {
       alert(response.message);
-      this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
+      this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(updateSub);
+    }, error => alert(error.error.ErrorMessage));
   }
 
   saveSocialMediaInfo(): void {
@@ -116,15 +97,11 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.currentUser.instagram,
       this.currentUser.linkedIn);
 
-    let socialsSub = this.userService.updateUserSocials(command).subscribe(response => {
+    this.updateUserSocialsSub$ = this.userService.updateUserSocials(command).subscribe(response => {
       alert(response.message);
-      this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
+      this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(socialsSub);
+    }, error => alert(error.error.ErrorMessage));
   }
 
   changePassword(): void {
@@ -139,43 +116,44 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     }
 
     const command = new ChangePasswordCommand(this.currentPassword, this.newPassword);
-    let changeSub = this.userService.changePassword(command).subscribe(data => {
-      alert(data.message);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
 
-    this.subscriptions.push(changeSub);
+    this.changePasswordSub$ = this.userService.changePassword(command).subscribe(data => {
+      alert(data.message);
+    }, error => alert(error.error.ErrorMessage));
   }
 
   updateProfilePicture(): void {
     const formData = new FormData();
     formData.append("formFile", this.file);
 
-    let docSub = this.documentService.uploadDocument(formData).subscribe(uploadResponse => {
-      let profileSub = this.userService.updateProfilePicture(uploadResponse.fileName).subscribe(updateResponse => {
-        console.log(uploadResponse);
-        alert(updateResponse.message);
-        this.currentUser.pictureUrl = uploadResponse.fileUrl;
-        this.cloneUser = (JSON.parse(JSON.stringify(this.currentUser)));
-        this.emitEventToChild(this.cloneUser);
-      });
-
-      this.subscriptions.push(profileSub);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(docSub);
+    this.uploadDocumentSub$ = this.documentService.uploadDocument(formData).subscribe(uploadResp => {
+      this.updateProfilePictureSub$ =
+        this.userService.updateProfilePicture(uploadResp.fileName).subscribe(updateResponse => {
+          alert(updateResponse.message);
+          this.currentUser.pictureUrl = uploadResp.fileUrl;
+          this.cloneCurrentUser();
+          this.emitEventToChild(this.cloneUser);
+        });
+    }, error => alert(error.error.ErrorMessage));
   }
 
-  onFileSelected(event: any) {
-
+  onFileSelected(event: any): void {
     const file: File = event.target.files[0];
 
     if (file) {
       this.file = file;
       this.fileName = file.name;
     }
+  }
+
+  ngOnDestroy(): void {
+  }
+
+  emitEventToChild(user: IUser): void {
+    this.eventsSubject.next(user);
+  }
+
+  private cloneCurrentUser = () => {
+    this.cloneUser = JSON.parse(JSON.stringify(this.currentUser));
   }
 }
