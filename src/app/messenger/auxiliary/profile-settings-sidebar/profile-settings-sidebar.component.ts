@@ -73,7 +73,7 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
 
   logoutAll(): void {
     let refreshToken = this.sessionService.getRefreshToken();
-    let deleteAllSub = this.sessionService.deleteAllSessions(refreshToken)
+    let deleteAllSub = this.sessionService.deleteAllSessions()
       .subscribe((_) => {
         this.sessionService.clearAccessToken();
         this.sessionService.clearRefreshToken();

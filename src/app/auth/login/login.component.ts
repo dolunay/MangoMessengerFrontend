@@ -25,7 +25,7 @@ export class LoginComponent implements OnDestroy {
   }
 
   login(): void {
-    let loginSub = this.authService.postSession(new LoginCommand(this.emailOrPhone, this.password))
+    let loginSub = this.authService.createSession(new LoginCommand(this.emailOrPhone, this.password))
       .subscribe(data => {
         this.authService.writeAccessToken(data.accessToken);
         this.authService.writeRefreshToken(data.refreshToken);

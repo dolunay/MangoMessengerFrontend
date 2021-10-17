@@ -24,9 +24,9 @@ export class VerifyPhoneComponent implements OnDestroy {
   }
 
   verifyPhone(): void {
-    let phoneSub = this.usersService.putPhoneConfirmation(this.phoneCode).subscribe(confirm => {
+    let phoneSub = this.usersService.confirmPhone(this.phoneCode).subscribe(confirm => {
       const refreshToken = this.sessionService.getRefreshToken();
-      let refreshSub = this.sessionService.postRefreshSession(refreshToken).subscribe(refreshResp => {
+      let refreshSub = this.sessionService.refreshSession(refreshToken).subscribe(refreshResp => {
         this.sessionService.writeAccessToken(refreshResp.accessToken);
         this.sessionService.writeRefreshToken(refreshResp.refreshToken);
         this.subscriptions.push(refreshSub);

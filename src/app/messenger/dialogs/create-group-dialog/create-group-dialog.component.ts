@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ICreateCommunityResponse} from "../../../../types/responses/ICreateCommunityResponse";
-import {ChatsService} from "../../../services/chats.service";
+import {CommunitiesService} from "../../../services/communities.service";
 import {CreateChannelCommand} from "../../../../types/requests/CreateChannelCommand";
 import {Subscription} from "rxjs";
 
@@ -14,7 +14,7 @@ export class CreateGroupDialogComponent implements OnDestroy {
 
   constructor(public dialogRef: MatDialogRef<CreateGroupDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: ICreateCommunityResponse,
-              private chatService: ChatsService) {
+              private chatService: CommunitiesService) {
   }
 
   groupType = "Private Channel";

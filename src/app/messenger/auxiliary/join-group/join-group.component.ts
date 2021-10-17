@@ -16,7 +16,7 @@ export class JoinGroupComponent implements OnDestroy {
   subscriptions: Subscription[] = [];
 
   onJoinGroupClick(): void {
-    let joinSub = this.userChatService.postJoinChat(this.chatId).subscribe((_) => {
+    let joinSub = this.userChatService.joinCommunity(this.chatId).subscribe((_) => {
       this.notifyParentOnJoinGroup.emit();
     }, error => {
       alert(error.error.ErrorMessage);

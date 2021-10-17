@@ -30,7 +30,7 @@ export class RegisterComponent {
     const command = new RegisterCommand(this.phoneNumber, this.email, this.displayName,
       this.password, verificationMethod, this.termsAccepted);
 
-    this.usersService.postUser(command).subscribe((data) => {
+    this.usersService.createUser(command).subscribe((data) => {
       this.sessionService.writeAccessToken(data.accessToken);
       this.sessionService.writeRefreshToken(data.refreshToken);
       this.sessionService.writeUserId(data.userId);

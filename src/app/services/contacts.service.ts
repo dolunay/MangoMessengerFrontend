@@ -15,18 +15,22 @@ export class ContactsService {
   constructor(private httpClient: HttpClient) {
   }
 
+  // GET /api/contacts
   getCurrentUserContacts(): Observable<IGetContactsResponse> {
     return this.httpClient.get<IGetContactsResponse>(ApiRoute.route + this.contactsRoute);
   }
 
-  postAddContact(userId: string): Observable<IBaseResponse> {
+  // POST /api/contacts/{contactId}
+  addContact(userId: string): Observable<IBaseResponse> {
     return this.httpClient.post<IGetContactsResponse>(ApiRoute.route + this.contactsRoute + userId, {});
   }
 
+  // DELETE /api/contacts/{contactId}
   deleteContact(userId: string): Observable<IBaseResponse> {
     return this.httpClient.delete<IGetContactsResponse>(ApiRoute.route + this.contactsRoute + userId);
   }
 
+  // GET /api/contacts/searches
   searchContacts(displayName: string): Observable<ISearchContactsResponse> {
     return this.httpClient.get<ISearchContactsResponse>(ApiRoute.route + this.contactsRoute +
       'searches?searchQuery=' + displayName);

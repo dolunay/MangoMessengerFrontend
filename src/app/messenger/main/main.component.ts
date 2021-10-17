@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
-import {ChatsService} from "../../services/chats.service";
+import {CommunitiesService} from "../../services/communities.service";
 import {MessagesService} from "../../services/messages.service";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
@@ -82,7 +82,7 @@ export class MainComponent implements OnInit, OnDestroy {
     .build();
 
   constructor(private sessionService: SessionService,
-              private chatService: ChatsService,
+              private chatService: CommunitiesService,
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
               public userService: UsersService,
@@ -296,7 +296,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onArchiveChatClick(): void {
-    let archiveSub = this.userChatsService.putArchiveChat(this.activeChatId).subscribe(_ => {
+    let archiveSub = this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ => {
       this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
     }, error => {
       alert(error.error.ErrorMessage);
@@ -306,7 +306,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onLeaveChatClick(): void {
-    let deleteSub = this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
+    let deleteSub = this.userChatsService.leaveCommunity(this.activeChatId).subscribe(_ => {
       this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
 
       if (this.chats[0]) {

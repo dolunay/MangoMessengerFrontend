@@ -13,15 +13,18 @@ export class UserChatsService {
   constructor(private httpClient: HttpClient) {
   }
 
-  postJoinChat(chatId: string): Observable<IBaseResponse> {
+  // POST /api/user-chats/{chatId}
+  joinCommunity(chatId: string): Observable<IBaseResponse> {
     return this.httpClient.post<IBaseResponse>(ApiRoute.route + this.userChatsRoute + chatId, {});
   }
 
-  putArchiveChat(chatId: string): Observable<IBaseResponse> {
+  // PUT /api/user-chats/{chatId}
+  archiveCommunity(chatId: string): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.userChatsRoute + chatId, {});
   }
 
-  deleteLeaveChat(chatId: string): Observable<IBaseResponse> {
+  // DELETE /api/user-chats/{chatId}
+  leaveCommunity(chatId: string): Observable<IBaseResponse> {
     return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.userChatsRoute + chatId);
   }
 }

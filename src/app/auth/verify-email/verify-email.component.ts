@@ -27,7 +27,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       const emailCode = params['emailCode'];
       const email = params['email'];
-      let putSubscribe = this.usersService.putEmailConfirmation(new VerifyEmailCommand(email, emailCode))
+      let putSubscribe = this.usersService.confirmEmail(new VerifyEmailCommand(email, emailCode))
         .subscribe(data => {
           this.success = data.success;
 
@@ -42,7 +42,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
 
   proceedToStart(): void {
     const refreshToken = this.sessionService.getRefreshToken();
-    let refreshSub = this.sessionService.postRefreshSession(refreshToken).subscribe(result => {
+    let refreshSub = this.sessionService.refreshSession(refreshToken).subscribe(result => {
       this.sessionService.writeRefreshToken(result.refreshToken);
       this.sessionService.writeAccessToken(result.accessToken);
       this.router.navigateByUrl('main').then(_ => _);

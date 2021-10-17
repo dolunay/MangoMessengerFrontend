@@ -14,6 +14,7 @@ export class DocumentsService {
   constructor(private httpClient: HttpClient) {
   }
 
+  // POST /api/documents
   uploadDocument(formData: FormData): Observable<IUploadDocumentResponse> {
     return this.httpClient.post<IUploadDocumentResponse>(ApiRoute.route + this.documentsRoute, formData);
   }

@@ -139,7 +139,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     }
 
     const command = new ChangePasswordCommand(this.currentPassword, this.newPassword);
-    let changeSub = this.userService.putChangePassword(command).subscribe(data => {
+    let changeSub = this.userService.changePassword(command).subscribe(data => {
       alert(data.message);
     }, error => {
       alert(error.error.ErrorMessage);

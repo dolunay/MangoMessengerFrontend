@@ -18,22 +18,27 @@ export class MessagesService {
   constructor(private httpClient: HttpClient) {
   }
 
+  // GET /api/messages/{chatId}
   getChatMessages(chatId: string): Observable<IGetChatMessagesResponse> {
     return this.httpClient.get<IGetChatMessagesResponse>(ApiRoute.route + this.messagesRoute + chatId);
   }
 
+  // POST /api/messages
   sendMessage(request: SendMessageCommand): Observable<ISendMessageResponse> {
     return this.httpClient.post<ISendMessageResponse>(ApiRoute.route + this.messagesRoute, request);
   }
 
+  // DELETE /api/messages/{messageId}
   deleteMessage(messageId: string): Observable<IDeleteMessageResponse> {
     return this.httpClient.delete<IDeleteMessageResponse>(ApiRoute.route + this.messagesRoute + messageId);
   }
 
+  // PUT /api/messages
   editMessage(request: EditMessageCommand): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.messagesRoute, request);
   }
 
+  // GET /api/messages/searches/{chatId}
   searchMessages(chatId: string, text: string): Observable<IGetChatMessagesResponse> {
     return this.httpClient.get<IGetChatMessagesResponse>(ApiRoute.route + this.messagesRoute +
       'searches/' + chatId + '?messageText=' + text);

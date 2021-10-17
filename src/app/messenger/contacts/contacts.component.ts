@@ -3,7 +3,7 @@ import {ContactsService} from "../../services/contacts.service";
 import {IContact} from "../../../types/models/IContact";
 import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
-import {ChatsService} from "../../services/chats.service";
+import {CommunitiesService} from "../../services/communities.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CreateChatCommand} from "../../../types/requests/CreateChatCommand";
 import {ChatType} from "../../../types/enums/ChatType";
@@ -18,7 +18,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   constructor(private contactsService: ContactsService,
               public userService: UsersService,
-              private chatsService: ChatsService,
+              private chatsService: CommunitiesService,
               private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router) {
@@ -113,7 +113,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   onAddContactClick() {
-    let contactsSub = this.contactsService.postAddContact(this.currentOpenedUser.userId).subscribe(_ => {
+    let contactsSub = this.contactsService.addContact(this.currentOpenedUser.userId).subscribe(_ => {
       this.onFilterClick('All Contacts');
       this.contactsSearchQuery = '';
       this.currentOpenedUserIsContact = true;

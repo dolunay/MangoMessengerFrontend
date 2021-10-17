@@ -14,37 +14,45 @@ import {IBaseResponse} from "../../types/responses/IBaseResponse";
 @Injectable({
   providedIn: 'root'
 })
-export class ChatsService {
+export class CommunitiesService {
   private chatsRoute = 'api/communities/'
 
   constructor(private httpClient: HttpClient) {
   }
 
+  // GET /api/communities
   getUserChats(): Observable<IGetUserChatsResponse> {
     return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute);
   }
 
+  // POST /api/communities/chat
   createChat(request: CreateChatCommand): Observable<ICreateCommunityResponse> {
     return this.httpClient.post<ICreateCommunityResponse>(ApiRoute.route + this.chatsRoute + 'chat', request);
   }
 
+  // POST /api/communities/channel
   createChannel(request: CreateChannelCommand): Observable<ICreateCommunityResponse> {
     return this.httpClient.post<ICreateCommunityResponse>(ApiRoute.route + this.chatsRoute + 'channel', request);
   }
 
+  // GET /api/communities/searches
   searchChat(displayName: string): Observable<IGetUserChatsResponse> {
-    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + 'searches?displayName=' + displayName);
+    return this.httpClient.get<IGetUserChatsResponse>(ApiRoute.route + this.chatsRoute + 'searches?displayName='
+      + displayName);
   }
 
+  // GET /api/communities/{id}
   getChatById(chatId: string): Observable<IGetChatByIdResponse> {
     return this.httpClient.get<IGetChatByIdResponse>(ApiRoute.route + this.chatsRoute + chatId);
   }
 
+  // GET /api/communities/chats/public-key/{chatId}
   getSecretChatPublicKey(chatId: string): Observable<IGetSecretChatPublicKeyResponse> {
-    return this.httpClient.get<IGetSecretChatPublicKeyResponse>(ApiRoute.route + this.chatsRoute + 'chats/public-key/'
-      + chatId);
+    return this.httpClient.get<IGetSecretChatPublicKeyResponse>(ApiRoute.route + this.chatsRoute +
+      'chats/public-key/' + chatId);
   }
 
+  // PUT /api/communities/picture
   updateChatLogo(command: UpdateChatLogoCommand): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.chatsRoute + 'picture', command);
   }

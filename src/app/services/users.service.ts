@@ -22,36 +22,44 @@ export class UsersService {
   constructor(private httpClient: HttpClient) {
   }
 
+  // PUT /api/users/socials
   updateUserSocials(request: UpdateUserSocialsCommand): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'socials/', request);
   }
 
+  // GET /api/users
   getCurrentUser(): Observable<IGetUserResponse> {
     return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute);
   }
 
+  // GET /api/users/{userId}
   getUserById(userId: string | null): Observable<IGetUserResponse> {
     return this.httpClient.get<IGetUserResponse>(ApiRoute.route + this.usersRoute + userId);
   }
 
-  postUser(command: RegisterCommand): Observable<ITokensResponse> {
+  // POST /api/users
+  createUser(command: RegisterCommand): Observable<ITokensResponse> {
     return this.httpClient.post<ITokensResponse>(ApiRoute.route + this.usersRoute, command);
   }
 
-  putEmailConfirmation(request: VerifyEmailCommand): Observable<IBaseResponse> {
+  // PUT /api/users/email-confirmation
+  confirmEmail(request: VerifyEmailCommand): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'email-confirmation/',
       request);
   }
 
-  putPhoneConfirmation(phoneCode: number): Observable<IBaseResponse> {
+  // PUT /api/users/{phoneCode}
+  confirmPhone(phoneCode: number): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + phoneCode, {});
   }
 
+  // PUT /api/users/account
   updateUserAccountInformation(request: UpdateAccountInformationCommand): Observable<IBaseResponse> {
     return this.httpClient.put<ISearchContactsResponse>(ApiRoute.route + this.usersRoute + 'account/', request);
   }
 
-  putChangePassword(request: ChangePasswordCommand): Observable<IBaseResponse> {
+  // PUT /api/users/password
+  changePassword(request: ChangePasswordCommand): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'password/', request);
   }
 
@@ -59,6 +67,7 @@ export class UsersService {
     return user.pictureUrl ? user.pictureUrl : 'assets/media/avatar/4.png';
   }
 
+  // PUT /api/users/picture/{image}
   updateProfilePicture(image: string): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(ApiRoute.route + this.usersRoute + 'picture/' + image, {});
   }
