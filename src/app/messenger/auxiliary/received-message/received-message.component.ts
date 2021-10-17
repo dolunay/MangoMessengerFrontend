@@ -2,7 +2,9 @@ import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {IMessage} from "../../../../types/models/IMessage";
 import {MessagesService} from "../../../services/messages.service";
 import {Subscription} from "rxjs";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-received-message',
   templateUrl: './received-message.component.html'
@@ -12,11 +14,7 @@ export class ReceivedMessageComponent implements OnDestroy {
   constructor(private messageService: MessagesService) {
   }
 
-  subscriptions: Subscription[] = [];
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
-  }
+  protected deleteMessageSub$!: Subscription;
 
   @Input() message: IMessage = {
     inReplayToAuthor: "",
@@ -39,13 +37,10 @@ export class ReceivedMessageComponent implements OnDestroy {
   @Output() notifyParentOnReplayMessage = new EventEmitter<any>();
 
   deleteMessage(): void {
-    let deleteSub = this.messageService.deleteMessage(this.message.messageId).subscribe(_ => {
+    this.deleteMessageSub$ =
+      this.messageService.deleteMessage(this.message.messageId).subscribe(_ => {
+      }, error => alert(error.error.ErrorMessage));
 
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(deleteSub);
   }
 
   editMessage(): void {
@@ -63,12 +58,13 @@ export class ReceivedMessageComponent implements OnDestroy {
       messageText: this.message.messageText,
     }
 
-    console.log('received message user name', body.messageAuthor);
-
     this.notifyParentOnReplayMessage.emit(body);
   }
 
   getMessageText(): string {
     return this.message.messageText;
+  }
+
+  ngOnDestroy(): void {
   }
 }
