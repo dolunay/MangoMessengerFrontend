@@ -24,12 +24,21 @@ export class ContactsComponent implements OnInit, OnDestroy {
               private router: Router) {
   }
 
-  contacts: IContact[] = [];
-  subscriptions: Subscription[] = [];
+  private currentUser!: IUser;
 
-  isLoaded = false;
+  protected getCurrentUserContactsSub$!: Subscription;
+  protected getCurrentUserSub$!: Subscription;
+  protected onFilterSub$!: Subscription;
+  protected searchSub$!: Subscription;
+  protected getUserByIdSub$!: Subscription;
+  protected addContactSub$!: Subscription;
+  protected createDirectChatSub$!: Subscription;
+  protected deleteContactSub$!: Subscription;
 
-  currentOpenedUser: IUser = {
+  public contacts: IContact[] = [];
+  public isLoaded = false;
+
+  public currentOpenedContact: IUser = {
     pictureUrl: "",
     publicKey: 0,
     address: "",
@@ -49,109 +58,95 @@ export class ContactsComponent implements OnInit, OnDestroy {
     website: ""
   };
 
-  contactsSearchQuery = '';
-  contactsFilter = 'All Contacts';
-  currentOpenedUserIsContact = false;
+  public contactsSearchQuery = '';
+  public contactsFilter = 'All Contacts';
+  public currentOpenedUserIsContact = false;
 
   ngOnInit(): void {
     this.initializeView();
   }
 
-  initializeView(): void {
-    let initialSub = this.contactsService.getCurrentUserContacts().subscribe(getContactsResponse => {
-      this.contacts = getContactsResponse.contacts;
+  private initializeView(): void {
+    this.getCurrentUserContactsSub$ =
+      this.contactsService.getCurrentUserContacts().subscribe(contResponse => {
+        this.contacts = contResponse.contacts;
 
-      let userSub = this.userService.getCurrentUser().subscribe(getUserResponse => {
-        this.currentOpenedUser = getUserResponse.user;
-        this.isLoaded = true;
-        this.currentOpenedUserIsContact = true;
-        this.contactsFilter = 'All Contacts';
-        this.contactsSearchQuery = '';
-      });
-
-      this.subscriptions.push(userSub);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(initialSub);
+        this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(response => {
+          this.currentUser = response.user;
+          this.currentOpenedContact = response.user;
+          this.isLoaded = true;
+          this.currentOpenedUserIsContact = true;
+          this.contactsFilter = 'All Contacts';
+          this.contactsSearchQuery = '';
+        });
+      }, error => alert(error.error.ErrorMessage));
   }
 
   onFilterClick(filter: string) {
-    this.contactsFilter = filter;
-    let contactsSub = this.contactsService.getCurrentUserContacts().subscribe(getContactsResponse => {
-      this.contacts = getContactsResponse.contacts;
-      this.contactsSearchQuery = '';
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
 
-    this.subscriptions.push(contactsSub);
+    this.contactsFilter = filter;
+
+    this.onFilterSub$ = this.contactsService.getCurrentUserContacts().subscribe(response => {
+      this.contacts = response.contacts;
+      this.contactsSearchQuery = '';
+    }, error => alert(error.error.ErrorMessage));
   }
 
   onUserSearchClick(): void {
-    let searchSub = this.contactsService.searchContacts(this.contactsSearchQuery)
-      .subscribe(searchContactsResponse => {
-        this.contacts = searchContactsResponse.contacts;
+    this.searchSub$ =
+      this.contactsService.searchContacts(this.contactsSearchQuery).subscribe(response => {
+        this.contacts = response.contacts;
         this.contactsFilter = 'Search Results';
-      }, error => {
-        alert(error.error.ErrorMessage);
-      });
-
-    this.subscriptions.push(searchSub);
+      }, error => alert(error.error.ErrorMessage));
   }
 
   onContactClick(contact: IContact): void {
-    let userSub = this.userService.getUserById(contact.userId).subscribe(getUserResponse => {
-      this.currentOpenedUser = getUserResponse.user;
+    this.getUserByIdSub$ = this.userService.getUserById(contact.userId).subscribe(response => {
+      this.currentOpenedContact = response.user;
       this.currentOpenedUserIsContact = contact.isContact;
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(userSub);
+    }, error => alert(error.error.ErrorMessage));
   }
 
   onAddContactClick() {
-    let contactsSub = this.contactsService.addContact(this.currentOpenedUser.userId).subscribe(_ => {
+    const contactId = this.currentOpenedContact.userId;
+
+    this.addContactSub$ = this.contactsService.addContact(contactId).subscribe(_ => {
+
+      // TODO: This API call is redundant, keep contacts in memory and simply push result to array
+      // TODO: Implement contacts repo
       this.onFilterClick('All Contacts');
+
       this.contactsSearchQuery = '';
       this.currentOpenedUserIsContact = true;
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(contactsSub);
+    }, error => alert(error.error.ErrorMessage));
   }
 
   onStartDirectChatClick() {
-    const userId = this.currentOpenedUser.userId;
+    const userId = this.currentOpenedContact.userId;
     const createDirectChatCommand = new CreateChatCommand(userId, ChatType.DirectChat);
 
-    let createSub = this.chatsService.createChat(createDirectChatCommand).subscribe(createChatResponse => {
-      this.router.navigate(['main', {chatId: createChatResponse.chatId}]).then(r => r);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(createSub);
+    this.createDirectChatSub$ =
+      this.chatsService.createChat(createDirectChatCommand).subscribe(response => {
+        this.router.navigate(['main', {chatId: response.chatId}]).then(r => r);
+      }, error => alert(error.error.ErrorMessage));
   }
 
   onRemoveContactClick() {
-    let deleteSub = this.contactsService.deleteContact(this.currentOpenedUser.userId).subscribe(_ => {
-      this.initializeView();
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
+    const userToRemoveId = this.currentOpenedContact.userId;
 
-    this.subscriptions.push(deleteSub);
+    this.deleteContactSub$ =
+      this.contactsService.deleteContact(this.currentOpenedContact.userId).subscribe(_ => {
+        this.contacts = this.contacts.filter(x => x.userId !== userToRemoveId);
+        this.currentOpenedContact = this.currentUser;
+      }, error => alert(error.error.ErrorMessage));
+
   }
 
-  getContactItemClass(userId: string): string {
-    return userId === this.currentOpenedUser.userId ? 'contacts-item active' : 'contacts-item';
-  }
+  getContactItemClass = (userId: string) => userId === this.currentOpenedContact.userId
+    ? 'contacts-item active'
+    : 'contacts-item';
+
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
   }
 }
