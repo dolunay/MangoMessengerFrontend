@@ -1,4 +1,4 @@
-<body class="profile-tab-open">
+<body class="profile-tab-open" style="background-color: #353535">
 
 <!-- Main Layout Start -->
 <div class="main-layout">
@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <div class="container-xl px-2 px-sm-3">
+      <div class="container-xl px-2 px-sm-3" *ngIf="isLoaded">
         <div class="row">
           <div class="col">
             <div class="card mb-3">
@@ -45,22 +45,6 @@
                 <div class="row">
                   <div class="col-md-6 col-12">
                     <div class="form-group">
-                      <label for="firstName">First Name</label>
-                      <input [(ngModel)]="currentUser.firstName" type="text" class="form-control form-control-md"
-                             id="firstName"
-                             placeholder="Type your first name" value="{{currentUser.firstName}}">
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group">
-                      <label for="lastName">Last Name</label>
-                      <input [(ngModel)]="currentUser.lastName" type="text" class="form-control form-control-md"
-                             id="lastName"
-                             placeholder="Type your last name" value="{{currentUser.lastName}}">
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group">
                       <label for="mobileNumber">Mobile number</label>
                       <input [(ngModel)]="currentUser.phoneNumber"
                              type="number"
@@ -70,12 +54,6 @@
                     </div>
                   </div>
                   <div class="col-md-6 col-12">
-                    <!--                    <div class="form-group">-->
-                    <!--                      <label for="birthDate">Birth date</label>-->
-                    <!--                      <input [(ngModel)]="currentUser.birthdayDate" type="text" class="form-control form-control-md"-->
-                    <!--                             id="birthDate"-->
-                    <!--                             placeholder="dd/mm/yyyy" value="{{currentUser.birthdayDate}}">-->
-                    <!--                    </div>-->
                     <mat-form-field appearance="fill">
                       <mat-label>Birthday Date</mat-label>
                       <input matInput [matDatepicker]="picker" [(ngModel)]="currentUser.birthdayDate">

@@ -20,6 +20,7 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.eventsSubscription = this.events.subscribe(data => {
       this.user = data;
+      this.isLoaded = true;
     });
 
     this.subscriptions.push(this.eventsSubscription);
@@ -47,6 +48,8 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
 
   @Input() events!: Observable<IUser>;
   subscriptions: Subscription[] = [];
+
+  isLoaded = false;
 
   private eventsSubscription!: Subscription;
 

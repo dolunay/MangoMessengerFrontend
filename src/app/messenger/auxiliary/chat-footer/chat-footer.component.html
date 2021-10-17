@@ -48,7 +48,6 @@
     <!-- Chat Input Group Start -->
     <div class="col">
       <div class="input-group">
-
         <!-- Textarea Start-->
         <textarea [(ngModel)]="currentMessageText"
                   (keydown.enter)="onMessageSendClick($event)"
@@ -63,6 +62,10 @@
       <div *ngIf="attachmentName">
         {{attachmentName}}
         <button (click)="deleteAttachment()" class="btn-close"></button>
+      </div>
+      <div *ngIf="inReplayAuthor && inReplayText">
+        In replay to <strong>{{inReplayAuthor}}:</strong>  {{inReplayText}}
+        <button (click)="clearInReplay()" class="btn-close"></button>
       </div>
     </div>
     <!-- Chat Input Group End -->

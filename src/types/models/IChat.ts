@@ -11,4 +11,5 @@ export interface IChat {
   isArchived: boolean;
   isMember: boolean;
   lastMessage: IMessage | null;
+  roleId: number;
 }
