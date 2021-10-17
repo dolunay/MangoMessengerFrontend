@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {IUserService} from "../../types/interfaces/IUserService";
 import {IGetUserResponse} from "../../types/responses/IGetUserResponse";
 import {RegisterCommand} from "../../types/requests/RegisterCommand";
 import {VerifyEmailCommand} from "../../types/requests/VerifyEmailCommand";
@@ -17,7 +16,7 @@ import {IUser} from "../../types/models/IUser";
 @Injectable({
   providedIn: 'root'
 })
-export class UsersService implements IUserService {
+export class UsersService {
   private usersRoute = 'api/users/'
 
   constructor(private httpClient: HttpClient) {

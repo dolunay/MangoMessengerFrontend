@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ICommunityService} from "../../types/interfaces/ICommunityService";
 import {IGetUserChatsResponse} from "../../types/responses/IGetUserChatsResponse";
 import {ICreateCommunityResponse} from "../../types/responses/ICreateCommunityResponse";
 import {CreateChannelCommand} from "../../types/requests/CreateChannelCommand";
@@ -15,7 +14,7 @@ import {IBaseResponse} from "../../types/responses/IBaseResponse";
 @Injectable({
   providedIn: 'root'
 })
-export class ChatsService implements ICommunityService {
+export class ChatsService {
   private chatsRoute = 'api/communities/'
 
   constructor(private httpClient: HttpClient) {

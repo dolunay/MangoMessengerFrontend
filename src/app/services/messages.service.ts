@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {IMessagesService} from "../../types/interfaces/IMessagesService";
 import {IGetChatMessagesResponse} from "../../types/responses/IGetChatMessagesResponse";
 import {SendMessageCommand} from "../../types/requests/SendMessageCommand";
 import {ISendMessageResponse} from "../../types/responses/ISendMessageResponse";
@@ -13,7 +12,7 @@ import {IDeleteMessageResponse} from "../../types/responses/IDeleteMessageRespon
 @Injectable({
   providedIn: 'root'
 })
-export class MessagesService implements IMessagesService {
+export class MessagesService {
   private messagesRoute = 'api/messages/'
 
   constructor(private httpClient: HttpClient) {

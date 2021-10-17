@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {IContactsService} from "../../types/interfaces/IContactsService";
 import {Observable} from "rxjs";
 import {IGetContactsResponse} from "../../types/responses/IGetContactsResponse";
 import {HttpClient} from "@angular/common/http";
@@ -10,7 +9,7 @@ import {ISearchContactsResponse} from "../../types/responses/ISearchContactsResp
 @Injectable({
   providedIn: 'root'
 })
-export class ContactsService implements IContactsService {
+export class ContactsService {
   private contactsRoute = 'api/contacts/'
 
   constructor(private httpClient: HttpClient) {

@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Tokens} from "../../consts/Tokens";
-import {ISessionService} from "../../types/interfaces/ISessionService";
 import {LoginCommand} from "../../types/requests/LoginCommand";
 import {ITokensResponse} from "../../types/responses/ITokensResponse";
 import {ApiRoute} from "../../consts/ApiRoute";
@@ -11,7 +10,7 @@ import {IBaseResponse} from "../../types/responses/IBaseResponse";
 @Injectable({
   providedIn: 'root'
 })
-export class SessionService implements ISessionService {
+export class SessionService {
   private sessionsRoute = 'api/sessions/'
 
   constructor(private httpClient: HttpClient) {
