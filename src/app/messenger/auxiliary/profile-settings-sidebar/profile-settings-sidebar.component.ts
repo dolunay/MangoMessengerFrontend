@@ -4,7 +4,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {UsersService} from "../../../services/users.service";
 import {IUser} from "../../../../types/models/IUser";
 import {Observable, Subscription} from "rxjs";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-profile-settings-sidebar',
   templateUrl: './profile-settings-sidebar.component.html'
@@ -17,16 +19,12 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
               private router: Router) {
   }
 
-  ngOnInit(): void {
-    this.eventsSubscription = this.events.subscribe(data => {
-      this.user = data;
-      this.isLoaded = true;
-    });
+  protected eventsSubscription$!: Subscription;
+  protected deleteSessionSub$!: Subscription;
+  protected deleteAllSessionsSub$!: Subscription;
 
-    this.subscriptions.push(this.eventsSubscription);
-  }
-
-  user: IUser = {
+  public isLoaded = false;
+  public user: IUser = {
     address: "",
     bio: "",
     birthdayDate: "",
@@ -46,50 +44,42 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
     website: ""
   }
 
-  @Input() events!: Observable<IUser>;
-  subscriptions: Subscription[] = [];
+  @Input() events$!: Observable<IUser>;
 
-  isLoaded = false;
-
-  private eventsSubscription!: Subscription;
+  ngOnInit(): void {
+    this.eventsSubscription$ = this.events$.subscribe(data => {
+      this.user = data;
+      this.isLoaded = true;
+    });
+  }
 
   logout(): void {
     let refreshToken = this.sessionService.getRefreshToken();
-    let deleteSession = this.sessionService.deleteSession(refreshToken)
-      .subscribe((_) => {
-        this.sessionService.clearAccessToken();
-        this.sessionService.clearRefreshToken();
-        this.sessionService.clearUserId();
-        this.router.navigateByUrl('login').then(r => r);
-      }, _ => {
-        this.sessionService.clearAccessToken();
-        this.sessionService.clearRefreshToken();
-        this.sessionService.clearUserId();
-        this.router.navigateByUrl('login').then(r => r);
-      });
-
-    this.subscriptions.push(deleteSession);
+    this.deleteSessionSub$ = this.sessionService.deleteSession(refreshToken).subscribe(_ => {
+      this.clearTokens();
+      this.router.navigateByUrl('login').then(r => r);
+    }, _ => {
+      this.clearTokens();
+      this.router.navigateByUrl('login').then(r => r);
+    });
   }
 
   logoutAll(): void {
-    let refreshToken = this.sessionService.getRefreshToken();
-    let deleteAllSub = this.sessionService.deleteAllSessions()
-      .subscribe((_) => {
-        this.sessionService.clearAccessToken();
-        this.sessionService.clearRefreshToken();
-        this.sessionService.clearUserId();
-        this.router.navigateByUrl('login').then(r => r);
-      }, _ => {
-        this.sessionService.clearAccessToken();
-        this.sessionService.clearRefreshToken();
-        this.sessionService.clearUserId();
-        this.router.navigateByUrl('login').then(r => r);
-      });
+    this.deleteAllSessionsSub$ = this.sessionService.deleteAllSessions().subscribe(_ => {
+      this.clearTokens();
+      this.router.navigateByUrl('login').then(r => r);
+    }, _ => {
+      this.clearTokens();
+      this.router.navigateByUrl('login').then(r => r);
+    });
+  }
 
-    this.subscriptions.push(deleteAllSub);
+  private clearTokens = () => {
+    this.sessionService.clearAccessToken();
+    this.sessionService.clearRefreshToken();
+    this.sessionService.clearUserId();
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
   }
 }
