@@ -11,7 +11,7 @@
             <input [(ngModel)]="registerCommand.phoneNumber" name="PhoneNumber" type="number"
                    class="form-control form-control-md"
                    id="phoneNumber"
-                   placeholder="Enter phone number (max. 13 digits)">
+                   placeholder="Enter phone number (max. 14 digits)">
           </div>
           <div class="form-group">
             <label for="displayName" class="sr-only">Display Name</label>
@@ -33,13 +33,6 @@
                    id="password"
                    placeholder="Enter password">
           </div>
-          <!--          <div class="text-white">-->
-          <!--            Verification method:-->
-          <!--            <select [(ngModel)]="verificationMethod" name="verificationMethod" [value]="verificationMethod">-->
-          <!--              <option *ngFor="let method of verificationMethods" [value]="method"-->
-          <!--                      [label]="method"></option>-->
-          <!--            </select>-->
-          <!--          </div>-->
           <div class="form-group">
             <input [checked]="registerCommand.termsAccepted"
                    (change)="registerCommand.termsAccepted = !registerCommand.termsAccepted"
@@ -54,6 +47,7 @@
         </form>
 
         <p>Already have an account? <a class="font-weight-semibold" routerLink="/login">Login</a>.</p>
+        <p>Forgot password? <a class="font-weight-semibold" routerLink="/restore-password-request">Restore</a>.</p>
       </div>
     </div>
   </div>
