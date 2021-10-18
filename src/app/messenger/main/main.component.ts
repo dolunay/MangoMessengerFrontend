@@ -100,8 +100,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
     let chatSubscription = this.chatService.getUserChats().subscribe(chatsResponse => {
 
-      this.chats = chatsResponse.chats.filter(x => !x.isArchived &&
-        x.communityType !== CommunityType.SecretChat);
+      this.chats = chatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
 
       this.connection.start().then(() => {
         this.chats.forEach(x => {
@@ -186,17 +185,12 @@ export class MainComponent implements OnInit, OnDestroy {
 
   private loadMessages(chatId: string | null): void {
     if (chatId != null) {
-
       let messagesSub = this.messageService.getChatMessages(chatId).subscribe(response => {
           this.messages = response.messages;
           this.activeChatId = chatId;
           this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
           this.scrollToEnd();
-
-        },
-        error => {
-          alert(error.error.ErrorMessage);
-        });
+        }, error => alert(error.error.ErrorMessage));
     }
   }
 
@@ -211,7 +205,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (!this.realTimeConnections.includes(chatId)) {
         this.connection.invoke("JoinGroup", chatId).then(() => {
-          console.log('missing group connected to realtime.');
           this.realTimeConnections.push(chatId);
         });
       }
@@ -253,19 +246,24 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onSearchClick(): void {
     let searchSub = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
+
       this.chats = response.chats;
       this.chatFilter = 'Search Results';
+
     }, error => alert(error.error.ErrorMessage));
   }
 
   onArchiveChatClick(): void {
     let archiveSub = this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ => {
+
       this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
+
     }, error => alert(error.error.ErrorMessage));
   }
 
   onLeaveChatClick(): void {
     let deleteSub = this.userChatsService.leaveCommunity(this.activeChatId).subscribe(_ => {
+
       this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
 
       if (this.chats[0]) {
@@ -299,7 +297,6 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
     this.editMessageRequest = new EditMessageCommand(messageId, messageText);
-    console.log('main edit event command', this.editMessageRequest);
   }
 
   onJoinGroupEvent() {
