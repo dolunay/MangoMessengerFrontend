@@ -10,10 +10,6 @@ export class ContactItemComponent {
   constructor() {
   }
 
-  @Input() contactName = '';
-  @Input() contactAddress = '';
-  @Input() contactBio = '';
-
   @Input() contact: IContact = {
     address: "",
     bio: "",

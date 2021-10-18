@@ -1,16 +1,19 @@
 import {Component, OnDestroy} from '@angular/core';
 import {PasswordResetService} from "../../services/password-reset.service";
 import {Subscription} from "rxjs";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-password-restore-request',
   templateUrl: './password-restore-request.component.html',
   styleUrls: ['./password-restore-request.component.scss']
 })
 export class PasswordRestoreRequestComponent implements OnDestroy {
-  phoneOrEmail = '';
 
-  subscriptions: Subscription[] = [];
+  protected resetPasswordSub$!: Subscription;
+
+  public phoneOrEmail = '';
 
   constructor(private passwordResetService: PasswordResetService) {
   }
@@ -21,18 +24,13 @@ export class PasswordRestoreRequestComponent implements OnDestroy {
       return;
     }
 
-    let sendPassSub = this.passwordResetService.sendPasswordResetRequest(this.phoneOrEmail)
+    this.resetPasswordSub$ = this.passwordResetService.sendPasswordResetRequest(this.phoneOrEmail)
       .subscribe(data => {
         this.phoneOrEmail = '';
         alert(data.message);
-      }, error => {
-        alert(error.error.ErrorMessage);
-      });
-
-    this.subscriptions.push(sendPassSub);
+      }, error => alert(error.error.ErrorMessage));
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
   }
 }
