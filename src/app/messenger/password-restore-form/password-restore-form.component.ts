@@ -3,7 +3,9 @@ import {ResetPasswordRequest} from "../../../types/requests/ResetPasswordRequest
 import {PasswordResetService} from "../../services/password-reset.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-password-restore-form',
   templateUrl: './password-restore-form.component.html',
@@ -11,19 +13,16 @@ import {Subscription} from "rxjs";
 })
 export class PasswordRestoreFormComponent implements OnDestroy {
 
-  newPassword = '';
-  repeatPassword = '';
-  requestId: string | null = '';
+  protected passwordChangeSub$!: Subscription;
 
-  subscriptions: Subscription[] = [];
+  public newPassword = '';
+  public repeatPassword = '';
+  public requestId: string | null = '';
+
 
   constructor(private passwordResetService: PasswordResetService,
               private route: ActivatedRoute,
               private router: Router) {
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
   restorePassword(): void {
@@ -33,14 +32,20 @@ export class PasswordRestoreFormComponent implements OnDestroy {
     }
 
     const requestId = this.route.snapshot.queryParamMap.get('requestId');
+
+    if (requestId == null) {
+      alert('Wrong password change request ID.');
+      return;
+    }
+
     const command = new ResetPasswordRequest(requestId, this.newPassword, this.repeatPassword);
 
-    let passwordSub = this.passwordResetService.resetPassword(command).subscribe(_ => {
-      alert('Password reset success.')
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
+    this.passwordChangeSub$ =
+      this.passwordResetService.resetPassword(command).subscribe(_ =>
+          this.router.navigateByUrl('login').then(() => alert('Password reset success.')),
+        error => alert(error.error.ErrorMessage));
+  }
 
-    this.subscriptions.push(passwordSub);
+  ngOnDestroy(): void {
   }
 }

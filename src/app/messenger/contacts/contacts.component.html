@@ -94,12 +94,12 @@
             <div class="card card-body card-bg-1 mb-3">
               <div class="d-flex flex-column align-items-center">
                 <div class="avatar avatar-lg mb-3">
-                  <img class="avatar-img" src="{{userService.getUserProfilePicture(currentOpenedUser)}}" alt="">
+                  <img class="avatar-img" src="{{userService.getUserProfilePicture(currentOpenedContact)}}" alt="">
                 </div>
 
                 <div class="d-flex flex-column align-items-center">
-                  <h3 class="mb-1">{{currentOpenedUser.displayName}}</h3>
-                  <h4 class="mb-1">{{currentOpenedUser.bio}}</h4>
+                  <h3 class="mb-1">{{currentOpenedContact.displayName}}</h3>
+                  <h4 class="mb-1">{{currentOpenedContact.bio}}</h4>
                   <!-- <p class="text-white rounded px-2 bg-primary">+01-202-265462</p> -->
                   <div class="d-flex mt-2">
 
@@ -140,11 +140,11 @@
           <div class="col">
             <div class="card">
               <ul class="list-group list-group-flush">
-                <li *ngIf="currentOpenedUser.birthdayDate" class="list-group-item">
+                <li *ngIf="currentOpenedContact.birthdayDate" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Birthdate</p>
-                      <p class="mb-0">{{currentOpenedUser.birthdayDate}}</p>
+                      <p class="mb-0">{{currentOpenedContact.birthdayDate}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -154,11 +154,11 @@
 
                   </div>
                 </li>
-                <li *ngIf="currentOpenedUser.phoneNumber" class="list-group-item">
+                <li *ngIf="currentOpenedContact.phoneNumber" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Phone</p>
-                      <p class="mb-0">{{currentOpenedUser.phoneNumber}}</p>
+                      <p class="mb-0">{{currentOpenedContact.phoneNumber}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -168,11 +168,11 @@
 
                   </div>
                 </li>
-                <li *ngIf="currentOpenedUser.email" class="list-group-item">
+                <li *ngIf="currentOpenedContact.email" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Email</p>
-                      <a class="mb-0" href="mailto:{{currentOpenedUser.email}}">{{currentOpenedUser.email}}</a>
+                      <a class="mb-0" href="mailto:{{currentOpenedContact.email}}">{{currentOpenedContact.email}}</a>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -182,11 +182,11 @@
 
                   </div>
                 </li>
-                <li *ngIf="currentOpenedUser.username" class="list-group-item">
+                <li *ngIf="currentOpenedContact.username" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Username</p>
-                      <p class="mb-0">{{currentOpenedUser.username}}</p>
+                      <p class="mb-0">{{currentOpenedContact.username}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -196,12 +196,12 @@
 
                   </div>
                 </li>
-                <li *ngIf="currentOpenedUser.website" class="list-group-item">
+                <li *ngIf="currentOpenedContact.website" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Website</p>
-                      <a class="mb-0" href="https://{{currentOpenedUser.website}}"
-                         target="_blank">{{currentOpenedUser.website}}</a>
+                      <a class="mb-0" href="https://{{currentOpenedContact.website}}"
+                         target="_blank">{{currentOpenedContact.website}}</a>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -211,11 +211,11 @@
 
                   </div>
                 </li>
-                <li *ngIf="currentOpenedUser.address" class="list-group-item">
+                <li *ngIf="currentOpenedContact.address" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Address</p>
-                      <p class="mb-0">{{currentOpenedUser.address}}</p>
+                      <p class="mb-0">{{currentOpenedContact.address}}</p>
                     </div>
                     <svg class="text-muted hw-20" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -231,13 +231,13 @@
 
             <div class="card">
               <ul class="list-group list-group-flush">
-                <li *ngIf="currentOpenedUser.facebook" class="list-group-item">
+                <li *ngIf="currentOpenedContact.facebook" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Facebook</p>
                       <a class="font-size-sm font-weight-medium"
-                         href="https://www.facebook.com/{{currentOpenedUser.facebook}}"
-                         target="_blank">@{{currentOpenedUser.facebook}}</a>
+                         href="https://www.facebook.com/{{currentOpenedContact.facebook}}"
+                         target="_blank">@{{currentOpenedContact.facebook}}</a>
                     </div>
                     <svg class="text-muted hw-20" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -247,13 +247,13 @@
 
                   </div>
                 </li>
-                <li *ngIf="currentOpenedUser.twitter" class="list-group-item">
+                <li *ngIf="currentOpenedContact.twitter" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Twitter</p>
                       <a class="font-size-sm font-weight-medium"
-                         href="https://twitter.com/{{currentOpenedUser.twitter}}"
-                         target="_blank">@{{currentOpenedUser.twitter}}</a>
+                         href="https://twitter.com/{{currentOpenedContact.twitter}}"
+                         target="_blank">@{{currentOpenedContact.twitter}}</a>
                     </div>
                     <svg class="text-muted hw-20" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -264,13 +264,13 @@
 
                   </div>
                 </li>
-                <li *ngIf="currentOpenedUser.instagram" class="list-group-item">
+                <li *ngIf="currentOpenedContact.instagram" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Instagram</p>
                       <a class="font-size-sm font-weight-medium"
-                         href="https://www.instagram.com/{{currentOpenedUser.instagram}}"
-                         target="_blank">@{{currentOpenedUser.instagram}}</a>
+                         href="https://www.instagram.com/{{currentOpenedContact.instagram}}"
+                         target="_blank">@{{currentOpenedContact.instagram}}</a>
                     </div>
                     <svg class="text-muted hw-20" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -282,13 +282,13 @@
 
                   </div>
                 </li>
-                <li *ngIf="currentOpenedUser.linkedIn" class="list-group-item">
+                <li *ngIf="currentOpenedContact.linkedIn" class="list-group-item">
                   <div class="media align-items-center">
                     <div class="media-body">
                       <p class="small text-muted mb-0">Linkedin</p>
                       <a class="font-size-sm font-weight-medium"
-                         href="https://www.linkedin.com/{{currentOpenedUser.linkedIn}}"
-                         target="_blank">@{{currentOpenedUser.linkedIn}}</a>
+                         href="https://www.linkedin.com/{{currentOpenedContact.linkedIn}}"
+                         target="_blank">@{{currentOpenedContact.linkedIn}}</a>
                     </div>
                     <svg class="text-muted hw-20" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round"

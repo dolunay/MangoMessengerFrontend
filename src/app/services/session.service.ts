@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Tokens} from "../../consts/Tokens";
-import {ISessionService} from "../../types/interfaces/ISessionService";
 import {LoginCommand} from "../../types/requests/LoginCommand";
 import {ITokensResponse} from "../../types/responses/ITokensResponse";
 import {ApiRoute} from "../../consts/ApiRoute";
@@ -11,26 +10,30 @@ import {IBaseResponse} from "../../types/responses/IBaseResponse";
 @Injectable({
   providedIn: 'root'
 })
-export class SessionService implements ISessionService {
+export class SessionService {
   private sessionsRoute = 'api/sessions/'
 
   constructor(private httpClient: HttpClient) {
   }
 
-  postSession(command: LoginCommand): Observable<ITokensResponse> {
+  // POST /api/sessions
+  createSession(command: LoginCommand): Observable<ITokensResponse> {
     return this.httpClient.post<ITokensResponse>(ApiRoute.route + this.sessionsRoute, command,
       {withCredentials: true});
   }
 
-  postRefreshSession(refreshToken: string | null): Observable<ITokensResponse> {
+  // POST /api/sessions/{refreshToken}
+  refreshSession(refreshToken: string | null): Observable<ITokensResponse> {
     return this.httpClient.post<ITokensResponse>(ApiRoute.route + this.sessionsRoute + refreshToken, {});
   }
 
+  // DELETE /api/sessions/{refreshToken}
   deleteSession(refreshToken: string | null): Observable<IBaseResponse> {
     return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.sessionsRoute + refreshToken);
   }
 
-  deleteAllSessions(refreshToken: string | null): Observable<IBaseResponse> {
+  // DELETE /api/sessions
+  deleteAllSessions(): Observable<IBaseResponse> {
     return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.sessionsRoute);
   }
 

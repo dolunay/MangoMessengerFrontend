@@ -8,36 +8,35 @@
         <form class="mb-3">
           <div class="form-group">
             <label for="phoneNumber" class="sr-only">Phone Number</label>
-            <input [(ngModel)]="phoneNumber" name="PhoneNumber" type="text" class="form-control form-control-md"
+            <input [(ngModel)]="registerCommand.phoneNumber" name="PhoneNumber" type="number"
+                   class="form-control form-control-md"
                    id="phoneNumber"
-                   placeholder="Enter your phone number">
+                   placeholder="Enter phone number (max. 14 digits)">
           </div>
           <div class="form-group">
             <label for="displayName" class="sr-only">Display Name</label>
-            <input [(ngModel)]="displayName" name="DisplayName" type="text" class="form-control form-control-md"
+            <input [(ngModel)]="registerCommand.displayName" name="DisplayName" type="text"
+                   class="form-control form-control-md"
                    id="displayName"
-                   placeholder="Enter your display name">
+                   placeholder="Enter display name">
           </div>
           <div class="form-group">
             <label for="email" class="sr-only">Email Address</label>
-            <input [(ngModel)]="email" name="Email" type="email" class="form-control form-control-md" id="email"
-                   placeholder="Enter your email address">
+            <input [(ngModel)]="registerCommand.email" name="Email" type="email" class="form-control form-control-md"
+                   id="email"
+                   placeholder="Enter valid email address">
           </div>
           <div class="form-group">
             <label for="password" class="sr-only">Password</label>
-            <input [(ngModel)]="password" name="Password" type="password" class="form-control form-control-md"
+            <input [(ngModel)]="registerCommand.password" name="Password" type="password"
+                   class="form-control form-control-md"
                    id="password"
-                   placeholder="Enter your password">
-          </div>
-          <div class="text-white">
-            Verification method:
-            <select [(ngModel)]="verificationMethod" name="verificationMethod" [value]="verificationMethod">
-              <option *ngFor="let method of verificationMethods" [value]="method"
-                      [label]="method"></option>
-            </select>
+                   placeholder="Enter password">
           </div>
           <div class="form-group">
-            <input [checked]="termsAccepted" (change)="termsAccepted = !termsAccepted" [name]="termsAccepted"
+            <input [checked]="registerCommand.termsAccepted"
+                   (change)="registerCommand.termsAccepted = !registerCommand.termsAccepted"
+                   [name]="registerCommand.termsAccepted"
                    type="checkbox"
                    id="termsOfService" name="termsOfService" checked>
             <label for="termsOfService">I accept terms of service</label>
@@ -48,6 +47,7 @@
         </form>
 
         <p>Already have an account? <a class="font-weight-semibold" routerLink="/login">Login</a>.</p>
+        <p>Forgot password? <a class="font-weight-semibold" routerLink="/restore-password-request">Restore</a>.</p>
       </div>
     </div>
   </div>

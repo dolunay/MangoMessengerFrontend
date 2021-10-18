@@ -1,10 +1,12 @@
 import {Component, Inject, OnDestroy} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ICreateCommunityResponse} from "../../../../types/responses/ICreateCommunityResponse";
-import {ChatsService} from "../../../services/chats.service";
+import {CommunitiesService} from "../../../services/communities.service";
 import {CreateChannelCommand} from "../../../../types/requests/CreateChannelCommand";
 import {Subscription} from "rxjs";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-create-group-dialog',
   templateUrl: './create-group-dialog.component.html',
@@ -13,34 +15,27 @@ import {Subscription} from "rxjs";
 export class CreateGroupDialogComponent implements OnDestroy {
 
   constructor(public dialogRef: MatDialogRef<CreateGroupDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: ICreateCommunityResponse,
-              private chatService: ChatsService) {
+              @Inject(MAT_DIALOG_DATA)
+              public data: ICreateCommunityResponse,
+              private chatService: CommunitiesService) {
   }
 
-  groupType = "Private Channel";
-  groupTypes = ["Private Channel", "Public Channel", "ReadOnly Channel"];
-  groupTitle = '';
-  groupDescription = '';
+  protected createChannelSub$!: Subscription;
 
-  subscriptions: Subscription[] = [];
+  public groupType = "Private Channel";
+  public groupTypes = ["Private Channel", "Public Channel", "ReadOnly Channel"];
+  public groupTitle = '';
+  public groupDescription = '';
 
-  createChatResponse: ICreateCommunityResponse = {chatId: "", message: "", success: false};
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
+  onNoClick = () => this.dialogRef.close();
 
   onCreateGroupClick(): void {
     const groupType = this.parseGroupType();
     const createGroupCommand = new CreateChannelCommand(groupType, this.groupTitle, this.groupDescription);
 
-    let createGroupSub = this.chatService.createChannel(createGroupCommand).subscribe(_ => {
+    this.createChannelSub$ = this.chatService.createChannel(createGroupCommand).subscribe(_ => {
       this.dialogRef.close();
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(createGroupSub);
+    }, error => alert(error.error.ErrorMessage));
   }
 
   private parseGroupType(): number {
@@ -56,6 +51,5 @@ export class CreateGroupDialogComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
   }
 }

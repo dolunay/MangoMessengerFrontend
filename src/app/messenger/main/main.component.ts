@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
-import {ChatsService} from "../../services/chats.service";
+import {CommunitiesService} from "../../services/communities.service";
 import {MessagesService} from "../../services/messages.service";
 import {IMessage} from "../../../types/models/IMessage";
 import {IChat} from "../../../types/models/IChat";
@@ -18,24 +18,32 @@ import {EditMessageCommand} from "../../../types/requests/EditMessageCommand";
 import {IEditMessageNotification} from "../../../types/models/IEditMessageNotification";
 import {DocumentsService} from "../../services/documents.service";
 import {UpdateChatLogoCommand} from "../../../types/requests/UpdateChatLogoCommand";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html'
 })
 export class MainComponent implements OnInit, OnDestroy {
 
-  messages: IMessage[] = [];
-  chats: IChat[] = [];
-  subscriptions: Subscription[] = [];
-  realTimeConnections: string[] = [];
-  editMessageRequest: EditMessageCommand | null = null;
+  private routeChatId = this.route.snapshot.paramMap.get('chatId');
+  private userId = this.sessionService.getUserId();
+  private connectionBuilder: signalR.HubConnectionBuilder = new signalR.HubConnectionBuilder();
+  private connection: signalR.HubConnection = this.connectionBuilder
+    .configureLogging(signalR.LogLevel.Information)
+    .withUrl(ApiRoute.route + 'notify')
+    .build();
 
-  replayMessageObject: any | null = null;
+  public messages: IMessage[] = [];
+  public chats: IChat[] = [];
+  public realTimeConnections: string[] = [];
+  public editMessageRequest: EditMessageCommand | null = null;
+  public replayMessageObject: any | null = null;
+  public isLoaded = false;
+  public activeChatId = '';
 
-  isLoaded = false;
-
-  currentUser: IUser = {
+  public currentUser: IUser = {
     address: "",
     bio: "",
     birthdayDate: "",
@@ -55,9 +63,7 @@ export class MainComponent implements OnInit, OnDestroy {
     website: ""
   }
 
-  activeChatId = '';
-
-  activeChat: IChat = {
+  public activeChat: IChat = {
     roleId: 1,
     communityType: CommunityType.PublicChannel,
     lastMessage: null,
@@ -70,19 +76,24 @@ export class MainComponent implements OnInit, OnDestroy {
     title: ""
   };
 
-  chatFilter = 'All Chats';
-  chatSearchQuery = '';
-  messageSearchQuery = '';
+  public chatFilter = 'All Chats';
+  public chatSearchQuery = '';
+  public messageSearchQuery = '';
 
-  private connectionBuilder: signalR.HubConnectionBuilder = new signalR.HubConnectionBuilder();
-
-  private connection: signalR.HubConnection = this.connectionBuilder
-    .configureLogging(signalR.LogLevel.Information)
-    .withUrl(ApiRoute.route + 'notify')
-    .build();
+  protected getUsersChatSub$!: Subscription;
+  protected getCurrentUserSub$!: Subscription;
+  protected getChatMessagesSub$!: Subscription;
+  protected onFilterClickSub$!: Subscription;
+  protected searchSub$!: Subscription;
+  protected archiveSub$!: Subscription;
+  protected deleteChatSub$!: Subscription;
+  protected onChatLeaveUserSub$!: Subscription;
+  protected searchMessageSub$!: Subscription;
+  protected uploadDocumentSub$!: Subscription;
+  protected updateChatLogoSub$!: Subscription;
 
   constructor(private sessionService: SessionService,
-              private chatService: ChatsService,
+              private chatService: CommunitiesService,
               private messageService: MessagesService,
               private userChatsService: UserChatsService,
               public userService: UsersService,
@@ -92,14 +103,7 @@ export class MainComponent implements OnInit, OnDestroy {
               public dialog: MatDialog) {
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
-    this.connection.stop().then(r => r);
-  }
-
-  openCreateGroupDialog(): void {
-    this.dialog.open(CreateGroupDialogComponent);
-  }
+  openCreateGroupDialog = () => this.dialog.open(CreateGroupDialogComponent);
 
   ngOnInit(): void {
     this.initializeView();
@@ -107,12 +111,9 @@ export class MainComponent implements OnInit, OnDestroy {
 
   initializeView(): void {
 
-    let chatSubscription = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
-      const routeChatId = this.route.snapshot.paramMap.get('chatId');
-      this.chatFilter = 'All Chats';
+    this.getUsersChatSub$ = this.chatService.getUserChats().subscribe(chatsResponse => {
 
-      this.chats = getUserChatsResponse.chats
-        .filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
+      this.chats = chatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
 
       this.connection.start().then(() => {
         this.chats.forEach(x => {
@@ -120,28 +121,19 @@ export class MainComponent implements OnInit, OnDestroy {
             return;
           }
 
-          this.connection.invoke("JoinGroup", x.chatId)
-            .then(() => {
-              console.log(`realtime joined chat: ${x.chatId}`);
-              this.realTimeConnections.push(x.chatId);
-            });
+          this.connection.invoke("JoinGroup", x.chatId).then(() => this.realTimeConnections.push(x.chatId));
         });
 
-        const userId = this.sessionService.getUserId();
-
-        if (userId != null && this.realTimeConnections.includes(userId)) {
+        if (this.userId != null && this.realTimeConnections.includes(this.userId)) {
           return;
         }
 
-        this.connection.invoke("JoinGroup", userId)
-          .then(() => console.log(`realtime joined user group: ${userId}`));
+        this.connection.invoke("JoinGroup", this.userId).then(r => r);
 
-      }).catch(function (err) {
-        return console.error(err.toString());
-      });
+      }).catch(err => console.error(err.toString()));
 
-      if (routeChatId) {
-        this.loadMessages(routeChatId);
+      if (this.routeChatId) {
+        this.loadMessages(this.routeChatId);
         this.isLoaded = true;
         return;
       }
@@ -152,15 +144,11 @@ export class MainComponent implements OnInit, OnDestroy {
         this.loadMessages(firstChat.chatId);
         this.isLoaded = true;
         return;
-
       }
 
-      if (this.activeChatId === '') {
-        let userSub = this.userService.getCurrentUser().subscribe(data => {
-          this.currentUser = data.user;
-        });
-
-        this.subscriptions.push(userSub);
+      if (!this.activeChatId) {
+        this.getCurrentUserSub$ = this.userService.getCurrentUser()
+          .subscribe(data => this.currentUser = data.user);
       }
 
       this.isLoaded = true;
@@ -174,11 +162,9 @@ export class MainComponent implements OnInit, OnDestroy {
       alert(error.error.ErrorMessage);
     });
 
-    this.subscriptions.push(chatSubscription);
-
     this.connection.on("BroadcastMessage", (message: IMessage) => {
-      const userId = this.sessionService.getUserId();
-      message.self = message.userId == userId;
+
+      message.self = message.userId == this.userId;
       let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
       chat.lastMessage = message;
       this.chats = this.chats.filter(x => x.chatId !== message.chatId);
@@ -209,60 +195,43 @@ export class MainComponent implements OnInit, OnDestroy {
     });
   }
 
-  navigateContacts(): void {
-    this.router.navigateByUrl('contacts').then(r => r);
-  }
+  navigateContacts = () => this.router.navigateByUrl('contacts').then(r => r);
 
   private loadMessages(chatId: string | null): void {
-    if (chatId != null) {
-      let messagesSub = this.messageService.getChatMessages(chatId).subscribe(getMessagesResponse => {
-          this.messages = getMessagesResponse.messages;
-          this.activeChatId = chatId;
-          this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
-          this.scrollToEnd();
-        },
-        error => {
-          alert(error.error.ErrorMessage);
-        });
+    if (chatId == null) return;
 
-      this.subscriptions.push(messagesSub);
-    }
+    this.getChatMessagesSub$ = this.messageService.getChatMessages(chatId).subscribe(response => {
+      this.messages = response.messages;
+      this.activeChatId = chatId;
+      this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
+      this.scrollToEnd();
+    }, error => alert(error.error.ErrorMessage));
   }
 
   navigateToChat(chatId: string): void {
-    if (this.activeChatId === chatId) {
-      return;
-    }
+    if (this.activeChatId === chatId) return;
 
     this.router.navigate(['main', {chatId: chatId}]).then(() => {
       this.loadMessages(chatId);
 
       if (!this.realTimeConnections.includes(chatId)) {
-        this.connection.invoke("JoinGroup", chatId).then(() => {
-          console.log('missing group connected to realtime.');
-          this.realTimeConnections.push(chatId);
-        });
+        this.connection.invoke("JoinGroup", chatId).then(() => this.realTimeConnections.push(chatId));
       }
-
     });
   }
 
-  scrollToEnd(): void {
-    setTimeout(() => {
-      let element = document.getElementById('messageList');
-      element?.scrollIntoView({block: "end"});
-    }, 0);
-  }
+  scrollToEnd = () => setTimeout(() =>
+    document.getElementById('messageList')?.scrollIntoView({block: "end"}));
+
 
   onChatFilerClick(filer: string): void {
-    let chatsSub = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
 
+    this.onFilterClickSub$ = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
       switch (filer) {
         case 'All Chats':
           this.initializeView();
           break;
         case 'Groups':
-          console.log(getUserChatsResponse.chats);
           this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.ReadOnlyChannel
             || x.communityType === CommunityType.PublicChannel
             || x.communityType === CommunityType.PrivateChannel);
@@ -280,33 +249,24 @@ export class MainComponent implements OnInit, OnDestroy {
       this.chatFilter = filer;
       this.chatSearchQuery = '';
     });
-
-    this.subscriptions.push(chatsSub);
   }
 
   onSearchClick(): void {
-    let searchSub = this.chatService.searchChat(this.chatSearchQuery).subscribe(getUserChatsResponse => {
-      this.chats = getUserChatsResponse.chats;
+    this.searchSub$ = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
+      this.chats = response.chats;
       this.chatFilter = 'Search Results';
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(searchSub);
+    }, error => alert(error.error.ErrorMessage));
   }
 
   onArchiveChatClick(): void {
-    let archiveSub = this.userChatsService.putArchiveChat(this.activeChatId).subscribe(_ => {
-      this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(archiveSub);
+    this.archiveSub$ =
+      this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ =>
+          this.chats = this.chats.filter(x => x.chatId !== this.activeChatId),
+        error => alert(error.error.ErrorMessage));
   }
 
   onLeaveChatClick(): void {
-    let deleteSub = this.userChatsService.deleteLeaveChat(this.activeChatId).subscribe(_ => {
+    this.deleteChatSub$ = this.userChatsService.leaveCommunity(this.activeChatId).subscribe(_ => {
       this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
 
       if (this.chats[0]) {
@@ -317,24 +277,18 @@ export class MainComponent implements OnInit, OnDestroy {
       }
 
       this.activeChatId = '';
-      let userSub = this.userService.getCurrentUser().subscribe(data => {
+
+      this.onChatLeaveUserSub$ = this.userService.getCurrentUser().subscribe(data => {
         this.currentUser = data.user;
+        this.router.navigateByUrl('main').then(r => r);
       });
-
-      this.subscriptions.push(userSub);
-      this.subscriptions.push(deleteSub);
-
-      this.router.navigateByUrl('main').then(r => r);
-    }, error => {
-      alert(error.error.ErrorMessage);
-    });
-
-    this.subscriptions.push(deleteSub);
+    }, error => alert(error.error.ErrorMessage));
   }
 
-  getMessageComponentClass(chat: IChat): string {
-    return chat.chatId === this.activeChatId ? 'contacts-item friends active' : 'contacts-item friends';
-  }
+  getMessageComponentClass = (chat: IChat) => chat.chatId === this.activeChatId
+    ? 'contacts-item friends active'
+    : 'contacts-item friends';
+
 
   onEditMessageEvent(event: any) {
     const messageId = event.messageId;
@@ -345,7 +299,6 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
     this.editMessageRequest = new EditMessageCommand(messageId, messageText);
-    console.log('main edit event command', this.editMessageRequest);
   }
 
   onJoinGroupEvent() {
@@ -353,42 +306,29 @@ export class MainComponent implements OnInit, OnDestroy {
     this.connection.invoke("JoinGroup", this.activeChatId).then(r => r);
   }
 
-  getChatImageUrl(): string {
-    return this.activeChat?.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
-  }
+  getChatImageUrl = () => this.activeChat?.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
+
 
   filterMessages(): void {
-    let searchMessageSub = this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery)
-      .subscribe(response => {
+    this.searchMessageSub$ =
+      this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
         this.messages = response.messages;
         this.messageSearchQuery = '';
-      }, error => {
-        alert(error.error.ErrorMessage);
-      });
-
-    this.subscriptions.push(searchMessageSub);
+      }, error => alert(error.error.ErrorMessage));
   }
 
-  onFilterMessageDropdownClick(): void {
-    this.loadMessages(this.activeChatId);
-  }
+  onFilterMessageDropdownClick = () => this.loadMessages(this.activeChatId);
 
-  onReplayMessageClick(event: any): void {
-    console.log('event', event);
+  onReplayMessageClick = (event: any) => this.replayMessageObject = {
+    messageAuthor: event.messageAuthor,
+    messageText: event.messageText
+  };
 
-    this.replayMessageObject = {
-      messageAuthor: event.messageAuthor,
-      messageText: event.messageText
-    };
 
-    console.log('main replay user name', this.replayMessageObject.messageAuthor)
-  }
-
-  hasActiveChat(): boolean {
-    return this.activeChatId !== '';
-  }
+  hasActiveChat = () => this.activeChatId !== '';
 
   onChangePictureClick(): void {
+
     const validChat = this.activeChat.communityType === CommunityType.PublicChannel
       || this.activeChat.communityType === CommunityType.PrivateChannel
       || this.activeChat.communityType === CommunityType.ReadOnlyChannel;
@@ -418,20 +358,20 @@ export class MainComponent implements OnInit, OnDestroy {
 
     const form = new FormData();
     form.append("formFile", file);
-    const uploadDocSub = this.documentService.uploadDocument(form).subscribe(uploadResponse => {
+
+    this.uploadDocumentSub$ = this.documentService.uploadDocument(form).subscribe(uploadResponse => {
       const chatId = this.activeChatId;
       const image = uploadResponse.fileName;
       const updateChatLogoCommand = new UpdateChatLogoCommand(chatId, image);
-      const updateChatLogoSub = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
+
+      this.updateChatLogoSub$ = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
         this.activeChat.chatLogoImageUrl = uploadResponse.fileUrl;
         alert(response.message);
-      }, error => {
-        alert(error.error.ErrorMessage);
-      });
-
-      this.subscriptions.push(updateChatLogoSub);
+      }, error => alert(error.error.ErrorMessage));
     });
+  }
 
-    this.subscriptions.push(uploadDocSub);
+  ngOnDestroy(): void {
+    this.connection.stop().then(r => r);
   }
 }

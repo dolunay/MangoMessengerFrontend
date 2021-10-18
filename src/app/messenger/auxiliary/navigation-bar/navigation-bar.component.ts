@@ -7,7 +7,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class NavigationBarComponent {
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute,
+              private router: Router) {
   }
 
   @Input() activeRoute = '';
