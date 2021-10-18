@@ -18,7 +18,9 @@ import {EditMessageCommand} from "../../../types/requests/EditMessageCommand";
 import {IEditMessageNotification} from "../../../types/models/IEditMessageNotification";
 import {DocumentsService} from "../../services/documents.service";
 import {UpdateChatLogoCommand} from "../../../types/requests/UpdateChatLogoCommand";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html'
@@ -39,6 +41,7 @@ export class MainComponent implements OnInit, OnDestroy {
   public editMessageRequest: EditMessageCommand | null = null;
   public replayMessageObject: any | null = null;
   public isLoaded = false;
+  public activeChatId = '';
 
   public currentUser: IUser = {
     address: "",
@@ -60,8 +63,6 @@ export class MainComponent implements OnInit, OnDestroy {
     website: ""
   }
 
-  public activeChatId = '';
-
   public activeChat: IChat = {
     roleId: 1,
     communityType: CommunityType.PublicChannel,
@@ -78,6 +79,18 @@ export class MainComponent implements OnInit, OnDestroy {
   public chatFilter = 'All Chats';
   public chatSearchQuery = '';
   public messageSearchQuery = '';
+
+  protected getUsersChatSub$!: Subscription;
+  protected getCurrentUserSub$!: Subscription;
+  protected getChatMessagesSub$!: Subscription;
+  protected onFilterClickSub$!: Subscription;
+  protected searchSub$!: Subscription;
+  protected archiveSub$!: Subscription;
+  protected deleteChatSub$!: Subscription;
+  protected onChatLeaveUserSub$!: Subscription;
+  protected searchMessageSub$!: Subscription;
+  protected uploadDocumentSub$!: Subscription;
+  protected updateChatLogoSub$!: Subscription;
 
   constructor(private sessionService: SessionService,
               private chatService: CommunitiesService,
@@ -98,7 +111,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   initializeView(): void {
 
-    let chatSubscription = this.chatService.getUserChats().subscribe(chatsResponse => {
+    this.getUsersChatSub$ = this.chatService.getUserChats().subscribe(chatsResponse => {
 
       this.chats = chatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
 
@@ -134,7 +147,8 @@ export class MainComponent implements OnInit, OnDestroy {
       }
 
       if (!this.activeChatId) {
-        let userSub = this.userService.getCurrentUser().subscribe(data => this.currentUser = data.user);
+        this.getCurrentUserSub$ = this.userService.getCurrentUser()
+          .subscribe(data => this.currentUser = data.user);
       }
 
       this.isLoaded = true;
@@ -184,31 +198,25 @@ export class MainComponent implements OnInit, OnDestroy {
   navigateContacts = () => this.router.navigateByUrl('contacts').then(r => r);
 
   private loadMessages(chatId: string | null): void {
-    if (chatId != null) {
-      let messagesSub = this.messageService.getChatMessages(chatId).subscribe(response => {
-          this.messages = response.messages;
-          this.activeChatId = chatId;
-          this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
-          this.scrollToEnd();
-        }, error => alert(error.error.ErrorMessage));
-    }
+    if (chatId == null) return;
+
+    this.getChatMessagesSub$ = this.messageService.getChatMessages(chatId).subscribe(response => {
+      this.messages = response.messages;
+      this.activeChatId = chatId;
+      this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
+      this.scrollToEnd();
+    }, error => alert(error.error.ErrorMessage));
   }
 
   navigateToChat(chatId: string): void {
-
-    if (this.activeChatId === chatId) {
-      return;
-    }
+    if (this.activeChatId === chatId) return;
 
     this.router.navigate(['main', {chatId: chatId}]).then(() => {
       this.loadMessages(chatId);
 
       if (!this.realTimeConnections.includes(chatId)) {
-        this.connection.invoke("JoinGroup", chatId).then(() => {
-          this.realTimeConnections.push(chatId);
-        });
+        this.connection.invoke("JoinGroup", chatId).then(() => this.realTimeConnections.push(chatId));
       }
-
     });
   }
 
@@ -218,8 +226,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onChatFilerClick(filer: string): void {
 
-    let chatsSub = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
-
+    this.onFilterClickSub$ = this.chatService.getUserChats().subscribe(getUserChatsResponse => {
       switch (filer) {
         case 'All Chats':
           this.initializeView();
@@ -245,25 +252,21 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onSearchClick(): void {
-    let searchSub = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
-
+    this.searchSub$ = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
       this.chats = response.chats;
       this.chatFilter = 'Search Results';
-
     }, error => alert(error.error.ErrorMessage));
   }
 
   onArchiveChatClick(): void {
-    let archiveSub = this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ => {
-
-      this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
-
-    }, error => alert(error.error.ErrorMessage));
+    this.archiveSub$ =
+      this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ =>
+          this.chats = this.chats.filter(x => x.chatId !== this.activeChatId),
+        error => alert(error.error.ErrorMessage));
   }
 
   onLeaveChatClick(): void {
-    let deleteSub = this.userChatsService.leaveCommunity(this.activeChatId).subscribe(_ => {
-
+    this.deleteChatSub$ = this.userChatsService.leaveCommunity(this.activeChatId).subscribe(_ => {
       this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
 
       if (this.chats[0]) {
@@ -275,11 +278,10 @@ export class MainComponent implements OnInit, OnDestroy {
 
       this.activeChatId = '';
 
-      let userSub = this.userService.getCurrentUser().subscribe(data => {
+      this.onChatLeaveUserSub$ = this.userService.getCurrentUser().subscribe(data => {
         this.currentUser = data.user;
         this.router.navigateByUrl('main').then(r => r);
       });
-
     }, error => alert(error.error.ErrorMessage));
   }
 
@@ -308,8 +310,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
 
   filterMessages(): void {
-
-    let searchMessageSub =
+    this.searchMessageSub$ =
       this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
         this.messages = response.messages;
         this.messageSearchQuery = '';
@@ -317,7 +318,6 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onFilterMessageDropdownClick = () => this.loadMessages(this.activeChatId);
-
 
   onReplayMessageClick = (event: any) => this.replayMessageObject = {
     messageAuthor: event.messageAuthor,
@@ -359,12 +359,12 @@ export class MainComponent implements OnInit, OnDestroy {
     const form = new FormData();
     form.append("formFile", file);
 
-    const uploadDocSub = this.documentService.uploadDocument(form).subscribe(uploadResponse => {
+    this.uploadDocumentSub$ = this.documentService.uploadDocument(form).subscribe(uploadResponse => {
       const chatId = this.activeChatId;
       const image = uploadResponse.fileName;
       const updateChatLogoCommand = new UpdateChatLogoCommand(chatId, image);
 
-      const updateChatLogoSub = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
+      this.updateChatLogoSub$ = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
         this.activeChat.chatLogoImageUrl = uploadResponse.fileUrl;
         alert(response.message);
       }, error => alert(error.error.ErrorMessage));
