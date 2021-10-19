@@ -20,8 +20,8 @@ export class LoginComponent implements OnDestroy {
   protected loginSub$!: Subscription;
 
   public loginCommand: LoginCommand = {
-    emailOrPhone: "kolosovp94@gmail.com",
-    password: "z[?6dMR#xmp=nr6q"
+    emailOrPhone: "",
+    password: ""
   };
 
   login(): void {
