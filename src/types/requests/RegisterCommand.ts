@@ -1,7 +1,7 @@
 ﻿import {VerificationMethod} from "../enums/VerificationMethod";
 
 export class RegisterCommand {
-  phoneNumber: string;
+  phoneNumber: number;
   email: string;
   displayName: string;
   password: string;
@@ -9,7 +9,7 @@ export class RegisterCommand {
   termsAccepted: boolean;
 
 
-  constructor(phoneNumber: string,
+  constructor(phoneNumber: number,
               email: string,
               displayName: string,
               password: string,
