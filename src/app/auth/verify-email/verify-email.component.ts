@@ -25,6 +25,9 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     success: false
   };
 
+  public isLoaded = false;
+  public errorMessage = '';
+
   protected routeSub$!: Subscription;
   protected confirmEmailSub$!: Subscription;
   protected refreshSessionSub$!: Subscription;
@@ -37,7 +40,11 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
 
       this.confirmEmailSub$ = this.usersService.confirmEmail(command).subscribe(result => {
         this.response = result;
-      }, error => alert(error.error.ErrorMessage));
+        this.isLoaded = true;
+      }, error => {
+        this.isLoaded = true;
+        this.errorMessage = error.error.ErrorMessage;
+      });
     });
   }
 
