@@ -1,9 +1,9 @@
-<body class="authentication-page">
+<body class="authentication-page" style="background-color: #353535">
 
-<div class="main-layout card-bg-1">
+<div *ngIf="isLoaded" class="main-layout card-bg-1">
   <div class="container d-flex flex-column">
     <div class="row no-gutters text-center align-items-center justify-content-center min-vh-100">
-      <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+      <div *ngIf="isLoaded" class="col-12 col-md-6 col-lg-5 col-xl-4">
         <h4 class="font-weight-bold">Email Verification Result</h4>
         <div *ngIf="response.success; else elseBlock" class="text-white">
           Account activated successfully.
@@ -15,7 +15,7 @@
         </div>
         <ng-template #elseBlock>
           <div class="text-white">
-            Error {{response.message}}
+            Error {{errorMessage}}
           </div>
         </ng-template>
       </div>
