@@ -44,7 +44,6 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
       }, error => {
         this.isLoaded = true;
         this.errorMessage = error.error.ErrorMessage;
-        alert(error.error.ErrorMessage);
       });
     });
   }
