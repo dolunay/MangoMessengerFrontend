@@ -10,7 +10,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {CreateGroupDialogComponent} from "../dialogs/create-group-dialog/create-group-dialog.component";
 import {CommunityType} from "../../../types/enums/CommunityType";
 import * as signalR from '@microsoft/signalr';
-import {ApiRoute} from "../../../consts/ApiRoute";
 import {Subscription} from "rxjs";
 import {IUser} from "../../../types/models/IUser";
 import {UsersService} from "../../services/users.service";
@@ -19,6 +18,7 @@ import {IEditMessageNotification} from "../../../types/models/IEditMessageNotifi
 import {DocumentsService} from "../../services/documents.service";
 import {UpdateChatLogoCommand} from "../../../types/requests/UpdateChatLogoCommand";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import {environment} from "../../../environments/environment";
 
 @AutoUnsubscribe()
 @Component({
@@ -32,7 +32,7 @@ export class MainComponent implements OnInit, OnDestroy {
   private connectionBuilder: signalR.HubConnectionBuilder = new signalR.HubConnectionBuilder();
   private connection: signalR.HubConnection = this.connectionBuilder
     .configureLogging(signalR.LogLevel.Information)
-    .withUrl(ApiRoute.route + 'notify')
+    .withUrl(environment.baseUrl + 'notify')
     .build();
 
   public messages: IMessage[] = [];

@@ -4,8 +4,8 @@ import {Observable} from "rxjs";
 import {Tokens} from "../../consts/Tokens";
 import {LoginCommand} from "../../types/requests/LoginCommand";
 import {ITokensResponse} from "../../types/responses/ITokensResponse";
-import {ApiRoute} from "../../consts/ApiRoute";
 import {IBaseResponse} from "../../types/responses/IBaseResponse";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -18,23 +18,23 @@ export class SessionService {
 
   // POST /api/sessions
   createSession(command: LoginCommand): Observable<ITokensResponse> {
-    return this.httpClient.post<ITokensResponse>(ApiRoute.route + this.sessionsRoute, command,
+    return this.httpClient.post<ITokensResponse>(environment.baseUrl + this.sessionsRoute, command,
       {withCredentials: true});
   }
 
   // POST /api/sessions/{refreshToken}
   refreshSession(refreshToken: string | null): Observable<ITokensResponse> {
-    return this.httpClient.post<ITokensResponse>(ApiRoute.route + this.sessionsRoute + refreshToken, {});
+    return this.httpClient.post<ITokensResponse>(environment.baseUrl + this.sessionsRoute + refreshToken, {});
   }
 
   // DELETE /api/sessions/{refreshToken}
   deleteSession(refreshToken: string | null): Observable<IBaseResponse> {
-    return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.sessionsRoute + refreshToken);
+    return this.httpClient.delete<IBaseResponse>(environment.baseUrl + this.sessionsRoute + refreshToken);
   }
 
   // DELETE /api/sessions
   deleteAllSessions(): Observable<IBaseResponse> {
-    return this.httpClient.delete<IBaseResponse>(ApiRoute.route + this.sessionsRoute);
+    return this.httpClient.delete<IBaseResponse>(environment.baseUrl + this.sessionsRoute);
   }
 
   getAccessToken(): string | null {
