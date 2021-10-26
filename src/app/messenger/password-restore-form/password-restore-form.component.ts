@@ -8,8 +8,7 @@ import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 @AutoUnsubscribe()
 @Component({
   selector: 'app-password-restore-form',
-  templateUrl: './password-restore-form.component.html',
-  styleUrls: ['./password-restore-form.component.scss']
+  templateUrl: './password-restore-form.component.html'
 })
 export class PasswordRestoreFormComponent implements OnDestroy {
 
