@@ -14,10 +14,10 @@ import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 export class RegisterComponent implements OnDestroy {
 
   public registerCommand: RegisterCommand = {
-    displayName: "Test Account",
-    email: "kolosovp94@gmail.com",
-    password: "z[?6dMR#xmp=nr6q",
-    phoneNumber: 38097491385,
+    displayName: "",
+    email: "",
+    password: "",
+    phoneNumber: 0,
     termsAccepted: false,
     verificationMethod: 2
   };
