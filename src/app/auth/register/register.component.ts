@@ -17,7 +17,7 @@ export class RegisterComponent implements OnDestroy {
     displayName: "",
     email: "",
     password: "",
-    phoneNumber: 0,
+    phoneNumber: "",
     termsAccepted: false,
     verificationMethod: 2
   };

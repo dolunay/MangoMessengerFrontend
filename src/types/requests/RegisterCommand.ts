@@ -1,7 +1,7 @@
 ﻿import {VerificationMethod} from "../enums/VerificationMethod";
 
 export class RegisterCommand {
-  phoneNumber: number;
+  phoneNumber: number | string;
   email: string;
   displayName: string;
   password: string;
