@@ -7,8 +7,6 @@
   createdAt: string;
   updatedAt: string;
   self: boolean;
-  isEncrypted: boolean;
-  authorPublicKey: number;
   messageAuthorPictureUrl: string;
   messageAttachmentUrl: string;
   inReplayToAuthor: string,

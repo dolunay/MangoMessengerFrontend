@@ -4,9 +4,7 @@ import {Observable} from "rxjs";
 import {IGetUserChatsResponse} from "../../types/responses/IGetUserChatsResponse";
 import {ICreateCommunityResponse} from "../../types/responses/ICreateCommunityResponse";
 import {CreateChannelCommand} from "../../types/requests/CreateChannelCommand";
-import {IGetChatByIdResponse} from "../../types/responses/IGetChatByIdResponse";
 import {CreateChatCommand} from "../../types/requests/CreateChatCommand";
-import {IGetSecretChatPublicKeyResponse} from "../../types/responses/IGetSecretChatPublicKeyResponse";
 import {UpdateChatLogoCommand} from "../../types/requests/UpdateChatLogoCommand";
 import {IBaseResponse} from "../../types/responses/IBaseResponse";
 import {environment} from "../../environments/environment";
@@ -42,15 +40,15 @@ export class CommunitiesService {
   }
 
   // GET /api/communities/{id}
-  getChatById(chatId: string): Observable<IGetChatByIdResponse> {
-    return this.httpClient.get<IGetChatByIdResponse>(environment.baseUrl + this.chatsRoute + chatId);
-  }
+  // getChatById(chatId: string): Observable<IGetChatByIdResponse> {
+  //   return this.httpClient.get<IGetChatByIdResponse>(environment.baseUrl + this.chatsRoute + chatId);
+  // }
 
-  // GET /api/communities/chats/public-key/{chatId}
-  getSecretChatPublicKey(chatId: string): Observable<IGetSecretChatPublicKeyResponse> {
-    return this.httpClient.get<IGetSecretChatPublicKeyResponse>(environment.baseUrl + this.chatsRoute +
-      'chats/public-key/' + chatId);
-  }
+  // // GET /api/communities/chats/public-key/{chatId}
+  // getSecretChatPublicKey(chatId: string): Observable<IGetSecretChatPublicKeyResponse> {
+  //   return this.httpClient.get<IGetSecretChatPublicKeyResponse>(environment.baseUrl + this.chatsRoute +
+  //     'chats/public-key/' + chatId);
+  // }
 
   // PUT /api/communities/picture
   updateChatLogo(command: UpdateChatLogoCommand): Observable<IBaseResponse> {
