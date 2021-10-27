@@ -23,8 +23,6 @@ export class ReceivedMessageComponent implements OnDestroy {
     userId: "",
     chatId: "",
     messageAuthorPictureUrl: "",
-    authorPublicKey: 0,
-    isEncrypted: false,
     updatedAt: "",
     messageId: "",
     messageText: "",

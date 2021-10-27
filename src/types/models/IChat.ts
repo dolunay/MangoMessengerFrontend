@@ -10,6 +10,9 @@ export interface IChat {
   membersCount: number;
   isArchived: boolean;
   isMember: boolean;
-  lastMessage: IMessage | null;
   roleId: number;
+  lastMessageAuthor: string,
+  lastMessageText: string,
+  lastMessageTime: string,
+  updatedAt: string
 }

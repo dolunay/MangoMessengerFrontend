@@ -64,9 +64,12 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   public activeChat: IChat = {
+    lastMessageAuthor: "",
+    lastMessageText: "",
+    lastMessageTime: "",
+    updatedAt: "",
     roleId: 1,
     communityType: CommunityType.PublicChannel,
-    lastMessage: null,
     description: "",
     chatId: "",
     chatLogoImageUrl: "",
@@ -166,7 +169,9 @@ export class MainComponent implements OnInit, OnDestroy {
 
       message.self = message.userId == this.userId;
       let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
-      chat.lastMessage = message;
+      chat.lastMessageAuthor = message.userDisplayName;
+      chat.lastMessageText = message.messageText;
+      chat.lastMessageTime = message.createdAt;
       this.chats = this.chats.filter(x => x.chatId !== message.chatId);
       this.chats = [chat, ...this.chats];
 

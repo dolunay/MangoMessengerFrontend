@@ -59,6 +59,10 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   isEmojiPickerVisible = false;
 
   @Input() chat: IChat = {
+    lastMessageAuthor: "",
+    lastMessageText: "",
+    lastMessageTime: "",
+    updatedAt: "",
     roleId: 1,
     chatId: "",
     chatLogoImageUrl: "",
@@ -66,7 +70,6 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
     description: "",
     isArchived: false,
     isMember: false,
-    lastMessage: null,
     membersCount: 0,
     title: ""
   }

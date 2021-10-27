@@ -20,11 +20,11 @@
           <div style="display: inline-block; vertical-align: top;">{{chat.title}}</div>
         </div>
       </ng-template>
-      <div class="chat-time">{{chat.lastMessage?.createdAt}}</div>
+      <div class="chat-time">{{chat.lastMessageTime}}</div>
     </div>
     <div class="contacts-texts">
       <p class="text-truncate" *ngIf="chatContainsMessages(); else elseBlock">
-        <strong>{{chat.lastMessage?.userDisplayName}}: </strong>{{chat.lastMessage?.messageText}}
+        <strong>{{chat.lastMessageAuthor}}: </strong>{{chat.lastMessageText}}
       </p>
       <ng-template #elseBlock class="text-truncate">
         Chat is currently empty.
