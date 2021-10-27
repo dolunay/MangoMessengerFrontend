@@ -6,8 +6,7 @@ import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 @AutoUnsubscribe()
 @Component({
   selector: 'app-password-restore-request',
-  templateUrl: './password-restore-request.component.html',
-  styleUrls: ['./password-restore-request.component.scss']
+  templateUrl: './password-restore-request.component.html'
 })
 export class PasswordRestoreRequestComponent implements OnDestroy {
 

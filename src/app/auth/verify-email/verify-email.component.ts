@@ -40,10 +40,9 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
 
       this.confirmEmailSub$ = this.usersService.confirmEmail(command).subscribe(result => {
         this.response = result;
-        this.isLoaded = true;
       }, error => {
-        this.isLoaded = true;
-        this.errorMessage = error.error.ErrorMessage;
+        //alert(error.error.errorDetails);
+        this.errorMessage = error.error.errorDetails;
       });
     });
   }

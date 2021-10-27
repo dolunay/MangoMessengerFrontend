@@ -9,9 +9,12 @@ import {CommunityType} from "../../../../types/enums/CommunityType";
 export class ChatItemActiveComponent {
 
   @Input() chat: IChat = {
+    lastMessageAuthor: "",
+    lastMessageText: "",
+    lastMessageTime: "",
+    updatedAt: "",
     roleId: 1,
     communityType: CommunityType.DirectChat,
-    lastMessage: null,
     description: "",
     chatId: "",
     chatLogoImageUrl: "",
@@ -22,7 +25,7 @@ export class ChatItemActiveComponent {
   };
 
   chatContainsMessages(): boolean {
-    return this.chat.lastMessage?.userDisplayName != null && this.chat.lastMessage != null;
+    return this.chat.lastMessageAuthor != null && this.chat.lastMessageText != null;
   }
 
   getChatPictureUrl(): string {
