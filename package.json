@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node server.js",
-    "build": "ng build --aot --configuration staging",
+    "build": "ng build --aot --configuration prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
