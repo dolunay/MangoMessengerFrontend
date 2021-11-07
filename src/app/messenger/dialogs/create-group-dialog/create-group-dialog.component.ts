@@ -29,6 +29,21 @@ export class CreateGroupDialogComponent implements OnDestroy {
   onNoClick = () => this.dialogRef.close();
 
   onCreateGroupClick(): void {
+    if (!this.groupType) {
+      alert("Group type must not be empty.");
+      return;
+    }
+
+    if (!this.groupTitle) {
+      alert("Group title must not be empty.");
+      return;
+    }
+
+    if (!this.groupDescription) {
+      alert("Group description must not be empty.");
+      return;
+    }
+
     const groupType = this.parseGroupType();
     const createGroupCommand = new CreateChannelCommand(groupType, this.groupTitle, this.groupDescription);
 

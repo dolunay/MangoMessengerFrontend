@@ -78,10 +78,15 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
 
     event.preventDefault();
 
+    if (!this.currentMessageText) {
+      alert("Cannot send empty message text.");
+      return;
+    }
+
     if (this.editMessageRequest != null) {
       this.editMessageRequest.modifiedText = this.currentMessageText;
 
-      let editSub = this.messageService.editMessage(this.editMessageRequest).subscribe(resp => {
+      let editSub = this.messageService.editMessage(this.editMessageRequest).subscribe(_ => {
         this.editMessageRequest = null;
         this.currentMessageText = '';
       }, error => {

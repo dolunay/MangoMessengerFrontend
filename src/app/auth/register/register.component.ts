@@ -31,12 +31,37 @@ export class RegisterComponent implements OnDestroy {
   }
 
   register(): void {
+    if (!this.registerCommand.displayName) {
+      alert("Display name must not be empty.");
+      return;
+    }
+
+    if (!this.registerCommand.email) {
+      alert("Email must not be empty.");
+      return;
+    }
+
+    if (!this.registerCommand.password) {
+      alert("Password must not be empty.");
+      return;
+    }
+
+    if (!this.registerCommand.phoneNumber) {
+      alert("Phone number must not be empty.");
+      return;
+    }
+
+    if (!this.registerCommand.termsAccepted) {
+      alert("Terms of service must be accepted.");
+      return;
+    }
+
     this.registerSub$ = this.usersService.createUser(this.registerCommand).subscribe(registerResponse => {
       this.sessionService.writeAccessToken(registerResponse.accessToken);
       this.sessionService.writeRefreshToken(registerResponse.refreshToken);
       this.sessionService.writeUserId(registerResponse.userId);
       this.router.navigateByUrl('verify-email-note').then(r => r);
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorMessage));
   }
 
   ngOnDestroy(): void {

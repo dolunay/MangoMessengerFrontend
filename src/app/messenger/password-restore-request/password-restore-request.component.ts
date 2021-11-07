@@ -27,7 +27,7 @@ export class PasswordRestoreRequestComponent implements OnDestroy {
       .subscribe(data => {
         this.phoneOrEmail = '';
         alert(data.message);
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorMessage));
   }
 
   ngOnDestroy(): void {
