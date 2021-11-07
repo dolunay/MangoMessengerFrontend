@@ -65,7 +65,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
       this.isLoaded = true;
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorMessage));
   }
 
   saveAccountInfo(): void {

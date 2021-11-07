@@ -21,7 +21,7 @@ export class JoinGroupComponent implements OnDestroy {
   onJoinGroupClick(): void {
     this.joinCommunitySub$ = this.userChatService.joinCommunity(this.chatId).subscribe(_ => {
       this.notifyParentOnJoinGroup.emit();
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorMessage));
   }
 
   ngOnDestroy(): void {

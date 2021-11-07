@@ -38,6 +38,11 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
       const email = params['email'];
       const command = new VerifyEmailCommand(email, emailCode);
 
+      if (!emailCode || !email) {
+        alert("Invalid request.");
+        return;
+      }
+
       this.confirmEmailSub$ = this.usersService.confirmEmail(command).subscribe(result => {
         this.response = result;
       }, error => {
