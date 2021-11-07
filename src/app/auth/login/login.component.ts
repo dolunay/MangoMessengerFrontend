@@ -25,14 +25,26 @@ export class LoginComponent implements OnDestroy {
   };
 
   login(): void {
+    if (!this.loginCommand.emailOrPhone) {
+      alert("Enter valid email of password.");
+      return;
+    }
+
+    if (!this.loginCommand.password) {
+      alert("Enter valid password");
+      return;
+    }
+
     this.loginSub$ = this.authService.createSession(this.loginCommand).subscribe(data => {
 
-        this.authService.writeAccessToken(data.accessToken);
-        this.authService.writeRefreshToken(data.refreshToken);
-        this.authService.writeUserId(data.userId);
+      this.authService.writeAccessToken(data.accessToken);
+      this.authService.writeRefreshToken(data.refreshToken);
+      this.authService.writeUserId(data.userId);
 
-        this.router.navigateByUrl('main').then(r => r);
-      }, error => alert(error.error.ErrorMessage));
+      this.router.navigateByUrl('main').then(r => r);
+    }, error => {
+      alert(error.error.errorDetails);
+    });
   }
 
   ngOnDestroy(): void {
