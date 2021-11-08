@@ -34,6 +34,7 @@ export class MainComponent implements OnInit, OnDestroy {
     .configureLogging(signalR.LogLevel.Information)
     .withUrl(environment.baseUrl + 'notify')
     .build();
+  private signalRConnected = false;
 
   public messages: IMessage[] = [];
   public chats: IChat[] = [];
@@ -117,7 +118,9 @@ export class MainComponent implements OnInit, OnDestroy {
 
       this.chats = chatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
 
-      this.connectChatsToHub();
+      if (this.connection.state !== signalR.HubConnectionState.Connected) {
+        this.connectChatsToHub();
+      }
 
       if (this.routeChatId) {
         this.loadMessages(this.routeChatId);
@@ -132,8 +135,7 @@ export class MainComponent implements OnInit, OnDestroy {
       }
 
       if (!this.activeChatId) {
-        this.getCurrentUserSub$ = this.userService.getCurrentUser()
-          .subscribe(data => this.currentUser = data.user);
+        this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(data => this.currentUser = data.user);
       }
 
     }, error => {
@@ -145,39 +147,10 @@ export class MainComponent implements OnInit, OnDestroy {
       alert(error.error.ErrorMessage);
     });
 
-    this.connection.on("BroadcastMessage", (message: IMessage) => {
-
-      message.self = message.userId == this.userId;
-      let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
-      chat.lastMessageAuthor = message.userDisplayName;
-      chat.lastMessageText = message.messageText;
-      chat.lastMessageTime = message.createdAt;
-      this.chats = this.chats.filter(x => x.chatId !== message.chatId);
-      this.chats = [chat, ...this.chats];
-
-      if (message.chatId === this.activeChatId) {
-        this.messages.push(message);
-      }
-
-      this.scrollToEnd();
-    });
-
-    this.connection.on("UpdateUserChats", (chat: IChat) => {
-      this.chats.push(chat);
-    });
-
-    this.connection.on('NotifyOnMessageDelete', (messageId: string) => {
-      this.messages = this.messages.filter(x => x.messageId !== messageId);
-    });
-
-    this.connection.on('NotifyOnMessageEdit', (request: IEditMessageNotification) => {
-      let message = this.messages.filter(x => x.messageId === request.messageId)[0];
-
-      if (message) {
-        message.messageText = request.modifiedText;
-        message.updatedAt = request.updatedAt;
-      }
-    });
+    if (!this.signalRConnected) {
+      this.setSignalRMethods();
+      this.signalRConnected = true;
+    }
   }
 
   connectChatsToHub(): void {
@@ -197,6 +170,41 @@ export class MainComponent implements OnInit, OnDestroy {
       this.connection.invoke("JoinGroup", this.userId).then(r => r);
 
     }).catch(err => console.error(err.toString()));
+  }
+
+  setSignalRMethods(): void {
+    this.connection.on("BroadcastMessage", (message: IMessage) => this.onBroadcastMessage(message));
+
+    this.connection.on("UpdateUserChats", (chat: IChat) => this.chats.push(chat));
+
+    this.connection.on('NotifyOnMessageDelete', (messageId: string) =>
+      this.messages = this.messages.filter(x => x.messageId !== messageId)
+    );
+
+    this.connection.on('NotifyOnMessageEdit', (request: IEditMessageNotification) => {
+      let message = this.messages.filter(x => x.messageId === request.messageId)[0];
+
+      if (message) {
+        message.messageText = request.modifiedText;
+        message.updatedAt = request.updatedAt;
+      }
+    });
+  }
+
+  onBroadcastMessage(message: IMessage): void {
+    message.self = message.userId == this.userId;
+    let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
+    chat.lastMessageAuthor = message.userDisplayName;
+    chat.lastMessageText = message.messageText;
+    chat.lastMessageTime = message.createdAt;
+    this.chats = this.chats.filter(x => x.chatId !== message.chatId);
+    this.chats = [chat, ...this.chats];
+
+    if (message.chatId === this.activeChatId) {
+      this.messages.push(message);
+    }
+
+    this.scrollToEnd();
   }
 
   navigateContacts = () => this.router.navigateByUrl('contacts').then(r => r);
@@ -219,7 +227,9 @@ export class MainComponent implements OnInit, OnDestroy {
       this.loadMessages(chatId);
 
       if (!this.realTimeConnections.includes(chatId)) {
-        this.connection.invoke("JoinGroup", chatId).then(() => this.realTimeConnections.push(chatId));
+        this.connection.invoke("JoinGroup", chatId).then(() => {
+          this.realTimeConnections.push(chatId);
+        });
       }
     });
   }
@@ -307,7 +317,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onJoinGroupEvent() {
     this.activeChat.isMember = true;
-    this.connection.invoke("JoinGroup", this.activeChatId).then(r => r);
   }
 
   getChatImageUrl = () => this.activeChat?.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
