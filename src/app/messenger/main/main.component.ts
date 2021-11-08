@@ -117,22 +117,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
       this.chats = chatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
 
-      this.connection.start().then(() => {
-        this.chats.forEach(x => {
-          if (this.realTimeConnections.includes(x.chatId)) {
-            return;
-          }
-
-          this.connection.invoke("JoinGroup", x.chatId).then(() => this.realTimeConnections.push(x.chatId));
-        });
-
-        if (this.userId != null && this.realTimeConnections.includes(this.userId)) {
-          return;
-        }
-
-        this.connection.invoke("JoinGroup", this.userId).then(r => r);
-
-      }).catch(err => console.error(err.toString()));
+      this.connectChatsToHub();
 
       if (this.routeChatId) {
         this.loadMessages(this.routeChatId);
@@ -193,6 +178,25 @@ export class MainComponent implements OnInit, OnDestroy {
         message.updatedAt = request.updatedAt;
       }
     });
+  }
+
+  connectChatsToHub(): void {
+    this.connection.start().then(() => {
+      this.chats.forEach(x => {
+        if (this.realTimeConnections.includes(x.chatId)) {
+          return;
+        }
+
+        this.connection.invoke("JoinGroup", x.chatId).then(() => this.realTimeConnections.push(x.chatId));
+      });
+
+      if (this.userId != null && this.realTimeConnections.includes(this.userId)) {
+        return;
+      }
+
+      this.connection.invoke("JoinGroup", this.userId).then(r => r);
+
+    }).catch(err => console.error(err.toString()));
   }
 
   navigateContacts = () => this.router.navigateByUrl('contacts').then(r => r);
