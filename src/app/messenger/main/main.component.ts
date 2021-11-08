@@ -40,7 +40,6 @@ export class MainComponent implements OnInit, OnDestroy {
   public realTimeConnections: string[] = [];
   public editMessageRequest: EditMessageCommand | null = null;
   public replayMessageObject: any | null = null;
-  public isLoaded = false;
   public activeChatId = '';
 
   public currentUser: IUser = {
@@ -137,7 +136,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (this.routeChatId) {
         this.loadMessages(this.routeChatId);
-        this.isLoaded = true;
         return;
       }
 
@@ -145,7 +143,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (firstChat) {
         this.loadMessages(firstChat.chatId);
-        this.isLoaded = true;
         return;
       }
 
@@ -153,8 +150,6 @@ export class MainComponent implements OnInit, OnDestroy {
         this.getCurrentUserSub$ = this.userService.getCurrentUser()
           .subscribe(data => this.currentUser = data.user);
       }
-
-      this.isLoaded = true;
 
     }, error => {
       if (error.status === 403) {
