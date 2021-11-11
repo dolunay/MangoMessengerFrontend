@@ -49,7 +49,7 @@ export class CreateGroupDialogComponent implements OnDestroy {
 
     this.createChannelSub$ = this.chatService.createChannel(createGroupCommand).subscribe(_ => {
       this.dialogRef.close();
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   private parseGroupType(): number {
