@@ -42,7 +42,7 @@ export class PasswordRestoreFormComponent implements OnDestroy {
     this.passwordChangeSub$ =
       this.passwordResetService.resetPassword(command).subscribe(_ =>
           this.router.navigateByUrl('login').then(() => alert('Password reset success.')),
-        error => alert(error.error.errorMessage));
+        error => alert(error.error.errorDetails));
   }
 
   ngOnDestroy(): void {

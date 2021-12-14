@@ -65,7 +65,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
       this.isLoaded = true;
-    }, error => alert(error.error.errorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   saveAccountInfo(): void {
@@ -88,7 +88,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       alert(response.message);
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   saveSocialMediaInfo(): void {
@@ -101,7 +101,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       alert(response.message);
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   changePassword(): void {
@@ -119,7 +119,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     this.changePasswordSub$ = this.userService.changePassword(command).subscribe(data => {
       alert(data.message);
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   updateProfilePicture(): void {
@@ -134,7 +134,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
           this.cloneCurrentUser();
           this.emitEventToChild(this.cloneUser);
         });
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   onFileSelected(event: any): void {

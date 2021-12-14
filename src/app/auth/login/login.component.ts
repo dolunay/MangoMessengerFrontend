@@ -43,7 +43,7 @@ export class LoginComponent implements OnDestroy {
 
       this.router.navigateByUrl('main').then(r => r);
     }, error => {
-      alert(error.error.errorDetails);
+      alert(error.error.errorDescription);
     });
   }
 

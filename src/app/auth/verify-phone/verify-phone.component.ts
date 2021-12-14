@@ -35,7 +35,7 @@ export class VerifyPhoneComponent implements OnDestroy {
         this.router.navigateByUrl('main').then(() => alert(confirm.message));
 
       });
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   ngOnDestroy(): void {

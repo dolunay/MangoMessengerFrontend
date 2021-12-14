@@ -90,7 +90,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
         this.editMessageRequest = null;
         this.currentMessageText = '';
       }, error => {
-        alert(error.error.ErrorMessage);
+        alert(error.error.errorDetails);
       })
 
       this.subscriptions.push(editSub);
@@ -112,7 +112,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
 
         this.subscriptions.push(sendSub);
       }, error => {
-        alert(error.error.ErrorMessage);
+        alert(error.error.errorDetails);
       });
 
       this.subscriptions.push(uploadSub);
@@ -129,7 +129,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
         this.inReplayText = null;
         this.inReplayAuthor = null;
       }, error => {
-        alert(error.error.ErrorMessage);
+        alert(error.error.errorDetails);
       });
 
       this.subscriptions.push(sendSub);
