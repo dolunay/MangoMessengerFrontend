@@ -7,7 +7,7 @@
 [![Contributors](https://img.shields.io/badge/Contributors-2-red)](https://github.com/kolosovpetro/MangoAPI/graphs/contributors)
 [![Trello board](https://img.shields.io/badge/Task%20Board-Trello-blue)](https://trello.com/b/Z7IlfrRb/mango-messenger-trello)
 
-## Manual run
+## Run locally
 
 - Clone this repository https://github.com/razumovskii/mango-angular-frontend.git
 - Install LTS Node Package Manager https://nodejs.org/en/download/
@@ -20,13 +20,20 @@
 
 ## Docker run
 
-- Build container `docker build -t mango-angular-frontend .`
-- Run it `docker run -d -p 9080:80 --name mango_frontend mango-angular-frontend:latest`
+- Build container `docker build -t 1337322420/mango-angular-frontend:0.0.1 .`
+- Run `docker run -d -p 9080:80 --name mango_frontend 1337322420/mango-angular-frontend:0.0.1`
+- Or via container registry
 
 ## Desktop version run
 
 - `ng build --base-href ./ && electron .`
 - Electron guide: https://buddy.works/tutorials/building-a-desktop-app-with-electron-and-angular
+
+## Envirnoments
+
+- Azure #1: https://front.mangomessenger.company (domain valid till 28-Oct-2022)
+- Azure #2: https://front.mangomesenger.company (domain valid till 28-Oct-2022)
+- Heroku: https://messenger-mango.herokuapp.com
 
 ## Git flow
 
