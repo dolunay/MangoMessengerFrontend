@@ -1,4 +1,4 @@
 ﻿export const environment = {
   production: true,
-  baseUrl: 'https://mangomessenger.company/',
+  baseUrl: process.env.NG_APP_MANGO_API_URL,
 };
