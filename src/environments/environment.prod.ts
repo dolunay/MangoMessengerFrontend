@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://mango-messenger-app.herokuapp.com/',
+  baseUrl: 'https://back.mangomessenger.company/',
 };
