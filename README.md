@@ -27,7 +27,7 @@
 ## Docker run experimental container
 
 - Build container `docker build -f Dockerfile.exp -t 1337322420/mango-angular-frontend:0.0.1exp .`
-- Run `docker run -d -e NODE_ENV=staging NG_APP_API_URL="https://example.com" -e PORT=80 -p 9080:80 --name mango_frontend_exp 1337322420/mango-angular-frontend:0.0.1exp`
+- Run `docker run -d -e NODE_ENV=staging -e NG_APP_API_URL="https://example.com" -e PORT=80 -p 9080:80 --name mango_frontend_exp 1337322420/mango-angular-frontend:0.0.1exp`
 - Or via container registry (if exists)
 
 ## Desktop version run
