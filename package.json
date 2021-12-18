@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "ng build --aot --configuration production",
+    "build-stage": "ng build --aot --configuration staging",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
