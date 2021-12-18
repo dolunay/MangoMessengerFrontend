@@ -46,8 +46,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
       this.confirmEmailSub$ = this.usersService.confirmEmail(command).subscribe(result => {
         this.response = result;
       }, error => {
-        //alert(error.error.errorDetails);
-        this.errorMessage = error.error.errorDetails;
+        alert(error.error.errorDetails);
       });
     });
   }
@@ -62,7 +61,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
 
       this.router.navigateByUrl('main').then(r => r);
 
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   ngOnDestroy(): void {

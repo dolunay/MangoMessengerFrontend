@@ -144,7 +144,7 @@ export class MainComponent implements OnInit, OnDestroy {
         return;
       }
 
-      alert(error.error.ErrorMessage);
+      alert(error.error.errorDetails);
     });
 
     if (!this.signalRConnected) {
@@ -217,7 +217,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.activeChatId = chatId;
       this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
       this.scrollToEnd();
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   navigateToChat(chatId: string): void {
@@ -269,14 +269,14 @@ export class MainComponent implements OnInit, OnDestroy {
     this.searchSub$ = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
       this.chats = response.chats;
       this.chatFilter = 'Search Results';
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   onArchiveChatClick(): void {
     this.archiveSub$ =
       this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ =>
           this.chats = this.chats.filter(x => x.chatId !== this.activeChatId),
-        error => alert(error.error.ErrorMessage));
+        error => alert(error.error.errorDetails));
   }
 
   onLeaveChatClick(): void {
@@ -327,7 +327,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
         this.messages = response.messages;
         this.messageSearchQuery = '';
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorDetails));
   }
 
   onFilterMessageDropdownClick = () => this.loadMessages(this.activeChatId);
@@ -380,7 +380,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.updateChatLogoSub$ = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
         this.activeChat.chatLogoImageUrl = uploadResponse.fileUrl;
         alert(response.message);
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorDetails));
     });
   }
 

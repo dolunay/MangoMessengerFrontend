@@ -37,7 +37,7 @@ export class ReceivedMessageComponent implements OnDestroy {
   deleteMessage(): void {
     this.deleteMessageSub$ =
       this.messageService.deleteMessage(this.message.messageId).subscribe(_ => {
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorDetails));
 
   }
 

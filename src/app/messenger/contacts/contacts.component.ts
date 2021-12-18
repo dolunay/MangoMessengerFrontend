@@ -81,7 +81,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
           this.contactsFilter = 'All Contacts';
           this.contactsSearchQuery = '';
         });
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorDetails));
   }
 
   onFilterClick(filter: string) {
@@ -91,7 +91,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
     this.onFilterSub$ = this.contactsService.getCurrentUserContacts().subscribe(response => {
       this.contacts = response.contacts;
       this.contactsSearchQuery = '';
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   onUserSearchClick(): void {
@@ -99,14 +99,14 @@ export class ContactsComponent implements OnInit, OnDestroy {
       this.contactsService.searchContacts(this.contactsSearchQuery).subscribe(response => {
         this.contacts = response.contacts;
         this.contactsFilter = 'Search Results';
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorDetails));
   }
 
   onContactClick(contact: IContact): void {
     this.getUserByIdSub$ = this.userService.getUserById(contact.userId).subscribe(response => {
       this.currentOpenedContact = response.user;
       this.currentOpenedUserIsContact = contact.isContact;
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   onAddContactClick() {
@@ -120,7 +120,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
       this.contactsSearchQuery = '';
       this.currentOpenedUserIsContact = true;
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   onStartDirectChatClick() {
@@ -130,7 +130,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
     this.createDirectChatSub$ =
       this.chatsService.createChat(createDirectChatCommand).subscribe(response => {
         this.router.navigate(['main', {chatId: response.chatId}]).then(r => r);
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorDetails));
   }
 
   onRemoveContactClick() {
@@ -140,7 +140,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
       this.contactsService.deleteContact(this.currentOpenedContact.userId).subscribe(_ => {
         this.contacts = this.contacts.filter(x => x.userId !== userToRemoveId);
         this.currentOpenedContact = this.currentUser;
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorDetails));
 
   }
 
