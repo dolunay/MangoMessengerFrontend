@@ -9,13 +9,13 @@
 
 ## Run locally
 
-- Clone this repository https://github.com/razumovskii/mango-angular-frontend.git
-- Install LTS Node Package Manager https://nodejs.org/en/download/
-- Check if NPM is installed correctly `npm -v`
-- Install Angular CLI 11.2.7  `npm install -g @angular/cli@11.2.7`
-- Check id Angular CLI is installed corectly `ng version`
+- Install Node JS 14.17.3, version may be specified using `nvm-windows`
+- Check Node JS installed properly `node -v`
+- Ensure NPM has version 7.20.0 `npm -v`
+- Clone current repo locally
 - Go to the project folder
-- Install Node modules `npm install`
+- Run `npm install`
+- Check that Angular CLI installed properly `ng version`
 - Run project `ng serve`
 
 ## Docker run
