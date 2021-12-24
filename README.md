@@ -29,16 +29,16 @@
 - Heroku: https://messenger-mango.herokuapp.com
 - GitHub Pages: https://razumovskii.github.io
 
-As image below shows
-
-![Environments](Environments.jpg?raw=true)
-
 ## Workflows
 
 - Azure Dev. Branch: `azure-dev` based on `develop`, workflow started after merge with actual `develop`. Consumes backend: https://back.mangomessenger.company
 - Azure QA. Branch: `azure-qa` based on `develop`, workflow started after merge with actual `develop`. Consumes backend: https://back.mangomesenger.company
 - Heroku. Branch: `master` workflow started after actual `develop` merged to `master`. Consumes backend: https://mango-messenger-app.herokuapp.com
 - Git pages. Branch: `github-pages` based on `develop`, workflow started after merge with actual `develop`. Consumes backend: https://back.mangomessenger.company
+
+As image below shows
+
+![Environments](Environments.jpg?raw=true)
 
 ## Git flow
 
