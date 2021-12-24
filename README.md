@@ -1,22 +1,16 @@
 # Mango Messenger Angular Frontend
 
-![Build](https://img.shields.io/badge/Build-succeeded-brightgreen)
-![License](https://img.shields.io/badge/License-MIT-%23bfc400)
-[![NPM](https://img.shields.io/badge/npm-14.17.3-%23009127)](https://nodejs.org/en/download/)
-[![Angular](https://img.shields.io/badge/Angular%20CLI-11.2.7-%23d61111)](https://angular.io/guide/setup-local)
-[![Contributors](https://img.shields.io/badge/Contributors-2-red)](https://github.com/kolosovpetro/MangoAPI/graphs/contributors)
-[![Trello board](https://img.shields.io/badge/Task%20Board-Trello-blue)](https://trello.com/b/Z7IlfrRb/mango-messenger-trello)
-
 ## Run locally
 
-- Install Node JS 14.17.3, version may be specified using `nvm-windows`
-- Check Node JS installed properly `node -v`
-- Ensure NPM has version 7.20.0 `npm -v`
-- Clone current repo locally
+- Install NVM: https://github.com/coreybutler/nvm-windows
+- Install Node JS 14.17.3: `nvm install 14.17.3`
+- Check Node JS installed properly: `node -v`
+- Clone current repo locally: `git clone https://github.com/MangoInstantMessenger/MangoMessengerFrontend.git`
 - Go to the project folder
-- Run `npm install`
-- Check that Angular CLI installed properly `ng version`
-- Run project `ng serve`
+- Restore packages: `npm ci`
+- Install Angular CLI globally: `npm install -g @angular/cli@11.2.7`
+- Check that Angular CLI installed properly: `ng version`
+- Run project: `ng serve`
 
 ## Docker run
 
