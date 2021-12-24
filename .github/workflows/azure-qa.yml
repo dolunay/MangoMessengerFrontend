@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
-      - run: npm run build-dev --if-present
+      - run: npm run build-qa --if-present
 
       - name: Configure SSH
         run: |
