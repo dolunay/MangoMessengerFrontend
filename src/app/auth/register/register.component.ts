@@ -61,7 +61,7 @@ export class RegisterComponent implements OnDestroy {
       this.sessionService.writeRefreshToken(registerResponse.refreshToken);
       this.sessionService.writeUserId(registerResponse.userId);
       this.router.navigateByUrl('verify-email-note').then(r => r);
-    }, error => alert(error.error.errorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   ngOnDestroy(): void {

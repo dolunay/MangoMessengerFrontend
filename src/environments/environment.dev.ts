@@ -1,4 +1,4 @@
 ﻿export const environment = {
   production: true,
-  baseUrl: 'https://mangomessenger.company/',
+  baseUrl: 'https://back.mangomessenger.company/',
 };

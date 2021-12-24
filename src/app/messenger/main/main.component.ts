@@ -34,13 +34,13 @@ export class MainComponent implements OnInit, OnDestroy {
     .configureLogging(signalR.LogLevel.Information)
     .withUrl(environment.baseUrl + 'notify')
     .build();
+  private signalRConnected = false;
 
   public messages: IMessage[] = [];
   public chats: IChat[] = [];
   public realTimeConnections: string[] = [];
   public editMessageRequest: EditMessageCommand | null = null;
   public replayMessageObject: any | null = null;
-  public isLoaded = false;
   public activeChatId = '';
 
   public currentUser: IUser = {
@@ -118,26 +118,12 @@ export class MainComponent implements OnInit, OnDestroy {
 
       this.chats = chatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
 
-      this.connection.start().then(() => {
-        this.chats.forEach(x => {
-          if (this.realTimeConnections.includes(x.chatId)) {
-            return;
-          }
-
-          this.connection.invoke("JoinGroup", x.chatId).then(() => this.realTimeConnections.push(x.chatId));
-        });
-
-        if (this.userId != null && this.realTimeConnections.includes(this.userId)) {
-          return;
-        }
-
-        this.connection.invoke("JoinGroup", this.userId).then(r => r);
-
-      }).catch(err => console.error(err.toString()));
+      if (this.connection.state !== signalR.HubConnectionState.Connected) {
+        this.connectChatsToHub();
+      }
 
       if (this.routeChatId) {
         this.loadMessages(this.routeChatId);
-        this.isLoaded = true;
         return;
       }
 
@@ -145,16 +131,12 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (firstChat) {
         this.loadMessages(firstChat.chatId);
-        this.isLoaded = true;
         return;
       }
 
       if (!this.activeChatId) {
-        this.getCurrentUserSub$ = this.userService.getCurrentUser()
-          .subscribe(data => this.currentUser = data.user);
+        this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(data => this.currentUser = data.user);
       }
-
-      this.isLoaded = true;
 
     }, error => {
       if (error.status === 403) {
@@ -162,33 +144,42 @@ export class MainComponent implements OnInit, OnDestroy {
         return;
       }
 
-      alert(error.error.ErrorMessage);
+      alert(error.error.errorDetails);
     });
 
-    this.connection.on("BroadcastMessage", (message: IMessage) => {
+    if (!this.signalRConnected) {
+      this.setSignalRMethods();
+      this.signalRConnected = true;
+    }
+  }
 
-      message.self = message.userId == this.userId;
-      let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
-      chat.lastMessageAuthor = message.userDisplayName;
-      chat.lastMessageText = message.messageText;
-      chat.lastMessageTime = message.createdAt;
-      this.chats = this.chats.filter(x => x.chatId !== message.chatId);
-      this.chats = [chat, ...this.chats];
+  connectChatsToHub(): void {
+    this.connection.start().then(() => {
+      this.chats.forEach(x => {
+        if (this.realTimeConnections.includes(x.chatId)) {
+          return;
+        }
 
-      if (message.chatId === this.activeChatId) {
-        this.messages.push(message);
+        this.connection.invoke("JoinGroup", x.chatId).then(() => this.realTimeConnections.push(x.chatId));
+      });
+
+      if (this.userId != null && this.realTimeConnections.includes(this.userId)) {
+        return;
       }
 
-      this.scrollToEnd();
-    });
+      this.connection.invoke("JoinGroup", this.userId).then(r => r);
 
-    this.connection.on("UpdateUserChats", (chat: IChat) => {
-      this.chats.push(chat);
-    });
+    }).catch(err => console.error(err.toString()));
+  }
 
-    this.connection.on('NotifyOnMessageDelete', (messageId: string) => {
-      this.messages = this.messages.filter(x => x.messageId !== messageId);
-    });
+  setSignalRMethods(): void {
+    this.connection.on("BroadcastMessage", (message: IMessage) => this.onBroadcastMessage(message));
+
+    this.connection.on("UpdateUserChats", (chat: IChat) => this.chats.push(chat));
+
+    this.connection.on('NotifyOnMessageDelete', (messageId: string) =>
+      this.messages = this.messages.filter(x => x.messageId !== messageId)
+    );
 
     this.connection.on('NotifyOnMessageEdit', (request: IEditMessageNotification) => {
       let message = this.messages.filter(x => x.messageId === request.messageId)[0];
@@ -198,6 +189,22 @@ export class MainComponent implements OnInit, OnDestroy {
         message.updatedAt = request.updatedAt;
       }
     });
+  }
+
+  onBroadcastMessage(message: IMessage): void {
+    message.self = message.userId == this.userId;
+    let chat = this.chats.filter(x => x.chatId === message.chatId)[0];
+    chat.lastMessageAuthor = message.userDisplayName;
+    chat.lastMessageText = message.messageText;
+    chat.lastMessageTime = message.createdAt;
+    this.chats = this.chats.filter(x => x.chatId !== message.chatId);
+    this.chats = [chat, ...this.chats];
+
+    if (message.chatId === this.activeChatId) {
+      this.messages.push(message);
+    }
+
+    this.scrollToEnd();
   }
 
   navigateContacts = () => this.router.navigateByUrl('contacts').then(r => r);
@@ -210,7 +217,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.activeChatId = chatId;
       this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
       this.scrollToEnd();
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   navigateToChat(chatId: string): void {
@@ -220,7 +227,9 @@ export class MainComponent implements OnInit, OnDestroy {
       this.loadMessages(chatId);
 
       if (!this.realTimeConnections.includes(chatId)) {
-        this.connection.invoke("JoinGroup", chatId).then(() => this.realTimeConnections.push(chatId));
+        this.connection.invoke("JoinGroup", chatId).then(() => {
+          this.realTimeConnections.push(chatId);
+        });
       }
     });
   }
@@ -260,14 +269,14 @@ export class MainComponent implements OnInit, OnDestroy {
     this.searchSub$ = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
       this.chats = response.chats;
       this.chatFilter = 'Search Results';
-    }, error => alert(error.error.ErrorMessage));
+    }, error => alert(error.error.errorDetails));
   }
 
   onArchiveChatClick(): void {
     this.archiveSub$ =
       this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ =>
           this.chats = this.chats.filter(x => x.chatId !== this.activeChatId),
-        error => alert(error.error.ErrorMessage));
+        error => alert(error.error.errorDetails));
   }
 
   onLeaveChatClick(): void {
@@ -308,7 +317,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onJoinGroupEvent() {
     this.activeChat.isMember = true;
-    this.connection.invoke("JoinGroup", this.activeChatId).then(r => r);
   }
 
   getChatImageUrl = () => this.activeChat?.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
@@ -319,7 +327,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
         this.messages = response.messages;
         this.messageSearchQuery = '';
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorDetails));
   }
 
   onFilterMessageDropdownClick = () => this.loadMessages(this.activeChatId);
@@ -372,7 +380,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.updateChatLogoSub$ = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
         this.activeChat.chatLogoImageUrl = uploadResponse.fileUrl;
         alert(response.message);
-      }, error => alert(error.error.ErrorMessage));
+      }, error => alert(error.error.errorDetails));
     });
   }
 
