@@ -1,8 +1,8 @@
-name: Node.js CI
+name: Azure Dev Environment CI/CD
 
 on:
   push:
-    branches: [ azure-deploy ]
+    branches: [ azure-dev ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,7 +17,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm run build --if-present
+    - run: npm run build-dev --if-present
 
     - name: Configure SSH
       run: |
@@ -32,14 +32,17 @@ jobs:
             StrictHostKeyChecking no
           END
       env:
-        SSH_USER: ${{ secrets.SSH_USER }}
-        SSH_KEY: ${{ secrets.AZURE_SSH_KEY }}
-        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.AZURE_DEV_SSH_USER }}
+        SSH_KEY: ${{ secrets.AZURE_DEV_SSH_KEY }}
+        SSH_HOST: ${{ secrets.AZURE_DEV_SSH_HOST }}
 
     - name: Copy Release to Remote
       run: |
-          scp -o StrictHostKeyChecking=no -r -i ~/.ssh/id_rsa dist/mango-angular-frontend/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dist/mango-angular-frontend
-          scp -o StrictHostKeyChecking=no -r -i ~/.ssh/id_rsa dist/mango-angular-frontend/index.html ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dist/mango-angular-frontend/404.html
+        scp -o StrictHostKeyChecking=no -r -i ~/.ssh/id_rsa dist/mango-angular-frontend/* $SSH_USER@$SSH_HOST:/home/$SSH_USER/dist/mango-angular-frontend
+        scp -o StrictHostKeyChecking=no -r -i ~/.ssh/id_rsa dist/mango-angular-frontend/index.html $SSH_USER@$SSH_HOST:/home/$SSH_USER/dist/mango-angular-frontend/404.html
+      env:
+        SSH_USER: ${{ secrets.AZURE_DEV_SSH_USER }}
+        SSH_HOST: ${{ secrets.AZURE_DEV_SSH_HOST }}
 
     - name: Restart nginx
       run: ssh staging "sudo systemctl restart nginx"
