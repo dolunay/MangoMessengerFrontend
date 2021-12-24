@@ -38,8 +38,11 @@ jobs:
 
     - name: Copy Release to Remote
       run: |
-        scp -o StrictHostKeyChecking=no -r -i ~/.ssh/id_rsa dist/mango-angular-frontend/* ${{ secrets.AZURE_DEV_SSH_USER }}@${{ secrets.AZURE_DEV_SSH_HOST }}:/home/${{ secrets.AZURE_DEV_SSH_USER }}/dist/mango-angular-frontend
-        scp -o StrictHostKeyChecking=no -r -i ~/.ssh/id_rsa dist/mango-angular-frontend/index.html ${{ secrets.AZURE_DEV_SSH_USER }}@${{ secrets.AZURE_DEV_SSH_HOST }}:/home/${{ secrets.AZURE_DEV_SSH_USER }}/dist/mango-angular-frontend/404.html
+        scp -o StrictHostKeyChecking=no -r -i ~/.ssh/id_rsa dist/mango-angular-frontend/* $SSH_USER@$SSH_HOST:/home/$SSH_USER/dist/mango-angular-frontend
+        scp -o StrictHostKeyChecking=no -r -i ~/.ssh/id_rsa dist/mango-angular-frontend/index.html $SSH_USER@$SSH_HOST:/home/$SSH_USER/dist/mango-angular-frontend/404.html
+      env:
+        SSH_USER: ${{ secrets.AZURE_DEV_SSH_USER }}
+        SSH_HOST: ${{ secrets.AZURE_DEV_SSH_HOST }}
 
     - name: Restart nginx
       run: ssh staging "sudo systemctl restart nginx"
