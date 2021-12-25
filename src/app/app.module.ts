@@ -8,7 +8,6 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {RegisterComponent} from './auth/register/register.component';
 import {LoginComponent} from './auth/login/login.component';
 import {VerifyEmailComponent} from './auth/verify-email/verify-email.component';
-import {VerifyPhoneComponent} from './auth/verify-phone/verify-phone.component';
 import {MainComponent} from './messenger/main/main.component';
 import {ProfileSettingsComponent} from './messenger/profile-settings/profile-settings.component';
 import {ContactsComponent} from './messenger/contacts/contacts.component';
@@ -42,7 +41,6 @@ import {MatNativeDateModule} from "@angular/material/core";
     RegisterComponent,
     LoginComponent,
     VerifyEmailComponent,
-    VerifyPhoneComponent,
     MainComponent,
     ProfileSettingsComponent,
     ContactsComponent,
@@ -68,7 +66,6 @@ import {MatNativeDateModule} from "@angular/material/core";
     RouterModule.forRoot([
       {path: 'register', component: RegisterComponent},
       {path: 'login', component: LoginComponent},
-      {path: 'verify-phone', component: VerifyPhoneComponent},
       {path: 'verify-email', component: VerifyEmailComponent},
       {path: 'main', component: MainComponent},
       {path: 'main/:chatId', component: MainComponent},
