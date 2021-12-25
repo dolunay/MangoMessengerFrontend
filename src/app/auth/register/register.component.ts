@@ -5,6 +5,7 @@ import {UsersService} from "../../services/users.service";
 import {RegisterCommand} from "../../../types/requests/RegisterCommand";
 import {Subscription} from "rxjs";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import {ErrorNotificationService} from "../../services/error-notification.service";
 
 @AutoUnsubscribe()
 @Component({
@@ -17,9 +18,7 @@ export class RegisterComponent implements OnDestroy {
     displayName: "",
     email: "",
     password: "",
-    phoneNumber: "",
     termsAccepted: false,
-    verificationMethod: 2
   };
 
   protected registerSub$!: Subscription;
@@ -27,7 +26,8 @@ export class RegisterComponent implements OnDestroy {
   constructor(private usersService: UsersService,
               private sessionService: SessionService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private errorNotificationService: ErrorNotificationService) {
   }
 
   register(): void {
@@ -46,11 +46,6 @@ export class RegisterComponent implements OnDestroy {
       return;
     }
 
-    if (!this.registerCommand.phoneNumber) {
-      alert("Phone number must not be empty.");
-      return;
-    }
-
     if (!this.registerCommand.termsAccepted) {
       alert("Terms of service must be accepted.");
       return;
@@ -61,7 +56,9 @@ export class RegisterComponent implements OnDestroy {
       this.sessionService.writeRefreshToken(registerResponse.refreshToken);
       this.sessionService.writeUserId(registerResponse.userId);
       this.router.navigateByUrl('verify-email-note').then(r => r);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   ngOnDestroy(): void {

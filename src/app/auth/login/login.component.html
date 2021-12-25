@@ -11,14 +11,14 @@
             <label for="email" class="sr-only">Email address or Phone number</label>
             <input [(ngModel)]="loginCommand.emailOrPhone" name="Email" type="email"
                    class="form-control form-control-md" id="email"
-                   placeholder="Enter your email or phone">
+                   placeholder="Email address">
           </div>
           <div class="form-group">
             <label for="password" class="sr-only">Password</label>
             <input [(ngModel)]="loginCommand.password" name="Password" type="password"
                    class="form-control form-control-md"
                    id="password"
-                   placeholder="Enter your password">
+                   placeholder="Password">
           </div>
           <button (click)="login()" class="btn btn-primary btn-lg btn-block text-uppercase font-weight-semibold"
                   type="submit">Login
