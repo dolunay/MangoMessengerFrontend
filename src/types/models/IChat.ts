@@ -1,5 +1,4 @@
-﻿import {IMessage} from "./IMessage";
-import {CommunityType} from "../enums/CommunityType";
+﻿import {CommunityType} from "../enums/CommunityType";
 
 export interface IChat {
   chatId: string;

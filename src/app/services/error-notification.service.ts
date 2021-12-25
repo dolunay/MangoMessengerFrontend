@@ -10,6 +10,12 @@ export class ErrorNotificationService {
       return;
     }
 
+    if (error.status === 403) {
+      alert("Your account is not activated yet. Activate to start chatting. " +
+        "Activation links is sent by email after registration.");
+      return;
+    }
+
     if (error.status === 409) {
       alert(error.error.errorDetails);
       return;
