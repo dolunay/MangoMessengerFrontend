@@ -19,6 +19,7 @@ import {DocumentsService} from "../../services/documents.service";
 import {UpdateChatLogoCommand} from "../../../types/requests/UpdateChatLogoCommand";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 import {environment} from "../../../environments/environment";
+import {ErrorNotificationService} from "../../services/error-notification.service";
 
 @AutoUnsubscribe()
 @Component({
@@ -103,7 +104,8 @@ export class MainComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private documentService: DocumentsService,
               private router: Router,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private errorNotificationService: ErrorNotificationService) {
   }
 
   openCreateGroupDialog = () => this.dialog.open(CreateGroupDialogComponent);
@@ -113,7 +115,6 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
-
     this.getUsersChatSub$ = this.chatService.getUserChats().subscribe(chatsResponse => {
 
       this.chats = chatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
@@ -139,12 +140,12 @@ export class MainComponent implements OnInit, OnDestroy {
       }
 
     }, error => {
-      if (error.status === 403) {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 403 || error.status === 0) {
         this.router.navigateByUrl('login').then(r => r);
         return;
       }
-
-      alert(error.error.errorDetails);
     });
 
     if (!this.signalRConnected) {

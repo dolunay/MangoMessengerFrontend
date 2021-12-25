@@ -26,7 +26,7 @@ export class PasswordRestoreFormComponent implements OnDestroy {
 
   restorePassword(): void {
     if (this.newPassword !== this.repeatPassword) {
-      alert('Passwords are not same');
+      alert('Passwords are different.');
       return;
     }
 

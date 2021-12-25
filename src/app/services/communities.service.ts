@@ -39,17 +39,6 @@ export class CommunitiesService {
       + displayName);
   }
 
-  // GET /api/communities/{id}
-  // getChatById(chatId: string): Observable<IGetChatByIdResponse> {
-  //   return this.httpClient.get<IGetChatByIdResponse>(environment.baseUrl + this.chatsRoute + chatId);
-  // }
-
-  // // GET /api/communities/chats/public-key/{chatId}
-  // getSecretChatPublicKey(chatId: string): Observable<IGetSecretChatPublicKeyResponse> {
-  //   return this.httpClient.get<IGetSecretChatPublicKeyResponse>(environment.baseUrl + this.chatsRoute +
-  //     'chats/public-key/' + chatId);
-  // }
-
   // PUT /api/communities/picture
   updateChatLogo(command: UpdateChatLogoCommand): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(environment.baseUrl + this.chatsRoute + 'picture', command);
