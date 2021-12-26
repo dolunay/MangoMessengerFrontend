@@ -63,7 +63,6 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
       this.clearTokens();
       this.router.navigateByUrl('login').then(r => r);
     }, error => {
-      console.log(error);
       this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
     });
   }

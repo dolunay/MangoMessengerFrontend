@@ -8,6 +8,7 @@ import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocial
 import {DocumentsService} from "../../services/documents.service";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 import {ErrorNotificationService} from "../../services/error-notification.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @AutoUnsubscribe()
 @Component({
@@ -18,7 +19,9 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UsersService,
               private documentService: DocumentsService,
-              private errorNotificationService: ErrorNotificationService) {
+              private errorNotificationService: ErrorNotificationService,
+              private route: ActivatedRoute,
+              private router: Router,) {
   }
 
   protected getCurrentUserSub$!: Subscription;
@@ -69,6 +72,10 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.isLoaded = true;
     }, error => {
       this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
     });
   }
 
@@ -92,6 +99,10 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.emitEventToChild(this.cloneUser);
     }, error => {
       this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
     });
   }
 
@@ -105,7 +116,13 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       alert('Social media links updated successfully.');
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   changePassword(): void {
@@ -125,6 +142,10 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       alert(data.message);
     }, error => {
       this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
     });
   }
 
@@ -142,6 +163,10 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
         });
     }, error => {
       this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
     });
   }
 
