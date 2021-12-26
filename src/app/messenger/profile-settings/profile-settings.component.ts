@@ -7,6 +7,8 @@ import {Subject, Subscription} from "rxjs";
 import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocialsCommand";
 import {DocumentsService} from "../../services/documents.service";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import {ErrorNotificationService} from "../../services/error-notification.service";
+import {validate} from "codelyzer/walkerFactory/walkerFn";
 
 @AutoUnsubscribe()
 @Component({
@@ -16,7 +18,8 @@ import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UsersService,
-              private documentService: DocumentsService) {
+              private documentService: DocumentsService,
+              private errorNotificationService: ErrorNotificationService) {
   }
 
   protected getCurrentUserSub$!: Subscription;
@@ -64,25 +67,41 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
       this.isLoaded = true;
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      console.log(error);
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   saveAccountInfo(): void {
+    console.log(this.currentUser.birthdayDate)
+    if (!this.validateDate(this.currentUser.birthdayDate)) {
+      alert('Invalid birthday date format. Correct and try again.');
+      return;
+    }
+
+    // birthdayDate: string | null;
+    // website: string | null = null;
+    // username: string | null;
+    // bio: string | null = null;
+    // address: string | null = null;
+    // displayName: string | null;
 
     const command = new UpdateAccountInformationCommand(
-      this.currentUser.displayName,
       this.currentUser.birthdayDate,
-      this.currentUser.email,
       this.currentUser.website,
       this.currentUser.username,
       this.currentUser.bio,
-      this.currentUser.address);
+      this.currentUser.address,
+      this.currentUser.displayName);
 
     this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(response => {
-      alert(response.message);
+      alert('Personal information has been updated successfully.');
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   saveSocialMediaInfo(): void {
@@ -149,5 +168,15 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   private cloneCurrentUser = () => {
     this.cloneUser = JSON.parse(JSON.stringify(this.currentUser));
+  }
+
+  validateDate(date: string): boolean {
+    if (date === null) {
+      return false;
+    }
+
+    let anyDate = date as any;
+    let parsedDate = (new Date(anyDate)).getDate();
+    return !isNaN(parsedDate);
   }
 }
