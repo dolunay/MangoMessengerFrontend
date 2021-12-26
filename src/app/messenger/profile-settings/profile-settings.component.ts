@@ -8,7 +8,6 @@ import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocial
 import {DocumentsService} from "../../services/documents.service";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 import {ErrorNotificationService} from "../../services/error-notification.service";
-import {validate} from "codelyzer/walkerFactory/walkerFn";
 
 @AutoUnsubscribe()
 @Component({
@@ -63,29 +62,21 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   initializeView(): void {
     this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(getUserResponse => {
+      console.log('inside init')
       this.currentUser = getUserResponse.user;
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
       this.isLoaded = true;
     }, error => {
-      console.log(error);
       this.errorNotificationService.notifyOnError(error);
     });
   }
 
   saveAccountInfo(): void {
-    console.log(this.currentUser.birthdayDate)
     if (!this.validateDate(this.currentUser.birthdayDate)) {
       alert('Invalid birthday date format. Correct and try again.');
       return;
     }
-
-    // birthdayDate: string | null;
-    // website: string | null = null;
-    // username: string | null;
-    // bio: string | null = null;
-    // address: string | null = null;
-    // displayName: string | null;
 
     const command = new UpdateAccountInformationCommand(
       this.currentUser.birthdayDate,
@@ -95,7 +86,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.currentUser.address,
       this.currentUser.displayName);
 
-    this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(response => {
+    this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(_ => {
       alert('Personal information has been updated successfully.');
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
@@ -110,8 +101,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.currentUser.instagram,
       this.currentUser.linkedIn);
 
-    this.updateUserSocialsSub$ = this.userService.updateUserSocials(command).subscribe(response => {
-      alert(response.message);
+    this.updateUserSocialsSub$ = this.userService.updateUserSocials(command).subscribe(_ => {
+      alert('Social media links updated successfully.');
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
     }, error => alert(error.error.errorDetails));
@@ -132,7 +123,9 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     this.changePasswordSub$ = this.userService.changePassword(command).subscribe(data => {
       alert(data.message);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   updateProfilePicture(): void {
@@ -147,7 +140,9 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
           this.cloneCurrentUser();
           this.emitEventToChild(this.cloneUser);
         });
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   onFileSelected(event: any): void {
