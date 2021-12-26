@@ -22,12 +22,12 @@ export class LoginComponent implements OnDestroy {
   protected loginSub$!: Subscription;
 
   public loginCommand: LoginCommand = {
-    emailOrPhone: "kolosovp95@gmail.com",
+    email: "kolosovp95@gmail.com",
     password: "z[?6dMR#xmp=nr6q"
   };
 
   login(): void {
-    if (!this.loginCommand.emailOrPhone) {
+    if (!this.loginCommand.email) {
       alert("Enter valid email of password.");
       return;
     }

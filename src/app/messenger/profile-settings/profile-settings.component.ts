@@ -7,6 +7,8 @@ import {Subject, Subscription} from "rxjs";
 import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocialsCommand";
 import {DocumentsService} from "../../services/documents.service";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import {ErrorNotificationService} from "../../services/error-notification.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @AutoUnsubscribe()
 @Component({
@@ -16,7 +18,10 @@ import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UsersService,
-              private documentService: DocumentsService) {
+              private documentService: DocumentsService,
+              private errorNotificationService: ErrorNotificationService,
+              private route: ActivatedRoute,
+              private router: Router,) {
   }
 
   protected getCurrentUserSub$!: Subscription;
@@ -48,7 +53,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     instagram: "",
     lastName: "",
     linkedIn: "",
-    phoneNumber: "",
     twitter: "",
     userId: "",
     username: "",
@@ -61,34 +65,45 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   initializeView(): void {
     this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(getUserResponse => {
+      console.log('inside init')
       this.currentUser = getUserResponse.user;
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
       this.isLoaded = true;
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   saveAccountInfo(): void {
-
-    const phone = this.currentUser.phoneNumber == null
-      ? ""
-      : this.currentUser.phoneNumber.toString();
+    if (!this.validateDate(this.currentUser.birthdayDate)) {
+      alert('Invalid birthday date format. Correct and try again.');
+      return;
+    }
 
     const command = new UpdateAccountInformationCommand(
-      this.currentUser.displayName,
-      phone,
       this.currentUser.birthdayDate,
-      this.currentUser.email,
       this.currentUser.website,
       this.currentUser.username,
       this.currentUser.bio,
-      this.currentUser.address);
+      this.currentUser.address,
+      this.currentUser.displayName);
 
-    this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(response => {
-      alert(response.message);
+    this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(_ => {
+      alert('Personal information has been updated successfully.');
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   saveSocialMediaInfo(): void {
@@ -97,11 +112,17 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.currentUser.instagram,
       this.currentUser.linkedIn);
 
-    this.updateUserSocialsSub$ = this.userService.updateUserSocials(command).subscribe(response => {
-      alert(response.message);
+    this.updateUserSocialsSub$ = this.userService.updateUserSocials(command).subscribe(_ => {
+      alert('Social media links updated successfully.');
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   changePassword(): void {
@@ -119,7 +140,13 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     this.changePasswordSub$ = this.userService.changePassword(command).subscribe(data => {
       alert(data.message);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   updateProfilePicture(): void {
@@ -134,7 +161,13 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
           this.cloneCurrentUser();
           this.emitEventToChild(this.cloneUser);
         });
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   onFileSelected(event: any): void {
@@ -155,5 +188,15 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   private cloneCurrentUser = () => {
     this.cloneUser = JSON.parse(JSON.stringify(this.currentUser));
+  }
+
+  validateDate(date: string): boolean {
+    if (date === null) {
+      return false;
+    }
+
+    let anyDate = date as any;
+    let parsedDate = (new Date(anyDate)).getDate();
+    return !isNaN(parsedDate);
   }
 }
