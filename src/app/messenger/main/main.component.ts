@@ -246,9 +246,12 @@ export class MainComponent implements OnInit, OnDestroy {
           this.initializeView();
           break;
         case 'Groups':
-          this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.ReadOnlyChannel
-            || x.communityType === CommunityType.PublicChannel
-            || x.communityType === CommunityType.PrivateChannel);
+          this.chats = getUserChatsResponse.chats
+            .filter(x => !x.isArchived)
+            .filter(x =>
+              x.communityType === CommunityType.ReadOnlyChannel ||
+              x.communityType === CommunityType.PublicChannel ||
+              x.communityType === CommunityType.PrivateChannel);
           break;
         case 'Direct Chats':
           this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.DirectChat);
@@ -274,8 +277,10 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onArchiveChatClick(): void {
     this.archiveSub$ =
-      this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ =>
-          this.chats = this.chats.filter(x => x.chatId !== this.activeChatId),
+      this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ => {
+          this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
+          this.activeChat.isArchived = !this.activeChat.isArchived;
+        },
         error => alert(error.error.errorDetails));
   }
 
