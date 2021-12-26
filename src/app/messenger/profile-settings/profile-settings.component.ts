@@ -48,7 +48,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     instagram: "",
     lastName: "",
     linkedIn: "",
-    phoneNumber: "",
     twitter: "",
     userId: "",
     username: "",
@@ -70,13 +69,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   saveAccountInfo(): void {
 
-    const phone = this.currentUser.phoneNumber == null
-      ? ""
-      : this.currentUser.phoneNumber.toString();
-
     const command = new UpdateAccountInformationCommand(
       this.currentUser.displayName,
-      phone,
       this.currentUser.birthdayDate,
       this.currentUser.email,
       this.currentUser.website,

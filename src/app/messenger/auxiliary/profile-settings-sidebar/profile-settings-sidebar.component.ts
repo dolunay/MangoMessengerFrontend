@@ -35,7 +35,6 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
     instagram: "",
     lastName: "",
     linkedIn: "",
-    phoneNumber: "",
     pictureUrl: "",
     publicKey: 0,
     twitter: "",

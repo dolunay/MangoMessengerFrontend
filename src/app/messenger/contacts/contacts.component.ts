@@ -53,7 +53,6 @@ export class ContactsComponent implements OnInit, OnDestroy {
     instagram: "",
     lastName: "",
     linkedIn: "",
-    phoneNumber: "",
     twitter: "",
     userId: "",
     username: "",
