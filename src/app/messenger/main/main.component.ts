@@ -217,7 +217,9 @@ export class MainComponent implements OnInit, OnDestroy {
       this.activeChatId = chatId;
       this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
       this.scrollToEnd();
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   navigateToChat(chatId: string): void {
@@ -272,16 +274,19 @@ export class MainComponent implements OnInit, OnDestroy {
     this.searchSub$ = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
       this.chats = response.chats;
       this.chatFilter = 'Search Results';
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   onArchiveChatClick(): void {
     this.archiveSub$ =
       this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ => {
-          this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
-          this.activeChat.isArchived = !this.activeChat.isArchived;
-        },
-        error => alert(error.error.errorDetails));
+        this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
+        this.activeChat.isArchived = !this.activeChat.isArchived;
+      }, error => {
+        this.errorNotificationService.notifyOnError(error);
+      });
   }
 
   onLeaveChatClick(): void {
@@ -301,7 +306,9 @@ export class MainComponent implements OnInit, OnDestroy {
         this.currentUser = data.user;
         this.router.navigateByUrl('main').then(r => r);
       });
-    }, error => alert(error.error.ErrorMessage));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   getMessageComponentClass = (chat: IChat) => chat.chatId === this.activeChatId
@@ -332,7 +339,9 @@ export class MainComponent implements OnInit, OnDestroy {
       this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
         this.messages = response.messages;
         this.messageSearchQuery = '';
-      }, error => alert(error.error.errorDetails));
+      }, error => {
+        this.errorNotificationService.notifyOnError(error);
+      });
   }
 
   onFilterMessageDropdownClick = () => this.loadMessages(this.activeChatId);
@@ -385,7 +394,9 @@ export class MainComponent implements OnInit, OnDestroy {
       this.updateChatLogoSub$ = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
         this.activeChat.chatLogoImageUrl = uploadResponse.fileUrl;
         alert(response.message);
-      }, error => alert(error.error.errorDetails));
+      }, error => {
+        this.errorNotificationService.notifyOnError(error);
+      });
     });
   }
 
