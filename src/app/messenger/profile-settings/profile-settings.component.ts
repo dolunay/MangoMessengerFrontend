@@ -1,3 +1,4 @@
+import { SessionService } from './../../services/session.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
 import {UpdateAccountInformationCommand} from "../../../types/requests/UpdateAccountInformationCommand";
@@ -21,6 +22,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   constructor(private userService: UsersService,
               private documentService: DocumentsService,
               private errorNotificationService: ErrorNotificationService,
+              private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router,) {
   }
@@ -32,6 +34,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   protected uploadDocumentSub$!: Subscription;
   protected updateProfilePictureSub$!: Subscription;
 
+  private userId = this.sessionService.getUserId();
+  
   public eventsSubject: Subject<IUser> = new Subject<IUser>();
   public isLoaded = false;
   public cloneUser!: IUser;
@@ -65,7 +69,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
-    this.getCurrentUserSub$ = this.userService.getUserById(localStorage.getItem("MangoUserID")).subscribe(getUserResponse => {
+    this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(getUserResponse => {
       console.log('inside init')
       this.currentUser = getUserResponse.user;
       this.cloneCurrentUser();

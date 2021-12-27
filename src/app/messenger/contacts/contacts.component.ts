@@ -28,6 +28,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
               private errorNotificationService: ErrorNotificationService) {
   }
 
+  private userId = this.sessionService.getUserId();
   private currentUser!: IUser;
 
   protected getCurrentUserContactsSub$!: Subscription;
@@ -74,7 +75,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
       this.contactsService.getCurrentUserContacts().subscribe(contResponse => {
         this.contacts = contResponse.contacts;
 
-        this.getCurrentUserSub$ = this.userService.getUserById(localStorage.getItem("MangoUserID")).subscribe(response => {
+        this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(response => {
           this.currentUser = response.user;
           this.currentOpenedContact = response.user;
           this.isLoaded = true;
