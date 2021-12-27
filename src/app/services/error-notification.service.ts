@@ -25,6 +25,11 @@ export class ErrorNotificationService {
       alert(error.error.ErrorMessage);
       return;
     }
+
+    if (error.status === 404) {
+      console.log(error);
+      alert(error.message);
+    }
   }
 
   notifyOnErrorWithComponentName(error: any, componentName: string): void {

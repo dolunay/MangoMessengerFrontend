@@ -370,7 +370,7 @@ export class MainComponent implements OnInit, OnDestroy {
     dialog?.click();
   }
 
-  onChatLogoChange(event: any): void {
+  onChatImageChange(event: any): void {
     const file: File = event.target.files[0];
 
     const properFileFormat = file.name.includes('.jpg')
@@ -397,6 +397,8 @@ export class MainComponent implements OnInit, OnDestroy {
       }, error => {
         this.errorNotificationService.notifyOnError(error);
       });
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
     });
   }
 

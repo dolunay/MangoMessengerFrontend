@@ -41,6 +41,6 @@ export class CommunitiesService {
 
   // PUT /api/communities/picture
   updateChatLogo(command: UpdateChatLogoCommand): Observable<IBaseResponse> {
-    return this.httpClient.put<IBaseResponse>(environment.baseUrl + this.chatsRoute + 'picture', command);
+    return this.httpClient.put<IBaseResponse>(environment.baseUrl + this.chatsRoute + 'picture/', command);
   }
 }
