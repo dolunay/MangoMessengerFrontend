@@ -74,7 +74,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
       this.contactsService.getCurrentUserContacts().subscribe(contResponse => {
         this.contacts = contResponse.contacts;
 
-        this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(response => {
+        this.getCurrentUserSub$ = this.userService.getUserById(localStorage.getItem("MangoUserID")).subscribe(response => {
           this.currentUser = response.user;
           this.currentOpenedContact = response.user;
           this.isLoaded = true;

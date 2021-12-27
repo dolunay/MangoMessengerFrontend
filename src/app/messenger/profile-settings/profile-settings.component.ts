@@ -64,7 +64,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
-    this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(getUserResponse => {
+    this.getCurrentUserSub$ = this.userService.getUserById(localStorage.getItem("MangoUserID")).subscribe(getUserResponse => {
       console.log('inside init')
       this.currentUser = getUserResponse.user;
       this.cloneCurrentUser();
