@@ -135,7 +135,7 @@ export class MainComponent implements OnInit, OnDestroy {
       }
 
       if (!this.activeChatId) {
-        this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(data => this.currentUser = data.user);
+        this.getCurrentUserSub$ = this.userService.getUserById(localStorage.getItem("MangoUserID")).subscribe(data => this.currentUser = data.user);
       }
 
     }, error => {
