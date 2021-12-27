@@ -13,7 +13,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 @AutoUnsubscribe()
 @Component({
   selector: 'app-profile-settings',
-  templateUrl: './profile-settings.component.html'
+  templateUrl: './profile-settings.component.html',
+  styleUrls: ['./profile-settings.component.scss']
 })
 export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
