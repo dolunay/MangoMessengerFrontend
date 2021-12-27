@@ -135,7 +135,7 @@ export class MainComponent implements OnInit, OnDestroy {
       }
 
       if (!this.activeChatId) {
-        this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(data => this.currentUser = data.user);
+        this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(data => this.currentUser = data.user);
       }
 
     }, error => {
@@ -297,7 +297,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
       this.activeChatId = '';
 
-      this.onChatLeaveUserSub$ = this.userService.getCurrentUser().subscribe(data => {
+      this.onChatLeaveUserSub$ = this.userService.getUserById(this.userId).subscribe(data => {
         this.currentUser = data.user;
         this.router.navigateByUrl('main').then(r => r);
       });
