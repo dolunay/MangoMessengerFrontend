@@ -5,9 +5,8 @@ import {IGetUserChatsResponse} from "../../types/responses/IGetUserChatsResponse
 import {ICreateCommunityResponse} from "../../types/responses/ICreateCommunityResponse";
 import {CreateChannelCommand} from "../../types/requests/CreateChannelCommand";
 import {CreateChatCommand} from "../../types/requests/CreateChatCommand";
-import {UpdateChatLogoCommand} from "../../types/requests/UpdateChatLogoCommand";
-import {IBaseResponse} from "../../types/responses/IBaseResponse";
 import {environment} from "../../environments/environment";
+import {IUpdateChatLogoResponse} from "../../types/responses/IUpdateChatLogoResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +39,7 @@ export class CommunitiesService {
   }
 
   // PUT /api/communities/picture
-  updateChatLogo(command: UpdateChatLogoCommand): Observable<IBaseResponse> {
-    return this.httpClient.put<IBaseResponse>(environment.baseUrl + this.chatsRoute + 'picture', command);
+  updateChatLogo(chatId: string, formData: FormData): Observable<IUpdateChatLogoResponse> {
+    return this.httpClient.post<IUpdateChatLogoResponse>(environment.baseUrl + this.chatsRoute + `picture/${chatId}`, formData);
   }
 }

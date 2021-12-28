@@ -1,4 +1,4 @@
-import { SessionService } from './../../services/session.service';
+import {SessionService} from './../../services/session.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
 import {UpdateAccountInformationCommand} from "../../../types/requests/UpdateAccountInformationCommand";
@@ -31,11 +31,10 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   protected updateAccountInfoSub$!: Subscription;
   protected updateUserSocialsSub$!: Subscription;
   protected changePasswordSub$!: Subscription;
-  protected uploadDocumentSub$!: Subscription;
   protected updateProfilePictureSub$!: Subscription;
 
   private userId = this.sessionService.getUserId();
-  
+
   public eventsSubject: Subject<IUser> = new Subject<IUser>();
   public isLoaded = false;
   public cloneUser!: IUser;
@@ -70,7 +69,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   initializeView(): void {
     this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(getUserResponse => {
-      console.log('inside init')
       this.currentUser = getUserResponse.user;
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
@@ -156,23 +154,17 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   updateProfilePicture(): void {
     const formData = new FormData();
-    formData.append("formFile", this.file);
+    formData.append("pictureFile", this.file);
 
-    this.uploadDocumentSub$ = this.documentService.uploadDocument(formData).subscribe(uploadResp => {
-      this.updateProfilePictureSub$ =
-        this.userService.updateProfilePicture(uploadResp.fileName).subscribe(updateResponse => {
-          alert(updateResponse.message);
-          this.currentUser.pictureUrl = uploadResp.fileUrl;
-          this.cloneCurrentUser();
-          this.emitEventToChild(this.cloneUser);
-        });
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
-
-      if (error.status === 0 || error.status === 401 || error.status === 403) {
-        this.router.navigateByUrl('login').then(r => r);
-      }
-    });
+    this.updateProfilePictureSub$ =
+      this.userService.updateProfilePicture(formData).subscribe(updateResponse => {
+        alert(updateResponse.message);
+        this.currentUser.pictureUrl = updateResponse.newUserPictureUrl;
+        this.cloneCurrentUser();
+        this.emitEventToChild(this.cloneUser);
+      }, error => {
+        this.errorNotificationService.notifyOnError(error);
+      });
   }
 
   onFileSelected(event: any): void {
