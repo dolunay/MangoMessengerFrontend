@@ -12,6 +12,7 @@ import {IBaseResponse} from "../../types/responses/IBaseResponse";
 import {UpdateUserSocialsCommand} from 'src/types/requests/UpdateUserSocialsCommand';
 import {IUser} from "../../types/models/IUser";
 import {environment} from "../../environments/environment";
+import {IUpdateProfilePictureResponse} from "../../types/responses/IUpdateProfilePictureResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +26,6 @@ export class UsersService {
   // PUT /api/users/socials
   updateUserSocials(request: UpdateUserSocialsCommand): Observable<IBaseResponse> {
     return this.httpClient.put<IBaseResponse>(environment.baseUrl + this.usersRoute + 'socials/', request);
-  }
-
-  // GET /api/users
-  getCurrentUser(): Observable<IGetUserResponse> {
-    return this.httpClient.get<IGetUserResponse>(environment.baseUrl + this.usersRoute);
   }
 
   // GET /api/users/{userId}
@@ -67,8 +63,8 @@ export class UsersService {
     return user.pictureUrl ? user.pictureUrl : 'assets/media/avatar/4.png';
   }
 
-  // PUT /api/users/picture/{image}
-  updateProfilePicture(image: string): Observable<IBaseResponse> {
-    return this.httpClient.put<IBaseResponse>(environment.baseUrl + this.usersRoute + 'picture/' + image, {});
+  // POST /api/users/picture/{image}
+  updateProfilePicture(formData: FormData): Observable<IUpdateProfilePictureResponse> {
+    return this.httpClient.post<IUpdateProfilePictureResponse>(environment.baseUrl + this.usersRoute + 'picture', formData);
   }
 }

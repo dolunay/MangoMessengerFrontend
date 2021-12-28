@@ -16,7 +16,6 @@ import {UsersService} from "../../services/users.service";
 import {EditMessageCommand} from "../../../types/requests/EditMessageCommand";
 import {IEditMessageNotification} from "../../../types/models/IEditMessageNotification";
 import {DocumentsService} from "../../services/documents.service";
-import {UpdateChatLogoCommand} from "../../../types/requests/UpdateChatLogoCommand";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 import {environment} from "../../../environments/environment";
 import {ErrorNotificationService} from "../../services/error-notification.service";
@@ -92,7 +91,6 @@ export class MainComponent implements OnInit, OnDestroy {
   protected deleteChatSub$!: Subscription;
   protected onChatLeaveUserSub$!: Subscription;
   protected searchMessageSub$!: Subscription;
-  protected uploadDocumentSub$!: Subscription;
   protected updateChatLogoSub$!: Subscription;
 
   constructor(private sessionService: SessionService,
@@ -372,6 +370,11 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onChatImageChange(event: any): void {
     const file: File = event.target.files[0];
+
+    if (file === null || file === undefined) {
+      return;
+    }
+
     const split = file.name.split('.');
     const extension = split.pop();
 
