@@ -372,11 +372,14 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onChatImageChange(event: any): void {
     const file: File = event.target.files[0];
+    const split = file.name.split('.');
+    const extension = split.pop();
 
-    const properFileFormat = file.name.includes('.jpg')
-      || file.name.includes('.png')
-      || file.name.includes('.JPG')
-      || file.name.includes('.PNG');
+    const properFileFormat =
+      extension === 'jpg' ||
+      extension === 'JPG' ||
+      extension === 'png' ||
+      extension === 'PNG';
 
     if (!properFileFormat) {
       alert('Wrong file format.');
@@ -384,21 +387,14 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
     const form = new FormData();
-    form.append("formFile", file);
+    form.append("newGroupPicture", file);
 
-    this.uploadDocumentSub$ = this.documentService.uploadDocument(form).subscribe(uploadResponse => {
-      const chatId = this.activeChatId;
-      const image = uploadResponse.fileName;
-      const updateChatLogoCommand = new UpdateChatLogoCommand(chatId, image);
 
-      this.updateChatLogoSub$ = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
-        this.activeChat.chatLogoImageUrl = uploadResponse.fileUrl;
-        alert(response.message);
-      }, error => {
-        this.errorNotificationService.notifyOnError(error);
-      });
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
+    const chatId = this.activeChatId;
+
+    this.updateChatLogoSub$ = this.chatService.updateChatLogo(chatId, form).subscribe(response => {
+      this.activeChat.chatLogoImageUrl = response.updatedLogoUrl;
+      alert(response.message);
     });
   }
 
