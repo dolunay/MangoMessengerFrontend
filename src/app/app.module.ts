@@ -34,6 +34,7 @@ import {PasswordRestoreFormComponent} from './messenger/password-restore-form/pa
 import {PickerModule} from "@ctrl/ngx-emoji-mart";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import {MatNativeDateModule} from "@angular/material/core";
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: RequestHeaderInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

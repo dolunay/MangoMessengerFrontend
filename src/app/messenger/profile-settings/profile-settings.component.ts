@@ -10,6 +10,7 @@ import {DocumentsService} from "../../services/documents.service";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {DatePipe} from '@angular/common';
 
 @AutoUnsubscribe()
 @Component({
@@ -24,7 +25,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
               private errorNotificationService: ErrorNotificationService,
               private sessionService: SessionService,
               private route: ActivatedRoute,
-              private router: Router,) {
+              private router: Router,
+              private datePipe: DatePipe) {
   }
 
   protected getCurrentUserSub$!: Subscription;
@@ -185,6 +187,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   private cloneCurrentUser = () => {
     this.cloneUser = JSON.parse(JSON.stringify(this.currentUser));
+    this.cloneUser.birthdayDate = this.datePipe.transform(this.cloneUser.birthdayDate, "MM-dd-yyyy") as any;
   }
 
   validateDate(date: string): boolean {

@@ -43,7 +43,7 @@ export class ReceivedMessageComponent implements OnDestroy {
            attachmentFileExtension == "png" || 
            attachmentFileExtension == "gif";
   }
-
+  
   deleteMessage(): void {
     this.deleteMessageSub$ =
       this.messageService.deleteMessage(this.message.messageId).subscribe(_ => {
