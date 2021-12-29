@@ -38,12 +38,10 @@ export class ReceivedMessageComponent implements OnDestroy {
   isImageOrGif(): boolean {
     let attachmentSplited = this.message.messageAttachmentUrl.split(".");
     let attachmentFileExtension = attachmentSplited[attachmentSplited.length - 1];
-    if(attachmentFileExtension == "jpg" || attachmentFileExtension == "png" || attachmentFileExtension == "gif")
-    {  
-      return true;
-    }
 
-    return false;
+    return attachmentFileExtension == "jpg" || 
+           attachmentFileExtension == "png" || 
+           attachmentFileExtension == "gif";
   }
 
   deleteMessage(): void {
