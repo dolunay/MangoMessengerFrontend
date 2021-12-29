@@ -142,6 +142,11 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
     this.inReplayText = null;
   }
 
+  clearInEdit(): void {
+    this.editMessageRequest = null;
+    this.currentMessageText = '';
+  }
+
   clearMessageInput(): void {
     this.currentMessageText = '';
   }
