@@ -187,8 +187,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   private cloneCurrentUser = () => {
     this.cloneUser = JSON.parse(JSON.stringify(this.currentUser));
-    let formattedDate = this.datePipe.transform(this.cloneUser.birthdayDate, "MM-dd-yyyy") as any;
-    this.cloneUser.birthdayDate = formattedDate;
+    this.cloneUser.birthdayDate = this.datePipe.transform(this.cloneUser.birthdayDate, "MM-dd-yyyy") as any;
   }
 
   validateDate(date: string): boolean {
