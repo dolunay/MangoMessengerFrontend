@@ -7,7 +7,8 @@ import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 @AutoUnsubscribe()
 @Component({
   selector: 'app-received-message',
-  templateUrl: './received-message.component.html'
+  templateUrl: './received-message.component.html',
+  styleUrls: ['./received-message.component.scss']
 })
 export class ReceivedMessageComponent implements OnDestroy {
 
@@ -33,6 +34,17 @@ export class ReceivedMessageComponent implements OnDestroy {
 
   @Output() notifyParentOnEditMessage = new EventEmitter<any>();
   @Output() notifyParentOnReplayMessage = new EventEmitter<any>();
+
+  isImageOrGif(): boolean {
+    let attachmentSplited = this.message.messageAttachmentUrl.split(".");
+    let attachmentFileExtension = attachmentSplited[attachmentSplited.length - 1];
+    if(attachmentFileExtension == "jpg" || attachmentFileExtension == "png" || attachmentFileExtension == "gif")
+    {  
+      return true;
+    }
+
+    return false;
+  }
 
   deleteMessage(): void {
     this.deleteMessageSub$ =
