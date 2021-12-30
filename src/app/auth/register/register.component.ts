@@ -57,6 +57,7 @@ export class RegisterComponent implements OnDestroy {
 
       this.router.navigateByUrl('verify-email-note').then(r => r);
     }, error => {
+      console.log(error);
       this.errorNotificationService.notifyOnError(error);
     });
   }

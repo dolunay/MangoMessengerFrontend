@@ -38,13 +38,9 @@ export class SessionService {
   }
 
   getToken(): ITokensResponse | null {
-    const tokensString = localStorage.getItem(this.LocalStorageTokenKey) ?? "";
+    const tokensString = localStorage.getItem(this.LocalStorageTokenKey);
 
-    if (tokensString === "") {
-      throw new Error("Localstorage tokens error.");
-    }
-
-    return JSON.parse(tokensString);
+    return tokensString === null ? null : JSON.parse(tokensString);
   }
 
   setToken(tokens: ITokensResponse): void {
