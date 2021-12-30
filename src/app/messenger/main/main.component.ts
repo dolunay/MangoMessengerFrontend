@@ -28,7 +28,7 @@ import {ErrorNotificationService} from "../../services/error-notification.servic
 export class MainComponent implements OnInit, OnDestroy {
 
   private routeChatId = this.route.snapshot.paramMap.get('chatId');
-  private userId = this.sessionService.getUserId();
+  private readonly userId: string | undefined = this.sessionService.getToken()?.userId;
   private connectionBuilder: signalR.HubConnectionBuilder = new signalR.HubConnectionBuilder();
   private connection: signalR.HubConnection = this.connectionBuilder
     .configureLogging(signalR.LogLevel.Information)
@@ -133,7 +133,8 @@ export class MainComponent implements OnInit, OnDestroy {
       }
 
       if (!this.activeChatId) {
-        this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(data => this.currentUser = data.user);
+        const userId = this.userId as string;
+        this.getCurrentUserSub$ = this.userService.getUserById(userId).subscribe(data => this.currentUser = data.user);
       }
 
     }, error => {
@@ -300,7 +301,8 @@ export class MainComponent implements OnInit, OnDestroy {
 
       this.activeChatId = '';
 
-      this.onChatLeaveUserSub$ = this.userService.getUserById(this.userId).subscribe(data => {
+      const userId = this.userId as string;
+      this.onChatLeaveUserSub$ = this.userService.getUserById(userId).subscribe(data => {
         this.currentUser = data.user;
         this.router.navigateByUrl('main').then(r => r);
       });

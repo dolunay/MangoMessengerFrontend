@@ -50,12 +50,14 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
   }
 
   proceedToMainComponent(): void {
-    const refreshToken = this.sessionService.getRefreshToken();
+    const refreshToken = this.sessionService.getToken()?.refreshToken;
 
-    this.refreshSessionSub$ = this.sessionService.refreshSession(refreshToken).subscribe(result => {
-      this.sessionService.writeRefreshToken(result.refreshToken);
-      this.sessionService.writeAccessToken(result.accessToken);
-      this.sessionService.writeUserId(result.userId);
+    if (refreshToken === null || refreshToken === undefined) {
+      throw new Error("Localstorage tokens error.");
+    }
+
+    this.refreshSessionSub$ = this.sessionService.refreshSession(refreshToken).subscribe(tokens => {
+      this.sessionService.setToken(tokens);
 
       this.router.navigateByUrl('main').then(r => r);
 

@@ -13,7 +13,7 @@ import {ErrorNotificationService} from "../../services/error-notification.servic
 })
 export class LoginComponent implements OnDestroy {
 
-  constructor(private authService: SessionService,
+  constructor(private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router,
               private errorNotificationService: ErrorNotificationService) {
@@ -37,11 +37,9 @@ export class LoginComponent implements OnDestroy {
       return;
     }
 
-    this.loginSub$ = this.authService.createSession(this.loginCommand).subscribe(data => {
+    this.loginSub$ = this.sessionService.createSession(this.loginCommand).subscribe(tokens => {
 
-      this.authService.writeAccessToken(data.accessToken);
-      this.authService.writeRefreshToken(data.refreshToken);
-      this.authService.writeUserId(data.userId);
+     this.sessionService.setToken(tokens);
 
       this.router.navigateByUrl('main').then(r => r);
     }, error => {

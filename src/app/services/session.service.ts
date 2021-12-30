@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Tokens} from "../../consts/Tokens";
 import {LoginCommand} from "../../types/requests/LoginCommand";
 import {ITokensResponse} from "../../types/responses/ITokensResponse";
 import {IBaseResponse} from "../../types/responses/IBaseResponse";
@@ -11,7 +10,8 @@ import {environment} from "../../environments/environment";
   providedIn: 'root'
 })
 export class SessionService {
-  private sessionsRoute = 'api/sessions/'
+  private sessionsRoute = 'api/sessions/';
+  private readonly LocalStorageTokenKey = "MANGO_TOKEN";
 
   constructor(private httpClient: HttpClient) {
   }
@@ -37,39 +37,22 @@ export class SessionService {
     return this.httpClient.delete<IBaseResponse>(environment.baseUrl + this.sessionsRoute);
   }
 
-  getAccessToken(): string | null {
-    return localStorage.getItem(Tokens.accessToken);
+  getToken(): ITokensResponse | null {
+    const tokensString = localStorage.getItem(this.LocalStorageTokenKey) ?? "";
+
+    if (tokensString === "") {
+      throw new Error("Localstorage tokens error.");
+    }
+
+    return JSON.parse(tokensString);
   }
 
-  getRefreshToken(): string | null {
-    return localStorage.getItem(Tokens.refreshToken);
+  setToken(tokens: ITokensResponse): void {
+    const tokensStringify = JSON.stringify(tokens);
+    localStorage.setItem(this.LocalStorageTokenKey, tokensStringify);
   }
 
-  writeAccessToken(token: string): void {
-    localStorage.setItem(Tokens.accessToken, token);
-  }
-
-  writeRefreshToken(tokenId: string): void {
-    localStorage.setItem(Tokens.refreshToken, tokenId);
-  }
-
-  clearAccessToken(): void {
-    localStorage.removeItem(Tokens.accessToken);
-  }
-
-  clearRefreshToken(): void {
-    localStorage.removeItem(Tokens.refreshToken);
-  }
-
-  getUserId(): string | null {
-    return localStorage.getItem('MangoUserID');
-  }
-
-  writeUserId(userId: string): void {
-    localStorage.setItem(Tokens.userId, userId);
-  }
-
-  clearUserId(): void {
-    localStorage.removeItem(Tokens.userId);
+  clearToken(): void {
+    localStorage.removeItem(this.LocalStorageTokenKey);
   }
 }

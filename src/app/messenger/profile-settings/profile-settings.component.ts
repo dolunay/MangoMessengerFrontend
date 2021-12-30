@@ -1,4 +1,4 @@
-import {SessionService} from './../../services/session.service';
+import {SessionService} from '../../services/session.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
 import {UpdateAccountInformationCommand} from "../../../types/requests/UpdateAccountInformationCommand";
@@ -35,7 +35,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   protected changePasswordSub$!: Subscription;
   protected updateProfilePictureSub$!: Subscription;
 
-  private userId = this.sessionService.getUserId();
+  private userId: string | undefined = this.sessionService.getToken()?.userId;
 
   public eventsSubject: Subject<IUser> = new Subject<IUser>();
   public isLoaded = false;
@@ -70,7 +70,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
-    this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(getUserResponse => {
+    const userId = this.userId as string;
+    this.getCurrentUserSub$ = this.userService.getUserById(userId).subscribe(getUserResponse => {
       this.currentUser = getUserResponse.user;
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
