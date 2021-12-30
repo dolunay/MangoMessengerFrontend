@@ -9,7 +9,8 @@ import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 @AutoUnsubscribe()
 @Component({
   selector: 'app-create-group-dialog',
-  templateUrl: './create-group-dialog.component.html'
+  templateUrl: './create-group-dialog.component.html',
+  styleUrls: ['./create-group-dialog.component.scss']
 })
 export class CreateGroupDialogComponent implements OnDestroy {
 

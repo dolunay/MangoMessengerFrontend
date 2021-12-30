@@ -1,3 +1,4 @@
+import {SessionService} from './../../services/session.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
 import {UpdateAccountInformationCommand} from "../../../types/requests/UpdateAccountInformationCommand";
@@ -7,24 +8,34 @@ import {Subject, Subscription} from "rxjs";
 import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocialsCommand";
 import {DocumentsService} from "../../services/documents.service";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import {ErrorNotificationService} from "../../services/error-notification.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {DatePipe} from '@angular/common';
 
 @AutoUnsubscribe()
 @Component({
   selector: 'app-profile-settings',
-  templateUrl: './profile-settings.component.html'
+  templateUrl: './profile-settings.component.html',
+  styleUrls: ['./profile-settings.component.scss']
 })
 export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UsersService,
-              private documentService: DocumentsService) {
+              private documentService: DocumentsService,
+              private errorNotificationService: ErrorNotificationService,
+              private sessionService: SessionService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private datePipe: DatePipe) {
   }
 
   protected getCurrentUserSub$!: Subscription;
   protected updateAccountInfoSub$!: Subscription;
   protected updateUserSocialsSub$!: Subscription;
   protected changePasswordSub$!: Subscription;
-  protected uploadDocumentSub$!: Subscription;
   protected updateProfilePictureSub$!: Subscription;
+
+  private userId = this.sessionService.getUserId();
 
   public eventsSubject: Subject<IUser> = new Subject<IUser>();
   public isLoaded = false;
@@ -48,7 +59,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     instagram: "",
     lastName: "",
     linkedIn: "",
-    phoneNumber: "",
     twitter: "",
     userId: "",
     username: "",
@@ -60,35 +70,45 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
-    this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(getUserResponse => {
+    this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(getUserResponse => {
       this.currentUser = getUserResponse.user;
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
       this.isLoaded = true;
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   saveAccountInfo(): void {
-
-    const phone = this.currentUser.phoneNumber == null
-      ? ""
-      : this.currentUser.phoneNumber.toString();
+    if (!this.validateDate(this.currentUser.birthdayDate)) {
+      alert('Invalid birthday date format. Correct and try again.');
+      return;
+    }
 
     const command = new UpdateAccountInformationCommand(
-      this.currentUser.displayName,
-      phone,
       this.currentUser.birthdayDate,
-      this.currentUser.email,
       this.currentUser.website,
       this.currentUser.username,
       this.currentUser.bio,
-      this.currentUser.address);
+      this.currentUser.address,
+      this.currentUser.displayName);
 
-    this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(response => {
-      alert(response.message);
+    this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(_ => {
+      alert('Personal information has been updated successfully.');
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   saveSocialMediaInfo(): void {
@@ -97,11 +117,17 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.currentUser.instagram,
       this.currentUser.linkedIn);
 
-    this.updateUserSocialsSub$ = this.userService.updateUserSocials(command).subscribe(response => {
-      alert(response.message);
+    this.updateUserSocialsSub$ = this.userService.updateUserSocials(command).subscribe(_ => {
+      alert('Social media links updated successfully.');
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   changePassword(): void {
@@ -119,22 +145,28 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     this.changePasswordSub$ = this.userService.changePassword(command).subscribe(data => {
       alert(data.message);
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 0 || error.status === 401 || error.status === 403) {
+        this.router.navigateByUrl('login').then(r => r);
+      }
+    });
   }
 
   updateProfilePicture(): void {
     const formData = new FormData();
-    formData.append("formFile", this.file);
+    formData.append("pictureFile", this.file);
 
-    this.uploadDocumentSub$ = this.documentService.uploadDocument(formData).subscribe(uploadResp => {
-      this.updateProfilePictureSub$ =
-        this.userService.updateProfilePicture(uploadResp.fileName).subscribe(updateResponse => {
-          alert(updateResponse.message);
-          this.currentUser.pictureUrl = uploadResp.fileUrl;
-          this.cloneCurrentUser();
-          this.emitEventToChild(this.cloneUser);
-        });
-    }, error => alert(error.error.errorDetails));
+    this.updateProfilePictureSub$ =
+      this.userService.updateProfilePicture(formData).subscribe(updateResponse => {
+        alert(updateResponse.message);
+        this.currentUser.pictureUrl = updateResponse.newUserPictureUrl;
+        this.cloneCurrentUser();
+        this.emitEventToChild(this.cloneUser);
+      }, error => {
+        this.errorNotificationService.notifyOnError(error);
+      });
   }
 
   onFileSelected(event: any): void {
@@ -155,5 +187,16 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   private cloneCurrentUser = () => {
     this.cloneUser = JSON.parse(JSON.stringify(this.currentUser));
+    this.cloneUser.birthdayDate = this.datePipe.transform(this.cloneUser.birthdayDate, "MM-dd-yyyy") as any;
+  }
+
+  validateDate(date: string): boolean {
+    if (date === null) {
+      return false;
+    }
+
+    let anyDate = date as any;
+    let parsedDate = (new Date(anyDate)).getDate();
+    return !isNaN(parsedDate);
   }
 }
