@@ -6,7 +6,10 @@ import {CommunityType} from "../../../../types/enums/CommunityType";
 import {DocumentsService} from "../../../services/documents.service";
 import {Subscription} from "rxjs";
 import {EditMessageCommand} from "../../../../types/requests/EditMessageCommand";
+import {ErrorNotificationService} from "../../../services/error-notification.service";
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-chat-footer',
   templateUrl: './chat-footer.component.html'
@@ -14,29 +17,8 @@ import {EditMessageCommand} from "../../../../types/requests/EditMessageCommand"
 export class ChatFooterComponent implements OnChanges, OnDestroy {
 
   constructor(private messageService: MessagesService,
-              private documentService: DocumentsService) {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('on changes in footer');
-    this.editMessageRequest = changes.editMessageRequest?.currentValue;
-    console.log('edit request', this.editMessageRequest);
-
-    if (this.editMessageRequest != null) {
-      this.currentMessageText = this.editMessageRequest.modifiedText;
-      return;
-    }
-
-    if (changes.replayMessageObject?.currentValue) {
-      const author = changes.replayMessageObject?.currentValue.messageAuthor;
-      const messageText = changes.replayMessageObject?.currentValue.messageText;
-      this.inReplayAuthor = author;
-      this.inReplayText = messageText;
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(x => x.unsubscribe());
+              private documentService: DocumentsService,
+              private errorNotificationService: ErrorNotificationService) {
   }
 
   // @ts-ignore
@@ -53,8 +35,6 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   attachmentName: string | null = '';
 
   attachment!: File | null;
-
-  subscriptions: Subscription[] = [];
 
   isEmojiPickerVisible = false;
 
@@ -74,8 +54,11 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
     title: ""
   }
 
-  onMessageSendClick(event: any): void {
+  private editSub$!: Subscription;
+  private uploadSub$!: Subscription;
+  private sendSub$!: Subscription;
 
+  onMessageSendClick(event: any): void {
     event.preventDefault();
 
     if (!this.currentMessageText) {
@@ -86,36 +69,37 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
     if (this.editMessageRequest != null) {
       this.editMessageRequest.modifiedText = this.currentMessageText;
 
-      let editSub = this.messageService.editMessage(this.editMessageRequest).subscribe(_ => {
+      this.editSub$ = this.messageService.editMessage(this.editMessageRequest).subscribe(_ => {
         this.editMessageRequest = null;
         this.currentMessageText = '';
       }, error => {
-        alert(error.error.errorDetails);
+        this.errorNotificationService.notifyOnError(error);
       })
 
-      this.subscriptions.push(editSub);
       return;
     }
 
     if (this.attachment) {
       const formData = new FormData();
+
       formData.append("formFile", this.attachment);
-      let uploadSub = this.documentService.uploadDocument(formData).subscribe(response => {
+
+      this.uploadSub$ = this.documentService.uploadDocument(formData).subscribe(response => {
         const fileName = response.fileName;
+
         const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
         sendMessageCommand.setAttachmentUrl(fileName);
-        let sendSub = this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
-          this.currentMessageText = '';
-          this.attachmentName = null;
-          this.attachment = null;
-        });
 
-        this.subscriptions.push(sendSub);
+        this.sendSub$ = this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
+          this.deleteAttachment();
+          this.clearMessageInput();
+        }, error => {
+          this.errorNotificationService.notifyOnError(error);
+        });
       }, error => {
-        alert(error.error.errorDetails);
+        this.errorNotificationService.notifyOnError(error);
       });
 
-      this.subscriptions.push(uploadSub);
     } else {
       const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
 
@@ -124,15 +108,12 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
         sendMessageCommand.setReplayToText(this.inReplayText);
       }
 
-      let sendSub = this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
-        this.currentMessageText = '';
-        this.inReplayText = null;
-        this.inReplayAuthor = null;
+      this.sendSub$ = this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
+        this.clearMessageInput();
+        this.clearInReplay();
       }, error => {
-        alert(error.error.errorDetails);
+        this.errorNotificationService.notifyOnError(error);
       });
-
-      this.subscriptions.push(sendSub);
     }
   }
 
@@ -159,5 +140,33 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   clearInReplay(): void {
     this.inReplayAuthor = null;
     this.inReplayText = null;
+  }
+
+  clearInEdit(): void {
+    this.editMessageRequest = null;
+    this.currentMessageText = '';
+  }
+
+  clearMessageInput(): void {
+    this.currentMessageText = '';
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.editMessageRequest = changes.editMessageRequest?.currentValue;
+
+    if (this.editMessageRequest != null) {
+      this.currentMessageText = this.editMessageRequest.modifiedText;
+      return;
+    }
+
+    if (changes.replayMessageObject?.currentValue) {
+      const author = changes.replayMessageObject?.currentValue.messageAuthor;
+      const messageText = changes.replayMessageObject?.currentValue.messageText;
+      this.inReplayAuthor = author;
+      this.inReplayText = messageText;
+    }
+  }
+
+  ngOnDestroy(): void {
   }
 }

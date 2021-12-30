@@ -8,7 +8,10 @@
       <div style="word-wrap: break-word;">{{getMessageText()}}</div>
       <div *ngIf="message.messageAttachmentUrl">
         <br>
-        <a class="link-warning" href="{{message.messageAttachmentUrl}}" target="_blank">Attachment</a>
+        <img *ngIf="isImageOrGif(); else elseBlock" src="{{message.messageAttachmentUrl}}" alt="attachment" class="imageAttachment">
+        <ng-template #elseBlock>
+          <a class="link-warning" href="{{message.messageAttachmentUrl}}" target="_blank" >Attachment</a>
+        </ng-template>
       </div>
     </div>
   </div>

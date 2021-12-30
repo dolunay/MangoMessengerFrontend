@@ -4,6 +4,7 @@ import {SessionService} from "../../services/session.service";
 import {LoginCommand} from "../../../types/requests/LoginCommand";
 import {Subscription} from "rxjs";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import {ErrorNotificationService} from "../../services/error-notification.service";
 
 @AutoUnsubscribe()
 @Component({
@@ -14,18 +15,19 @@ export class LoginComponent implements OnDestroy {
 
   constructor(private authService: SessionService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private errorNotificationService: ErrorNotificationService) {
   }
 
   protected loginSub$!: Subscription;
 
   public loginCommand: LoginCommand = {
-    emailOrPhone: "",
-    password: ""
+    email: "kolosovp95@gmail.com",
+    password: "z[?6dMR#xmp=nr6q"
   };
 
   login(): void {
-    if (!this.loginCommand.emailOrPhone) {
+    if (!this.loginCommand.email) {
       alert("Enter valid email of password.");
       return;
     }
@@ -43,7 +45,7 @@ export class LoginComponent implements OnDestroy {
 
       this.router.navigateByUrl('main').then(r => r);
     }, error => {
-      alert(error.error.errorDescription);
+      this.errorNotificationService.notifyOnError(error);
     });
   }
 

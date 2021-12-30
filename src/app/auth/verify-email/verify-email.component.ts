@@ -39,15 +39,13 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
       const command = new VerifyEmailCommand(email, emailCode);
 
       if (!emailCode || !email) {
-        alert("Invalid request.");
+        alert("Invalid or expired activation link.");
         return;
       }
 
-      this.confirmEmailSub$ = this.usersService.confirmEmail(command).subscribe(result => {
-        this.response = result;
-      }, error => {
-        alert(error.error.errorDetails);
-      });
+      this.confirmEmailSub$ = this.usersService.confirmEmail(command).subscribe(result =>
+          this.response = result,
+        _ => this.errorMessage = "Invalid or expired activation link.");
     });
   }
 

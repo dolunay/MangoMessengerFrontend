@@ -16,9 +16,9 @@ import {UsersService} from "../../services/users.service";
 import {EditMessageCommand} from "../../../types/requests/EditMessageCommand";
 import {IEditMessageNotification} from "../../../types/models/IEditMessageNotification";
 import {DocumentsService} from "../../services/documents.service";
-import {UpdateChatLogoCommand} from "../../../types/requests/UpdateChatLogoCommand";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 import {environment} from "../../../environments/environment";
+import {ErrorNotificationService} from "../../services/error-notification.service";
 
 @AutoUnsubscribe()
 @Component({
@@ -54,7 +54,6 @@ export class MainComponent implements OnInit, OnDestroy {
     instagram: "",
     lastName: "",
     linkedIn: "",
-    phoneNumber: "",
     pictureUrl: "",
     publicKey: 0,
     twitter: "",
@@ -92,7 +91,6 @@ export class MainComponent implements OnInit, OnDestroy {
   protected deleteChatSub$!: Subscription;
   protected onChatLeaveUserSub$!: Subscription;
   protected searchMessageSub$!: Subscription;
-  protected uploadDocumentSub$!: Subscription;
   protected updateChatLogoSub$!: Subscription;
 
   constructor(private sessionService: SessionService,
@@ -103,7 +101,8 @@ export class MainComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private documentService: DocumentsService,
               private router: Router,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private errorNotificationService: ErrorNotificationService) {
   }
 
   openCreateGroupDialog = () => this.dialog.open(CreateGroupDialogComponent);
@@ -113,7 +112,6 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
-
     this.getUsersChatSub$ = this.chatService.getUserChats().subscribe(chatsResponse => {
 
       this.chats = chatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
@@ -135,16 +133,16 @@ export class MainComponent implements OnInit, OnDestroy {
       }
 
       if (!this.activeChatId) {
-        this.getCurrentUserSub$ = this.userService.getCurrentUser().subscribe(data => this.currentUser = data.user);
+        this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(data => this.currentUser = data.user);
       }
 
     }, error => {
-      if (error.status === 403) {
+      this.errorNotificationService.notifyOnError(error);
+
+      if (error.status === 403 || error.status === 0) {
         this.router.navigateByUrl('login').then(r => r);
         return;
       }
-
-      alert(error.error.errorDetails);
     });
 
     if (!this.signalRConnected) {
@@ -217,7 +215,9 @@ export class MainComponent implements OnInit, OnDestroy {
       this.activeChatId = chatId;
       this.activeChat = this.chats.filter(x => x.chatId === this.activeChatId)[0];
       this.scrollToEnd();
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   navigateToChat(chatId: string): void {
@@ -246,9 +246,12 @@ export class MainComponent implements OnInit, OnDestroy {
           this.initializeView();
           break;
         case 'Groups':
-          this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.ReadOnlyChannel
-            || x.communityType === CommunityType.PublicChannel
-            || x.communityType === CommunityType.PrivateChannel);
+          this.chats = getUserChatsResponse.chats
+            .filter(x => !x.isArchived)
+            .filter(x =>
+              x.communityType === CommunityType.ReadOnlyChannel ||
+              x.communityType === CommunityType.PublicChannel ||
+              x.communityType === CommunityType.PrivateChannel);
           break;
         case 'Direct Chats':
           this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.DirectChat);
@@ -269,14 +272,19 @@ export class MainComponent implements OnInit, OnDestroy {
     this.searchSub$ = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
       this.chats = response.chats;
       this.chatFilter = 'Search Results';
-    }, error => alert(error.error.errorDetails));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   onArchiveChatClick(): void {
     this.archiveSub$ =
-      this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ =>
-          this.chats = this.chats.filter(x => x.chatId !== this.activeChatId),
-        error => alert(error.error.errorDetails));
+      this.userChatsService.archiveCommunity(this.activeChatId).subscribe(_ => {
+        this.chats = this.chats.filter(x => x.chatId !== this.activeChatId);
+        this.activeChat.isArchived = !this.activeChat.isArchived;
+      }, error => {
+        this.errorNotificationService.notifyOnError(error);
+      });
   }
 
   onLeaveChatClick(): void {
@@ -292,11 +300,13 @@ export class MainComponent implements OnInit, OnDestroy {
 
       this.activeChatId = '';
 
-      this.onChatLeaveUserSub$ = this.userService.getCurrentUser().subscribe(data => {
+      this.onChatLeaveUserSub$ = this.userService.getUserById(this.userId).subscribe(data => {
         this.currentUser = data.user;
         this.router.navigateByUrl('main').then(r => r);
       });
-    }, error => alert(error.error.ErrorMessage));
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
   }
 
   getMessageComponentClass = (chat: IChat) => chat.chatId === this.activeChatId
@@ -327,7 +337,9 @@ export class MainComponent implements OnInit, OnDestroy {
       this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
         this.messages = response.messages;
         this.messageSearchQuery = '';
-      }, error => alert(error.error.errorDetails));
+      }, error => {
+        this.errorNotificationService.notifyOnError(error);
+      });
   }
 
   onFilterMessageDropdownClick = () => this.loadMessages(this.activeChatId);
@@ -356,13 +368,21 @@ export class MainComponent implements OnInit, OnDestroy {
     dialog?.click();
   }
 
-  onChatLogoChange(event: any): void {
+  onChatImageChange(event: any): void {
     const file: File = event.target.files[0];
 
-    const properFileFormat = file.name.includes('.jpg')
-      || file.name.includes('.png')
-      || file.name.includes('.JPG')
-      || file.name.includes('.PNG');
+    if (file === null || file === undefined) {
+      return;
+    }
+
+    const split = file.name.split('.');
+    const extension = split.pop();
+
+    const properFileFormat =
+      extension === 'jpg' ||
+      extension === 'JPG' ||
+      extension === 'png' ||
+      extension === 'PNG';
 
     if (!properFileFormat) {
       alert('Wrong file format.');
@@ -370,17 +390,14 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
     const form = new FormData();
-    form.append("formFile", file);
+    form.append("newGroupPicture", file);
 
-    this.uploadDocumentSub$ = this.documentService.uploadDocument(form).subscribe(uploadResponse => {
-      const chatId = this.activeChatId;
-      const image = uploadResponse.fileName;
-      const updateChatLogoCommand = new UpdateChatLogoCommand(chatId, image);
 
-      this.updateChatLogoSub$ = this.chatService.updateChatLogo(updateChatLogoCommand).subscribe(response => {
-        this.activeChat.chatLogoImageUrl = uploadResponse.fileUrl;
-        alert(response.message);
-      }, error => alert(error.error.errorDetails));
+    const chatId = this.activeChatId;
+
+    this.updateChatLogoSub$ = this.chatService.updateChatLogo(chatId, form).subscribe(response => {
+      this.activeChat.chatLogoImageUrl = response.updatedLogoUrl;
+      alert(response.message);
     });
   }
 

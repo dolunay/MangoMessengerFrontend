@@ -15,8 +15,8 @@ export class PasswordResetService {
   private currentRoute = 'api/password-restore-request/';
 
   // POST /api/password-restore-request/{emailOrPhone}
-  sendPasswordResetRequest(emailOrPhone: string): Observable<IBaseResponse> {
-    return this.httpClient.post<IBaseResponse>(environment.baseUrl + this.currentRoute + emailOrPhone, {});
+  sendPasswordResetRequest(email: string): Observable<IBaseResponse> {
+    return this.httpClient.post<IBaseResponse>(environment.baseUrl + this.currentRoute + email, {});
   }
 
   // PUT /api/password-restore-request

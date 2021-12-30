@@ -47,6 +47,10 @@
     <!-- Emoji End -->
     <!-- Chat Input Group Start -->
     <div class="col">
+      <div *ngIf="editMessageRequest">
+        Editing message
+        <button (click)="clearInEdit()" class="btn-close"></button>
+      </div>
       <div class="input-group">
         <!-- Textarea Start-->
         <textarea [(ngModel)]="currentMessageText"
