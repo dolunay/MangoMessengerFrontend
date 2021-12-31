@@ -109,6 +109,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
       this.contactsService.searchContacts(this.contactsSearchQuery).subscribe(response => {
         this.contacts = response.contacts;
         this.contactsFilter = 'Search Results';
+        this.contactsSearchQuery = '';
       }, error => {
         this.errorNotificationService.notifyOnError(error);
       });

@@ -316,6 +316,12 @@ export class MainComponent implements OnInit, OnDestroy {
 
 
   onEditMessageEvent(event: any) {
+    if (!this.activeChat.isMember) {
+      alert('You are not a member of the chat to edit messages.');
+      return;
+    }
+
+
     const messageId = event.messageId;
     const messageText = event.messageText;
 
@@ -345,9 +351,16 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onFilterMessageDropdownClick = () => this.loadMessages(this.activeChatId);
 
-  onReplayMessageClick = (event: any) => this.replayMessageObject = {
-    messageAuthor: event.messageAuthor,
-    messageText: event.messageText
+  onReplayMessageClick = (event: any) => {
+    if (!this.activeChat.isMember) {
+      alert('You are not a member of the chat to reply messages.');
+      return;
+    }
+
+    return this.replayMessageObject = {
+      messageAuthor: event.messageAuthor,
+      messageText: event.messageText
+    };
   };
 
 
