@@ -30,7 +30,6 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
 
   protected routeSub$!: Subscription;
   protected confirmEmailSub$!: Subscription;
-  protected refreshSessionSub$!: Subscription;
 
   ngOnInit(): void {
     this.routeSub$ = this.route.queryParams.subscribe(params => {
@@ -49,17 +48,8 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     });
   }
 
-  proceedToMainComponent(): void {
-    const refreshToken = this.sessionService.getRefreshToken();
-
-    this.refreshSessionSub$ = this.sessionService.refreshSession(refreshToken).subscribe(result => {
-      this.sessionService.writeRefreshToken(result.refreshToken);
-      this.sessionService.writeAccessToken(result.accessToken);
-      this.sessionService.writeUserId(result.userId);
-
-      this.router.navigateByUrl('main').then(r => r);
-
-    }, error => alert(error.error.errorDetails));
+  proceedToLoginComponent(): void {
+    this.router.navigateByUrl('main').then(r => r);
   }
 
   ngOnDestroy(): void {
