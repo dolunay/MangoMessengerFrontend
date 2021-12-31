@@ -15,9 +15,9 @@ import {ErrorNotificationService} from "../../services/error-notification.servic
 export class RegisterComponent implements OnDestroy {
 
   public registerCommand: RegisterCommand = {
-    displayName: "Bo4a Account",
-    email: "kolosovp94@gmail.com",
-    password: "z[?6dMR#xmp=nr6q",
+    displayName: "",
+    email: "",
+    password: "",
     termsAccepted: false,
   };
 
