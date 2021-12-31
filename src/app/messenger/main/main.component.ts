@@ -272,6 +272,7 @@ export class MainComponent implements OnInit, OnDestroy {
     this.searchSub$ = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
       this.chats = response.chats;
       this.chatFilter = 'Search Results';
+      this.chatSearchQuery = '';
     }, error => {
       this.errorNotificationService.notifyOnError(error);
     });
