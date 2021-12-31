@@ -3,7 +3,6 @@
   firstName: string;
   lastName: string;
   displayName: string;
-  phoneNumber: string;
   birthdayDate: string;
   email: string;
   website: string;

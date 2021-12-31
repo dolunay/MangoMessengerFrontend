@@ -5,6 +5,7 @@ import {UsersService} from "../../../services/users.service";
 import {IUser} from "../../../../types/models/IUser";
 import {Observable, Subscription} from "rxjs";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import {ErrorNotificationService} from "../../../services/error-notification.service";
 
 @AutoUnsubscribe()
 @Component({
@@ -16,7 +17,8 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
   constructor(private sessionService: SessionService,
               private userService: UsersService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private errorNotificationService: ErrorNotificationService) {
   }
 
   protected eventsSubscription$!: Subscription;
@@ -35,7 +37,6 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
     instagram: "",
     lastName: "",
     linkedIn: "",
-    phoneNumber: "",
     pictureUrl: "",
     publicKey: 0,
     twitter: "",
@@ -50,6 +51,9 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
     this.eventsSubscription$ = this.events$.subscribe(data => {
       this.user = data;
       this.isLoaded = true;
+    }, error => {
+      console.log(error);
+      this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
     });
   }
 
@@ -58,9 +62,8 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
     this.deleteSessionSub$ = this.sessionService.deleteSession(refreshToken).subscribe(_ => {
       this.clearTokens();
       this.router.navigateByUrl('login').then(r => r);
-    }, _ => {
-      this.clearTokens();
-      this.router.navigateByUrl('login').then(r => r);
+    }, error => {
+      this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
     });
   }
 
@@ -68,9 +71,9 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
     this.deleteAllSessionsSub$ = this.sessionService.deleteAllSessions().subscribe(_ => {
       this.clearTokens();
       this.router.navigateByUrl('login').then(r => r);
-    }, _ => {
-      this.clearTokens();
-      this.router.navigateByUrl('login').then(r => r);
+    }, error => {
+      console.log(error);
+      this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
     });
   }
 
