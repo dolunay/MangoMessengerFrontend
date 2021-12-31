@@ -49,7 +49,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
   }
 
   proceedToLoginComponent(): void {
-    this.router.navigateByUrl('main').then(r => r);
+    this.router.navigateByUrl('login').then(r => r);
   }
 
   ngOnDestroy(): void {
