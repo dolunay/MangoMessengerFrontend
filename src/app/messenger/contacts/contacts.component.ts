@@ -28,7 +28,6 @@ export class ContactsComponent implements OnInit, OnDestroy {
               private errorNotificationService: ErrorNotificationService) {
   }
 
-  private userId = this.sessionService.getUserId();
   private currentUser!: IUser;
 
   protected getCurrentUserContactsSub$!: Subscription;
@@ -71,11 +70,17 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   private initializeView(): void {
+    const userId = this.sessionService.getToken()?.userId;
+
+    if (userId === null || userId === undefined) {
+      throw new Error("Localstorage tokens error.");
+    }
+
     this.getCurrentUserContactsSub$ =
       this.contactsService.getCurrentUserContacts().subscribe(contResponse => {
         this.contacts = contResponse.contacts;
 
-        this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(response => {
+        this.getCurrentUserSub$ = this.userService.getUserById(userId).subscribe(response => {
           this.currentUser = response.user;
           this.currentOpenedContact = response.user;
           this.isLoaded = true;
