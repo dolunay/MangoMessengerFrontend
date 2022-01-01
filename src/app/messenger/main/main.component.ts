@@ -19,6 +19,7 @@ import {DocumentsService} from "../../services/documents.service";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 import {environment} from "../../../environments/environment";
 import {ErrorNotificationService} from "../../services/error-notification.service";
+import {IDeleteMessageNotification} from "../../../types/models/IDeleteMessageNotification";
 
 @AutoUnsubscribe()
 @Component({
@@ -63,6 +64,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   public activeChat: IChat = {
+    lastMessageId: "",
     lastMessageAuthor: "",
     lastMessageText: "",
     lastMessageTime: "",
@@ -175,8 +177,13 @@ export class MainComponent implements OnInit, OnDestroy {
 
     this.connection.on("UpdateUserChats", (chat: IChat) => this.chats.push(chat));
 
-    this.connection.on('NotifyOnMessageDelete', (messageId: string) =>
-      this.messages = this.messages.filter(x => x.messageId !== messageId)
+    this.connection.on('NotifyOnMessageDelete', (notification: IDeleteMessageNotification) => {
+        this.messages = this.messages.filter(x => x.messageId !== notification.messageId);
+        this.activeChat.lastMessageAuthor = notification.newLastMessageAuthor;
+        this.activeChat.lastMessageText = notification.newLastMessageText;
+        this.activeChat.lastMessageTime = notification.newLastMessageTime;
+        this.activeChat.lastMessageId = notification.newLastMessageId;
+      }
     );
 
     this.connection.on('NotifyOnMessageEdit', (request: IEditMessageNotification) => {

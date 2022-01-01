@@ -39,6 +39,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   isEmojiPickerVisible = false;
 
   @Input() chat: IChat = {
+    lastMessageId: "",
     lastMessageAuthor: "",
     lastMessageText: "",
     lastMessageTime: "",
