@@ -173,11 +173,11 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   setSignalRMethods(): void {
-    this.connection.on("BroadcastMessage", (message: IMessage) => this.onBroadcastMessage(message));
+    this.connection.on("BroadcastMessageAsync", (message: IMessage) => this.onBroadcastMessage(message));
 
-    this.connection.on("UpdateUserChats", (chat: IChat) => this.chats.push(chat));
+    this.connection.on("UpdateUserChatsAsync", (chat: IChat) => this.chats.push(chat));
 
-    this.connection.on('NotifyOnMessageDelete', (notification: IDeleteMessageNotification) => {
+    this.connection.on('NotifyOnMessageDeleteAsync', (notification: IDeleteMessageNotification) => {
         this.messages = this.messages.filter(x => x.messageId !== notification.messageId);
         this.activeChat.lastMessageAuthor = notification.newLastMessageAuthor;
         this.activeChat.lastMessageText = notification.newLastMessageText;
@@ -186,12 +186,17 @@ export class MainComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.connection.on('NotifyOnMessageEdit', (request: IEditMessageNotification) => {
-      let message = this.messages.filter(x => x.messageId === request.messageId)[0];
+    this.connection.on('NotifyOnMessageEditAsync', (notification: IEditMessageNotification) => {
+      let message = this.messages.filter(x => x.messageId === notification.messageId)[0];
 
       if (message) {
-        message.messageText = request.modifiedText;
-        message.updatedAt = request.updatedAt;
+        message.messageText = notification.modifiedText;
+        message.updatedAt = notification.updatedAt;
+      }
+
+      if (notification.isLastMessage) {
+        this.activeChat.lastMessageText = notification.modifiedText;
+        this.activeChat.lastMessageTime = notification.updatedAt;
       }
     });
   }
@@ -336,7 +341,8 @@ export class MainComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.editMessageRequest = new EditMessageCommand(messageId, messageText);
+    const chatId = this.activeChatId;
+    this.editMessageRequest = new EditMessageCommand(messageId, chatId, messageText);
   }
 
   onJoinGroupEvent() {
