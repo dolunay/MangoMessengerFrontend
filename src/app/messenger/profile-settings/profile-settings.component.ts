@@ -35,7 +35,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   protected changePasswordSub$!: Subscription;
   protected updateProfilePictureSub$!: Subscription;
 
-  private userId: string | undefined = this.sessionService.getToken()?.userId;
+  private userId: string | undefined = this.sessionService.getTokens()?.userId;
 
   public eventsSubject: Subject<IUser> = new Subject<IUser>();
   public isLoaded = false;

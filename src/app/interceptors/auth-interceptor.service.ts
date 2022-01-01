@@ -22,20 +22,20 @@ export class AuthInterceptor implements HttpInterceptor {
       request.headers.get('Authorization')?.startsWith('Bearer');
 
     if (shouldHandle) {
-      let refreshToken = this.sessionService.getToken()?.refreshToken;
+      let refreshToken = this.sessionService.getTokens()?.refreshToken;
 
       if (refreshToken === null || refreshToken === undefined) {
         throw new Error("Localstorage tokens error.");
       }
 
       const refreshTokenResponse = this.sessionService.refreshSession(refreshToken);
-      return refreshTokenResponse.pipe(switchMap(tokens => {
+      return refreshTokenResponse.pipe(switchMap(response => {
 
-        this.sessionService.setToken(tokens);
+        this.sessionService.setTokens(response.tokens);
 
         return next.handle(request.clone({
           setHeaders: {
-            Authorization: 'Bearer ' + tokens.accessToken
+            Authorization: 'Bearer ' + response.tokens.accessToken
           }, withCredentials: true
         }));
       })).pipe(catchError((_: HttpErrorResponse) => {

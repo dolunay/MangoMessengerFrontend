@@ -70,7 +70,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   private initializeView(): void {
-    const userId = this.sessionService.getToken()?.userId;
+    const userId = this.sessionService.getTokens()?.userId;
 
     if (userId === null || userId === undefined) {
       throw new Error("Localstorage tokens error.");

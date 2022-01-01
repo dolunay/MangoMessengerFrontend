@@ -15,7 +15,7 @@ export class RequestHeaderInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const accessToken = this.sessionService.getToken()?.accessToken;
+    const accessToken = this.sessionService.getTokens()?.accessToken;
 
     const addHeaderRequest = request.clone({
       headers: new HttpHeaders({'Authorization': 'Bearer ' + accessToken})

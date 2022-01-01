@@ -5,6 +5,7 @@ import {LoginCommand} from "../../types/requests/LoginCommand";
 import {ITokensResponse} from "../../types/responses/ITokensResponse";
 import {IBaseResponse} from "../../types/responses/IBaseResponse";
 import {environment} from "../../environments/environment";
+import {ITokens} from "../../types/models/ITokens";
 
 @Injectable({
   providedIn: 'root'
@@ -37,18 +38,18 @@ export class SessionService {
     return this.httpClient.delete<IBaseResponse>(environment.baseUrl + this.sessionsRoute);
   }
 
-  getToken(): ITokensResponse | null {
+  getTokens(): ITokens | null {
     const tokensString = localStorage.getItem(this.LocalStorageTokenKey);
 
     return tokensString === null ? null : JSON.parse(tokensString);
   }
 
-  setToken(tokens: ITokensResponse): void {
+  setTokens(tokens: ITokens): void {
     const tokensStringify = JSON.stringify(tokens);
     localStorage.setItem(this.LocalStorageTokenKey, tokensStringify);
   }
 
-  clearToken(): void {
+  clearTokens(): void {
     localStorage.removeItem(this.LocalStorageTokenKey);
   }
 }

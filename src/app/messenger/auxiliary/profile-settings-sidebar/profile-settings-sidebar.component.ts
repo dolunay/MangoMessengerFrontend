@@ -58,15 +58,15 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    let refreshToken = this.sessionService.getToken()?.refreshToken;
+    let refreshToken = this.sessionService.getTokens()?.refreshToken;
 
     if (refreshToken === null || refreshToken === undefined) {
       throw new Error("Localstorage tokens error.");
     }
 
     this.deleteSessionSub$ = this.sessionService.deleteSession(refreshToken).subscribe(_ => {
-      
-      this.sessionService.clearToken();
+
+      this.sessionService.clearTokens();
 
       this.router.navigateByUrl('login').then(r => r);
     }, error => {
@@ -77,7 +77,7 @@ export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
   logoutAll(): void {
     this.deleteAllSessionsSub$ = this.sessionService.deleteAllSessions().subscribe(_ => {
 
-      this.sessionService.clearToken();
+      this.sessionService.clearTokens();
 
       this.router.navigateByUrl('login').then(r => r);
     }, error => {

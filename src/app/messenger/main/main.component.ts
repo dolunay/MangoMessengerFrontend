@@ -29,7 +29,7 @@ import {IDeleteMessageNotification} from "../../../types/models/IDeleteMessageNo
 export class MainComponent implements OnInit, OnDestroy {
 
   private routeChatId = this.route.snapshot.paramMap.get('chatId');
-  private readonly userId: string | undefined = this.sessionService.getToken()?.userId;
+  private readonly userId: string | undefined = this.sessionService.getTokens()?.userId;
   private connectionBuilder: signalR.HubConnectionBuilder = new signalR.HubConnectionBuilder();
   private connection: signalR.HubConnection = this.connectionBuilder
     .configureLogging(signalR.LogLevel.Information)
