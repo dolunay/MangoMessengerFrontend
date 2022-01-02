@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
 import {LoginCommand} from "../../../types/requests/LoginCommand";
@@ -11,9 +11,9 @@ import {ErrorNotificationService} from "../../services/error-notification.servic
   selector: 'app-login',
   templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent implements OnDestroy, OnInit {
 
-  constructor(private authService: SessionService,
+  constructor(private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router,
               private errorNotificationService: ErrorNotificationService) {
@@ -37,11 +37,9 @@ export class LoginComponent implements OnDestroy {
       return;
     }
 
-    this.loginSub$ = this.authService.createSession(this.loginCommand).subscribe(data => {
+    this.loginSub$ = this.sessionService.createSession(this.loginCommand).subscribe(response => {
 
-      this.authService.writeAccessToken(data.accessToken);
-      this.authService.writeRefreshToken(data.refreshToken);
-      this.authService.writeUserId(data.userId);
+      this.sessionService.setTokens(response.tokens);
 
       this.router.navigateByUrl('main').then(r => r);
     }, error => {
@@ -50,5 +48,9 @@ export class LoginComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+  }
+
+  ngOnInit(): void {
+    this.sessionService.clearTokens();
   }
 }
