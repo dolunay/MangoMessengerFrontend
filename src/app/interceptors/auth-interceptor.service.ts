@@ -22,11 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
       request.headers.get('Authorization')?.startsWith('Bearer');
 
     if (shouldHandle) {
-      let refreshToken = this.sessionService.getTokens()?.refreshToken;
-
-      if (refreshToken === null || refreshToken === undefined) {
-        throw new Error("Localstorage tokens error.");
-      }
+      let refreshToken = this.sessionService.getTokens()?.refreshToken ?? "";
 
       const refreshTokenResponse = this.sessionService.refreshSession(refreshToken);
       return refreshTokenResponse.pipe(switchMap(response => {
