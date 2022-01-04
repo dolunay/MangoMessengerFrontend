@@ -3,7 +3,7 @@
 [![Build](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/build.yml/badge.svg)](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/build.yml/badge.svg)
 [![Azure Dev Deploy](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/azure-dev.yml/badge.svg)](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/azure-dev.yml/badge.svg)
 [![Azure QA Deploy](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/azure-qa.yml/badge.svg)](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/azure-qa.yml/badge.svg)
-[![Heroku](http://heroku-badge.herokuapp.com/?app=mango-messenger-front&style=flat&svg=1&root=index.html)]
+![Heroku](http://heroku-badge.herokuapp.com/?app=mango-messenger-front&style=flat&svg=1&root=index.html)
 ![contributors count](https://img.shields.io/github/contributors/MangoInstantMessenger/MangoMessengerFrontend)
 
 ## Run locally

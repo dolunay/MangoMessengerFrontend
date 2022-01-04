@@ -8,7 +8,8 @@ on:
   push:
     branches:
       - develop
-      - MANGO-174
+      - MANGO-UI-174
+
 jobs:
   build:
     runs-on: ubuntu-latest
