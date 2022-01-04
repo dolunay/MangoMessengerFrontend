@@ -1,5 +1,11 @@
 # Mango Messenger Angular Frontend
 
+[![Build](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/build.yml/badge.svg)](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/build.yml/badge.svg)
+[![Azure Dev Deploy](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/azure-dev.yml/badge.svg)](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/azure-dev.yml/badge.svg)
+[![Azure QA Deploy](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/azure-qa.yml/badge.svg)](https://github.com/MangoInstantMessenger/MangoMessengerFrontend/actions/workflows/azure-qa.yml/badge.svg)
+[![Heroku](http://heroku-badge.herokuapp.com/?app=mango-messenger-front&style=flat&svg=1&root=index.html)]
+![contributors count](https://img.shields.io/github/contributors/MangoInstantMessenger/MangoMessengerFrontend)
+
 ## Run locally
 
 - Install NVM: https://github.com/coreybutler/nvm-windows
@@ -31,10 +37,14 @@
 
 ## Workflows
 
-- Azure Dev. Branch: `azure-dev` based on `develop`, workflow started after merge with actual `develop`. Consumes backend: https://back.mangomessenger.company
-- Azure QA. Branch: `azure-qa` based on `develop`, workflow started after merge with actual `develop`. Consumes backend: https://back.mangomesenger.company
-- Heroku. Branch: `master` workflow started after actual `develop` merged to `master`. Consumes backend: https://mango-messenger-app.herokuapp.com
-- Git pages. Branch: `github-pages` based on `develop`, workflow started after merge with actual `develop`. Consumes backend: https://back.mangomessenger.company
+- Azure Dev. Branch: `azure-dev` based on `develop`, workflow started after merge with actual `develop`. Consumes
+  backend: https://back.mangomessenger.company
+- Azure QA. Branch: `azure-qa` based on `develop`, workflow started after merge with actual `develop`. Consumes
+  backend: https://back.mangomesenger.company
+- Heroku. Branch: `master` workflow started after actual `develop` merged to `master`. Consumes
+  backend: https://mango-messenger-app.herokuapp.com
+- Git pages. Branch: `github-pages` based on `develop`, workflow started after merge with actual `develop`. Consumes
+  backend: https://back.mangomessenger.company
 
 As image below shows
 
