@@ -66,7 +66,10 @@
             <!-- Sidebar Header End -->
           </div>
           <!-- Chat Header End -->
-
+          <h1 *ngIf="contacts.length == 0" style="color: #fff; text-align: center;line-height: 600px; user-select: none;
+              font-size: 16px;">
+            No Results
+          </h1>
           <!-- Friends Contact List Start -->
           <div class="contacts-list" id="friendsTab">
             <div *ngFor="let contact of contacts">
@@ -74,6 +77,7 @@
                                 (click)="onContactClick(contact)"
                                 [ngClass]="getContactItemClass(contact.userId)">
               </app-contact-item>
+              
             </div>
           </div>
           <!-- Friends Contact List End -->
