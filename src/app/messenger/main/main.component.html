@@ -100,8 +100,10 @@
             </div>
             <!-- Chat Header End -->
 
+            
+
             <!-- Chat Contact List Start -->
-            <ul class="contacts-list" id="chatContactTab">
+            <ul class="contacts-list" id="chatContactTab" >
               <!-- Chat Item Start -->
               <li *ngFor="let chat of chats">
                 <app-chat-item-active [chat]="chat"
@@ -110,6 +112,10 @@
                 </app-chat-item-active>
               </li>
               <!-- Chat Item End -->
+              <h1 *ngIf="chats.length == 0" style="color: #fff; text-align: center;line-height: 600px; user-select: none;">
+                No Results
+              </h1>
+              
             </ul>
             <!-- Chat Contact List End -->
           </div>
