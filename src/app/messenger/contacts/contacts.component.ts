@@ -15,7 +15,8 @@ import {ErrorNotificationService} from "../../services/error-notification.servic
 @AutoUnsubscribe()
 @Component({
   selector: 'app-contacts',
-  templateUrl: './contacts.component.html'
+  templateUrl: './contacts.component.html',
+  styleUrls: ['./contacts.component.scss']
 })
 export class ContactsComponent implements OnInit, OnDestroy {
 
@@ -173,6 +174,15 @@ export class ContactsComponent implements OnInit, OnDestroy {
   getContactItemClass = (userId: string) => userId === this.currentOpenedContact.userId
     ? 'contacts-item active'
     : 'contacts-item';
+
+  isCurrentUserOpened(): boolean {
+    const tokens = this.sessionService.getTokens();
+    const userId = tokens?.userId;
+
+    const currentOpenedIsSelf = this.currentOpenedContact.userId === userId;
+
+    return currentOpenedIsSelf;
+  }
 
 
   ngOnDestroy(): void {
