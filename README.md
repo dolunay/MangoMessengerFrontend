@@ -32,7 +32,7 @@ in feature. Current frontend implementation has three basic components:
   <img src="img/contacts.PNG" width="2560"  alt="Mango Messenger Logo"></img>
 </p>
 
-- **Personal setting**: component responsible for user information management
+- **Personal settings**: component responsible for user information management
 
 <p align="center">
   <img src="img/personal-information.PNG" width="2560"  alt="Mango Messenger Logo"></img>
@@ -43,9 +43,9 @@ in feature. Current frontend implementation has three basic components:
 Perform the following steps:
 
 - Install NVM: https://github.com/coreybutler/nvm-windows
-- Install Node JS 14.17.3 via NVM: `nvm install 14.17.3`
-- Use Node JS 14.17.3 via NVM: `nvm use 14.17.3`
-- Check Node JS installed properly: `node -v`
+- Install NodeJS 14.17.3 via NVM: `nvm install 14.17.3`
+- Use NodeJS 14.17.3 via NVM: `nvm use 14.17.3`
+- Check NodeJS installed properly: `node -v`
 - Fork this repository
 - Clone forked repository locally: `git clone https://github.com/${{ username }}/MangoMessengerFrontend.git`
 - Go to the project folder
