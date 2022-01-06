@@ -83,6 +83,7 @@ export class MainComponent implements OnInit, OnDestroy {
   public chatFilter = 'All Chats';
   public chatSearchQuery = '';
   public messageSearchQuery = '';
+  public messageInputOpened = false;
 
   protected getUsersChatSub$!: Subscription;
   protected getCurrentUserSub$!: Subscription;
@@ -364,7 +365,10 @@ export class MainComponent implements OnInit, OnDestroy {
       });
   }
 
-  onFilterMessageDropdownClick = () => this.loadMessages(this.activeChatId);
+  onFilterMessageDropdownClick() { 
+    this.loadMessages(this.activeChatId); 
+    this.messageInputOpened = !this.messageInputOpened;
+  };
 
   onReplayMessageClick = (event: any) => {
     if (!this.activeChat.isMember) {
