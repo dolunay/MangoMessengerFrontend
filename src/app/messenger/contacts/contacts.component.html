@@ -68,7 +68,8 @@
           <div class="contacts-list" id="friendsTab">
             <div *ngFor="let contact of contacts">
               <app-contact-item [contact]="contact" (click)="onContactClick(contact)"
-                                [ngClass]="getContactItemClass(contact.userId)">
+                                [ngClass]="getContactItemClass(contact.userId)"
+                                style="margin: 8px 0;">
               </app-contact-item>
 
             </div>
