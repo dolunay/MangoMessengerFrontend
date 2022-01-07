@@ -1,3 +1,4 @@
+import { ValidationService } from './../../services/validation.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
@@ -103,6 +104,7 @@ export class MainComponent implements OnInit, OnDestroy {
               public userService: UsersService,
               private route: ActivatedRoute,
               private documentService: DocumentsService,
+              private validationService: ValidationService,
               private router: Router,
               public dialog: MatDialog,
               private errorNotificationService: ErrorNotificationService) {
@@ -283,6 +285,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onSearchClick(): void {
+    this.validationService.validateField(this.chatSearchQuery, 'Chat Search');
     this.searchSub$ = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
       this.chats = response.chats;
       this.chatFilter = 'Search Results';
@@ -356,6 +359,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
 
   filterMessages(): void {
+    this.validationService.validateField(this.messageSearchQuery, 'Chat Search');
     this.searchMessageSub$ =
       this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
         this.messages = response.messages;

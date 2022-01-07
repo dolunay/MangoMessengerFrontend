@@ -1,3 +1,4 @@
+import { ValidationService } from './../../services/validation.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ContactsService} from "../../services/contacts.service";
 import {IContact} from "../../../types/models/IContact";
@@ -26,7 +27,8 @@ export class ContactsComponent implements OnInit, OnDestroy {
               private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router,
-              private errorNotificationService: ErrorNotificationService) {
+              private errorNotificationService: ErrorNotificationService,
+              private validationService: ValidationService) {
   }
 
   private currentUser!: IUser;
@@ -111,6 +113,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   onUserSearchClick(): void {
+    this.validationService.validateField(this.contactsSearchQuery, 'Contact Search');
     this.searchSub$ =
       this.contactsService.searchContacts(this.contactsSearchQuery).subscribe(response => {
         this.contacts = response.contacts;
