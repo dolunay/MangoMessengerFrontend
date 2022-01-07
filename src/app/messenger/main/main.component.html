@@ -108,7 +108,8 @@
               <li *ngFor="let chat of chats">
                 <app-chat-item-active [chat]="chat"
                                       (click)="navigateToChat(chat.chatId)"
-                                      [ngClass]="getMessageComponentClass(chat)">
+                                      [ngClass]="getMessageComponentClass(chat)"
+                                      style="margin: 8px 0;">
                 </app-chat-item-active>
               </li>
               <!-- Chat Item End -->
