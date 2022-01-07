@@ -1,3 +1,4 @@
+import { ValidationService } from './../../services/validation.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
@@ -16,7 +17,8 @@ export class LoginComponent implements OnDestroy, OnInit {
   constructor(private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router,
-              private errorNotificationService: ErrorNotificationService) {
+              private errorNotificationService: ErrorNotificationService,
+              private validationService: ValidationService) {
   }
 
   protected loginSub$!: Subscription;
@@ -27,15 +29,8 @@ export class LoginComponent implements OnDestroy, OnInit {
   };
 
   login(): void {
-    if (!this.loginCommand.email) {
-      alert("Enter valid email of password.");
-      return;
-    }
-
-    if (!this.loginCommand.password) {
-      alert("Enter valid password");
-      return;
-    }
+    this.validationService.validateField(this.loginCommand.email, 'Email');
+    this.validationService.validateField(this.loginCommand.password, 'Password');
 
     this.loginSub$ = this.sessionService.createSession(this.loginCommand).subscribe(response => {
 

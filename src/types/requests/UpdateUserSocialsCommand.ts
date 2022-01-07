@@ -1,13 +1,13 @@
 ﻿export class UpdateUserSocialsCommand {
-  facebook: string | null;
-  twitter: string | null;
-  instagram: string | null;
-  linkedIn: string | null;
+  facebook: string;
+  twitter: string;
+  instagram: string;
+  linkedIn: string;
 
-  constructor(facebook: string | null,
-              twitter: string | null,
-              instagram: string | null,
-              linkedIn: string | null) {
+  constructor(facebook: string,
+              twitter: string,
+              instagram: string,
+              linkedIn: string) {
     this.facebook = facebook;
     this.twitter = twitter;
     this.instagram = instagram;

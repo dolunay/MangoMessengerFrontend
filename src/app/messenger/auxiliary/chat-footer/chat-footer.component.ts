@@ -1,3 +1,4 @@
+import { ValidationService } from './../../../services/validation.service';
 import {Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
 import {MessagesService} from "../../../services/messages.service";
 import {SendMessageCommand} from "../../../../types/requests/SendMessageCommand";
@@ -18,7 +19,8 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
 
   constructor(private messageService: MessagesService,
               private documentService: DocumentsService,
-              private errorNotificationService: ErrorNotificationService) {
+              private errorNotificationService: ErrorNotificationService,
+              private validationService: ValidationService) {
   }
 
   // @ts-ignore
@@ -62,10 +64,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   onMessageSendClick(event: any): void {
     event.preventDefault();
 
-    if (!this.currentMessageText) {
-      alert("Cannot send empty message text.");
-      return;
-    }
+    this.validationService.validateField(this.currentMessageText, 'Message Text');
 
     if (this.editMessageRequest != null) {
       this.editMessage();
@@ -81,6 +80,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   }
 
   private sendTextMessage() {
+    this.validationService.validateField(this.currentMessageText, 'Message Text');
     const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
 
     if (this.inReplayText && this.inReplayAuthor) {
@@ -106,6 +106,8 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
 
     const formData = new FormData();
 
+    let fileName = this.attachmentName ?? this.attachment.name;
+    this.validationService.validateFileName(fileName);
     formData.append("formFile", this.attachment);
 
     this.uploadSub$ = this.documentService.uploadDocument(formData).subscribe(response => {
@@ -132,6 +134,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
       return;
     }
 
+    this.validationService.validateField(this.currentMessageText, 'Message Text');
     this.editMessageRequest.modifiedText = this.currentMessageText;
 
     this.editSub$ = this.messageService.editMessage(this.editMessageRequest).subscribe(_ => {
