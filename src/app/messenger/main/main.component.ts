@@ -353,6 +353,8 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onJoinGroupEvent() {
     this.activeChat.isMember = true;
+    this.chatFilter = 'All Chats';
+    this.initializeView();
   }
 
   getChatImageUrl = () => this.activeChat?.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
