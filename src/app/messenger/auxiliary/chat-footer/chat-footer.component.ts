@@ -1,3 +1,4 @@
+import { ValidationService } from './../../../services/validation.service';
 import {Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
 import {MessagesService} from "../../../services/messages.service";
 import {SendMessageCommand} from "../../../../types/requests/SendMessageCommand";
@@ -18,7 +19,8 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
 
   constructor(private messageService: MessagesService,
               private documentService: DocumentsService,
-              private errorNotificationService: ErrorNotificationService) {
+              private errorNotificationService: ErrorNotificationService,
+              private validationService: ValidationService) {
   }
 
   // @ts-ignore
@@ -39,6 +41,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   isEmojiPickerVisible = false;
 
   @Input() chat: IChat = {
+    lastMessageId: "",
     lastMessageAuthor: "",
     lastMessageText: "",
     lastMessageTime: "",
@@ -61,60 +64,85 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
   onMessageSendClick(event: any): void {
     event.preventDefault();
 
-    if (!this.currentMessageText) {
-      alert("Cannot send empty message text.");
-      return;
-    }
+    this.validationService.validateField(this.currentMessageText, 'Message Text');
 
     if (this.editMessageRequest != null) {
-      this.editMessageRequest.modifiedText = this.currentMessageText;
-
-      this.editSub$ = this.messageService.editMessage(this.editMessageRequest).subscribe(_ => {
-        this.editMessageRequest = null;
-        this.currentMessageText = '';
-      }, error => {
-        this.errorNotificationService.notifyOnError(error);
-      })
-
+      this.editMessage();
       return;
     }
 
     if (this.attachment) {
-      const formData = new FormData();
+      this.sendMessageWithAttachment();
+      return;
+    }
 
-      formData.append("formFile", this.attachment);
+    this.sendTextMessage();
+  }
 
-      this.uploadSub$ = this.documentService.uploadDocument(formData).subscribe(response => {
-        const fileName = response.fileName;
+  private sendTextMessage() {
+    this.validationService.validateField(this.currentMessageText, 'Message Text');
+    const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
 
-        const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
-        sendMessageCommand.setAttachmentUrl(fileName);
+    if (this.inReplayText && this.inReplayAuthor) {
+      sendMessageCommand.setReplayToAuthor(this.inReplayAuthor);
+      sendMessageCommand.setReplayToText(this.inReplayText);
+    }
 
-        this.sendSub$ = this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
-          this.deleteAttachment();
-          this.clearMessageInput();
-        }, error => {
-          this.errorNotificationService.notifyOnError(error);
-        });
-      }, error => {
-        this.errorNotificationService.notifyOnError(error);
-      });
+    this.sendSub$ = this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
+      this.clearMessageInput();
+      this.clearInReplay();
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
+  }
 
-    } else {
+  private sendMessageWithAttachment() {
+    if (!this.attachment) {
+      this.clearMessageInput();
+      this.clearInReplay();
+      this.clearAttachment();
+      return;
+    }
+
+    const formData = new FormData();
+
+    let fileName = this.attachmentName ?? this.attachment.name;
+    this.validationService.validateFileName(fileName);
+    formData.append("formFile", this.attachment);
+
+    this.uploadSub$ = this.documentService.uploadDocument(formData).subscribe(response => {
+      const fileName = response.fileName;
+
       const sendMessageCommand = new SendMessageCommand(this.currentMessageText, this.chat.chatId);
-
-      if (this.inReplayText && this.inReplayAuthor) {
-        sendMessageCommand.setReplayToAuthor(this.inReplayAuthor);
-        sendMessageCommand.setReplayToText(this.inReplayText);
-      }
+      sendMessageCommand.setAttachmentUrl(fileName);
 
       this.sendSub$ = this.messageService.sendMessage(sendMessageCommand).subscribe(_ => {
+        this.clearAttachment();
         this.clearMessageInput();
-        this.clearInReplay();
       }, error => {
         this.errorNotificationService.notifyOnError(error);
       });
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    });
+  }
+
+  private editMessage() {
+    if (!this.editMessageRequest) {
+      this.clearInEdit();
+      this.clearMessageInput();
+      return;
     }
+
+    this.validationService.validateField(this.currentMessageText, 'Message Text');
+    this.editMessageRequest.modifiedText = this.currentMessageText;
+
+    this.editSub$ = this.messageService.editMessage(this.editMessageRequest).subscribe(_ => {
+      this.editMessageRequest = null;
+      this.currentMessageText = '';
+    }, error => {
+      this.errorNotificationService.notifyOnError(error);
+    })
   }
 
   public addEmoji(event: any): void {
@@ -131,7 +159,7 @@ export class ChatFooterComponent implements OnChanges, OnDestroy {
     }
   }
 
-  deleteAttachment(): void {
+  clearAttachment(): void {
     this.fileInput.nativeElement.value = "";
     this.attachment = null;
     this.attachmentName = null;

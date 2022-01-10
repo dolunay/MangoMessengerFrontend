@@ -1,8 +1,6 @@
 ﻿import {IBaseResponse} from "./IBaseResponse";
+import {ITokens} from "../models/ITokens";
 
 export interface ITokensResponse extends IBaseResponse {
-  accessToken: string;
-  refreshToken: string;
-  userId: string;
-  expires: number;
+  tokens: ITokens;
 }

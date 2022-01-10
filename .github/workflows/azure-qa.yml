@@ -1,14 +1,15 @@
-﻿name: Azure QA Environment CI/CD
+﻿name: Azure QA Deploy
 
 on:
   push:
-    branches: [ azure-qa ]
+    branches:
+      - azure-qa
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [ 14.x ]
 
     steps:
       - uses: actions/checkout@v2

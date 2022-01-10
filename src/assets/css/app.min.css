@@ -12041,7 +12041,7 @@ Chanelog:
 }
 
 .contacts-list .contacts-item {
-  margin: 0.4rem 0;
+  margin: 8px 0;
   max-width: 100%;
   width: 100%;
   cursor: pointer;
@@ -12050,7 +12050,7 @@ Chanelog:
 
 @media (min-width: 576px) {
   .contacts-list .contacts-item {
-    margin: 0.75rem 0;
+    margin: 8px 0;
   }
 }
 
@@ -12643,6 +12643,16 @@ Chanelog:
 
 .main-layout .sidebar::-webkit-scrollbar {
   display: none;
+}
+
+.close-icon{
+  box-sizing: border-box;
+  font-size: 14px; 
+  font-stretch: ultra-expanded;
+  color: #adb5bd; 
+  display: inline-block;
+  width: 45px;
+  text-align: center;
 }
 
 @media (min-width: 1200px) {
