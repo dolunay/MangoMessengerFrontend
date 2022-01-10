@@ -1,4 +1,5 @@
-import {SessionService} from './../../services/session.service';
+import { ValidationService } from './../../services/validation.service';
+import {SessionService} from '../../services/session.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UsersService} from "../../services/users.service";
 import {UpdateAccountInformationCommand} from "../../../types/requests/UpdateAccountInformationCommand";
@@ -26,7 +27,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
               private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router,
-              private datePipe: DatePipe) {
+              private datePipe: DatePipe,
+              private validationService: ValidationService) {
   }
 
   protected getCurrentUserSub$!: Subscription;
@@ -35,7 +37,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   protected changePasswordSub$!: Subscription;
   protected updateProfilePictureSub$!: Subscription;
 
-  private userId = this.sessionService.getUserId();
+  private userId: string | undefined = this.sessionService.getTokens()?.userId;
 
   public eventsSubject: Subject<IUser> = new Subject<IUser>();
   public isLoaded = false;
@@ -70,7 +72,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   }
 
   initializeView(): void {
-    this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(getUserResponse => {
+    const userId = this.userId as string;
+    this.getCurrentUserSub$ = this.userService.getUserById(userId).subscribe(getUserResponse => {
       this.currentUser = getUserResponse.user;
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
@@ -98,7 +101,9 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.currentUser.address,
       this.currentUser.displayName);
 
-    this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(_ => {
+      this.validateUsersAccountInfo(command);
+
+      this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(_ => {
       alert('Personal information has been updated successfully.');
       this.cloneCurrentUser();
       this.emitEventToChild(this.cloneUser);
@@ -117,6 +122,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       this.currentUser.instagram,
       this.currentUser.linkedIn);
 
+    this.validateUsersSocials(command);
+
     this.updateUserSocialsSub$ = this.userService.updateUserSocials(command).subscribe(_ => {
       alert('Social media links updated successfully.');
       this.cloneCurrentUser();
@@ -131,8 +138,10 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   }
 
   changePassword(): void {
+    this.validationService.validateField(this.currentPassword, 'Current Password');
+    this.validationService.validateField(this.newPassword, 'New Password');
     if (this.currentPassword === this.newPassword) {
-      alert("New password should not equals current password");
+      alert("New password should not equals current password.");
       return;
     }
 
@@ -156,6 +165,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
   updateProfilePicture(): void {
     const formData = new FormData();
+    let pictureFileName = this.fileName ?? this.file.name;
+    this.validationService.validateFileName(pictureFileName);
     formData.append("pictureFile", this.file);
 
     this.updateProfilePictureSub$ =
@@ -198,5 +209,20 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     let anyDate = date as any;
     let parsedDate = (new Date(anyDate)).getDate();
     return !isNaN(parsedDate);
+  }
+
+  validateUsersAccountInfo(command: UpdateAccountInformationCommand) {
+    this.validationService.validateField(command.displayName, 'Display Name');
+    this.validationService.validateField(command.username, 'User Name');
+    this.validationService.validateField(command.website, 'Web Site');
+    this.validationService.validateField(command.bio, 'Bio');
+    this.validationService.validateField(command.address, 'Adress');
+  }
+
+  validateUsersSocials(command: UpdateUserSocialsCommand) {
+    this.validationService.validateField(command.facebook, 'Facebook');
+    this.validationService.validateField(command.instagram, 'Instagram');
+    this.validationService.validateField(command.twitter, 'Twitter');
+    this.validationService.validateField(command.linkedIn, 'LinkedIn');
   }
 }

@@ -1,3 +1,4 @@
+import { ValidationService } from './../../services/validation.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
@@ -19,6 +20,7 @@ import {DocumentsService} from "../../services/documents.service";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 import {environment} from "../../../environments/environment";
 import {ErrorNotificationService} from "../../services/error-notification.service";
+import {IDeleteMessageNotification} from "../../../types/models/IDeleteMessageNotification";
 
 @AutoUnsubscribe()
 @Component({
@@ -28,7 +30,7 @@ import {ErrorNotificationService} from "../../services/error-notification.servic
 export class MainComponent implements OnInit, OnDestroy {
 
   private routeChatId = this.route.snapshot.paramMap.get('chatId');
-  private userId = this.sessionService.getUserId();
+  private readonly userId: string | undefined = this.sessionService.getTokens()?.userId;
   private connectionBuilder: signalR.HubConnectionBuilder = new signalR.HubConnectionBuilder();
   private connection: signalR.HubConnection = this.connectionBuilder
     .configureLogging(signalR.LogLevel.Information)
@@ -63,6 +65,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   public activeChat: IChat = {
+    lastMessageId: "",
     lastMessageAuthor: "",
     lastMessageText: "",
     lastMessageTime: "",
@@ -81,6 +84,7 @@ export class MainComponent implements OnInit, OnDestroy {
   public chatFilter = 'All Chats';
   public chatSearchQuery = '';
   public messageSearchQuery = '';
+  public messageInputOpened = false;
 
   protected getUsersChatSub$!: Subscription;
   protected getCurrentUserSub$!: Subscription;
@@ -100,6 +104,7 @@ export class MainComponent implements OnInit, OnDestroy {
               public userService: UsersService,
               private route: ActivatedRoute,
               private documentService: DocumentsService,
+              private validationService: ValidationService,
               private router: Router,
               public dialog: MatDialog,
               private errorNotificationService: ErrorNotificationService) {
@@ -133,7 +138,8 @@ export class MainComponent implements OnInit, OnDestroy {
       }
 
       if (!this.activeChatId) {
-        this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(data => this.currentUser = data.user);
+        const userId = this.userId as string;
+        this.getCurrentUserSub$ = this.userService.getUserById(userId).subscribe(data => this.currentUser = data.user);
       }
 
     }, error => {
@@ -171,20 +177,30 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   setSignalRMethods(): void {
-    this.connection.on("BroadcastMessage", (message: IMessage) => this.onBroadcastMessage(message));
+    this.connection.on("BroadcastMessageAsync", (message: IMessage) => this.onBroadcastMessage(message));
 
-    this.connection.on("UpdateUserChats", (chat: IChat) => this.chats.push(chat));
+    this.connection.on("UpdateUserChatsAsync", (chat: IChat) => this.chats.push(chat));
 
-    this.connection.on('NotifyOnMessageDelete', (messageId: string) =>
-      this.messages = this.messages.filter(x => x.messageId !== messageId)
+    this.connection.on('NotifyOnMessageDeleteAsync', (notification: IDeleteMessageNotification) => {
+        this.messages = this.messages.filter(x => x.messageId !== notification.messageId);
+        this.activeChat.lastMessageAuthor = notification.newLastMessageAuthor;
+        this.activeChat.lastMessageText = notification.newLastMessageText;
+        this.activeChat.lastMessageTime = notification.newLastMessageTime;
+        this.activeChat.lastMessageId = notification.newLastMessageId;
+      }
     );
 
-    this.connection.on('NotifyOnMessageEdit', (request: IEditMessageNotification) => {
-      let message = this.messages.filter(x => x.messageId === request.messageId)[0];
+    this.connection.on('NotifyOnMessageEditAsync', (notification: IEditMessageNotification) => {
+      let message = this.messages.filter(x => x.messageId === notification.messageId)[0];
 
       if (message) {
-        message.messageText = request.modifiedText;
-        message.updatedAt = request.updatedAt;
+        message.messageText = notification.modifiedText;
+        message.updatedAt = notification.updatedAt;
+      }
+
+      if (notification.isLastMessage) {
+        this.activeChat.lastMessageText = notification.modifiedText;
+        this.activeChat.lastMessageTime = notification.updatedAt;
       }
     });
   }
@@ -269,9 +285,11 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onSearchClick(): void {
+    this.validationService.validateField(this.chatSearchQuery, 'Chat Search');
     this.searchSub$ = this.chatService.searchChat(this.chatSearchQuery).subscribe(response => {
       this.chats = response.chats;
       this.chatFilter = 'Search Results';
+      this.chatSearchQuery = '';
     }, error => {
       this.errorNotificationService.notifyOnError(error);
     });
@@ -300,7 +318,8 @@ export class MainComponent implements OnInit, OnDestroy {
 
       this.activeChatId = '';
 
-      this.onChatLeaveUserSub$ = this.userService.getUserById(this.userId).subscribe(data => {
+      const userId = this.userId as string;
+      this.onChatLeaveUserSub$ = this.userService.getUserById(userId).subscribe(data => {
         this.currentUser = data.user;
         this.router.navigateByUrl('main').then(r => r);
       });
@@ -315,6 +334,12 @@ export class MainComponent implements OnInit, OnDestroy {
 
 
   onEditMessageEvent(event: any) {
+    if (!this.activeChat.isMember) {
+      alert('You are not a member of the chat to edit messages.');
+      return;
+    }
+
+
     const messageId = event.messageId;
     const messageText = event.messageText;
 
@@ -322,17 +347,21 @@ export class MainComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.editMessageRequest = new EditMessageCommand(messageId, messageText);
+    const chatId = this.activeChatId;
+    this.editMessageRequest = new EditMessageCommand(messageId, chatId, messageText);
   }
 
   onJoinGroupEvent() {
     this.activeChat.isMember = true;
+    this.chatFilter = 'All Chats';
+    this.initializeView();
   }
 
   getChatImageUrl = () => this.activeChat?.chatLogoImageUrl ?? 'assets/media/avatar/3.png';
 
 
   filterMessages(): void {
+    this.validationService.validateField(this.messageSearchQuery, 'Chat Search');
     this.searchMessageSub$ =
       this.messageService.searchMessages(this.activeChatId, this.messageSearchQuery).subscribe(response => {
         this.messages = response.messages;
@@ -342,11 +371,21 @@ export class MainComponent implements OnInit, OnDestroy {
       });
   }
 
-  onFilterMessageDropdownClick = () => this.loadMessages(this.activeChatId);
+  onFilterMessageDropdownClick() { 
+    this.loadMessages(this.activeChatId); 
+    this.messageInputOpened = !this.messageInputOpened;
+  };
 
-  onReplayMessageClick = (event: any) => this.replayMessageObject = {
-    messageAuthor: event.messageAuthor,
-    messageText: event.messageText
+  onReplayMessageClick = (event: any) => {
+    if (!this.activeChat.isMember) {
+      alert('You are not a member of the chat to reply messages.');
+      return;
+    }
+
+    return this.replayMessageObject = {
+      messageAuthor: event.messageAuthor,
+      messageText: event.messageText
+    };
   };
 
 

@@ -1,7 +1,7 @@
+<emoji-mart class="emoji-mart" *ngIf="isEmojiPickerVisible"
+            (emojiSelect)="addEmoji($event)" title="Choose your emoji">
+</emoji-mart>
 <div class="chat-footer">
-  <emoji-mart class="emoji-mart" *ngIf="isEmojiPickerVisible"
-              (emojiSelect)="addEmoji($event)" title="Choose your emoji">
-  </emoji-mart>
   <div class="form-row">
     <div class="input-group-prepend mr-sm-2 mr-1">
       <div class="dropdown">
@@ -17,16 +17,6 @@
         </button>
         <div class="dropdown-menu cursor-pointer">
           <input type="file" #fileInput id="attachment" class="dropdown-item" (change)="attachDocument($event)">
-          <!-- Default :: Inline SVG -->
-          <!--            <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24"-->
-          <!--                 stroke="currentColor">-->
-          <!--              <path stroke-linecap="round" stroke-linejoin="round"-->
-          <!--                    stroke-width="2"-->
-          <!--                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>-->
-          <!--            </svg>-->
-
-          <!--            <span>Document</span>-->
-
         </div>
       </div>
     </div>
@@ -65,7 +55,7 @@
       </div>
       <div *ngIf="attachmentName">
         {{attachmentName}}
-        <button (click)="deleteAttachment()" class="btn-close"></button>
+        <button (click)="clearAttachment()" class="btn-close"></button>
       </div>
       <div *ngIf="inReplayAuthor && inReplayText">
         In replay to <strong>{{inReplayAuthor}}:</strong>  {{inReplayText}}

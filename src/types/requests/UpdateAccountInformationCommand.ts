@@ -1,17 +1,17 @@
 ﻿export class UpdateAccountInformationCommand {
-  birthdayDate: string | null;
-  website: string | null = null;
-  username: string | null;
-  bio: string | null = null;
-  address: string | null = null;
-  displayName: string | null;
+  birthdayDate: string;
+  website: string;
+  username: string;
+  bio: string;
+  address: string;
+  displayName: string;
 
-  constructor(birthdayDate: string | null,
-              website: string | null = null,
-              username: string | null,
-              bio: string | null = null,
-              address: string | null = null,
-              displayName: string | null) {
+  constructor(birthdayDate: string,
+              website: string,
+              username: string,
+              bio: string,
+              address: string,
+              displayName: string) {
     this.birthdayDate = birthdayDate;
     this.website = website;
     this.username = username;

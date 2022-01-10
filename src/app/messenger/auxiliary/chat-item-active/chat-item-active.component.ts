@@ -4,11 +4,13 @@ import {CommunityType} from "../../../../types/enums/CommunityType";
 
 @Component({
   selector: 'app-chat-item-active',
-  templateUrl: './chat-item-active.component.html'
+  templateUrl: './chat-item-active.component.html',
+  styleUrls: ['./chat-item-active.component.scss']
 })
 export class ChatItemActiveComponent {
 
   @Input() chat: IChat = {
+    lastMessageId: "",
     lastMessageAuthor: "",
     lastMessageText: "",
     lastMessageTime: "",
