@@ -1,3 +1,4 @@
+import { ValidationService } from './../../../services/validation.service';
 import {Component, Inject, OnDestroy} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ICreateCommunityResponse} from "../../../../types/responses/ICreateCommunityResponse";
@@ -17,7 +18,8 @@ export class CreateGroupDialogComponent implements OnDestroy {
   constructor(public dialogRef: MatDialogRef<CreateGroupDialogComponent>,
               @Inject(MAT_DIALOG_DATA)
               public data: ICreateCommunityResponse,
-              private chatService: CommunitiesService) {
+              private chatService: CommunitiesService,
+              private validationService: ValidationService) {
   }
 
   protected createChannelSub$!: Subscription;
@@ -30,20 +32,8 @@ export class CreateGroupDialogComponent implements OnDestroy {
   onNoClick = () => this.dialogRef.close();
 
   onCreateGroupClick(): void {
-    if (!this.groupType) {
-      alert("Group type must not be empty.");
-      return;
-    }
-
-    if (!this.groupTitle) {
-      alert("Group title must not be empty.");
-      return;
-    }
-
-    if (!this.groupDescription) {
-      alert("Group description must not be empty.");
-      return;
-    }
+    this.validationService.validateField(this.groupTitle, 'Group Title');
+    this.validationService.validateField(this.groupDescription, 'Group Description');
 
     const groupType = this.parseGroupType();
     const createGroupCommand = new CreateChannelCommand(groupType, this.groupTitle, this.groupDescription);
