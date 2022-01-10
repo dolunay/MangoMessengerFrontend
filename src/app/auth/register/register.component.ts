@@ -1,3 +1,4 @@
+import { ValidationService } from './../../services/validation.service';
 import {Component, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionService} from "../../services/session.service";
@@ -27,24 +28,15 @@ export class RegisterComponent implements OnDestroy {
               private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router,
-              private errorNotificationService: ErrorNotificationService) {
+              private errorNotificationService: ErrorNotificationService,
+              private validationService: ValidationService) {
   }
 
   register(): void {
-    if (!this.registerCommand.displayName) {
-      alert("Display name must not be empty.");
-      return;
-    }
-
-    if (!this.registerCommand.email) {
-      alert("Email must not be empty.");
-      return;
-    }
-
-    if (!this.registerCommand.password) {
-      alert("Password must not be empty.");
-      return;
-    }
+    
+    this.validationService.validateField(this.registerCommand.email, 'Email');
+    this.validationService.validateField(this.registerCommand.displayName, 'Display Name');
+    this.validationService.validateField(this.registerCommand.password, 'Password');
 
     if (!this.registerCommand.termsAccepted) {
       alert("Terms of service must be accepted.");

@@ -1,3 +1,4 @@
+import { ValidationService } from './../../services/validation.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ContactsService} from "../../services/contacts.service";
 import {IContact} from "../../../types/models/IContact";
@@ -15,7 +16,8 @@ import {ErrorNotificationService} from "../../services/error-notification.servic
 @AutoUnsubscribe()
 @Component({
   selector: 'app-contacts',
-  templateUrl: './contacts.component.html'
+  templateUrl: './contacts.component.html',
+  styleUrls: ['./contacts.component.scss']
 })
 export class ContactsComponent implements OnInit, OnDestroy {
 
@@ -25,10 +27,10 @@ export class ContactsComponent implements OnInit, OnDestroy {
               private sessionService: SessionService,
               private route: ActivatedRoute,
               private router: Router,
-              private errorNotificationService: ErrorNotificationService) {
+              private errorNotificationService: ErrorNotificationService,
+              private validationService: ValidationService) {
   }
 
-  private userId = this.sessionService.getUserId();
   private currentUser!: IUser;
 
   protected getCurrentUserContactsSub$!: Subscription;
@@ -71,11 +73,17 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   private initializeView(): void {
+    const userId = this.sessionService.getTokens()?.userId;
+
+    if (userId === null || userId === undefined) {
+      throw new Error("Localstorage tokens error.");
+    }
+
     this.getCurrentUserContactsSub$ =
       this.contactsService.getCurrentUserContacts().subscribe(contResponse => {
         this.contacts = contResponse.contacts;
 
-        this.getCurrentUserSub$ = this.userService.getUserById(this.userId).subscribe(response => {
+        this.getCurrentUserSub$ = this.userService.getUserById(userId).subscribe(response => {
           this.currentUser = response.user;
           this.currentOpenedContact = response.user;
           this.isLoaded = true;
@@ -105,6 +113,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   onUserSearchClick(): void {
+    this.validationService.validateField(this.contactsSearchQuery, 'Contact Search');
     this.searchSub$ =
       this.contactsService.searchContacts(this.contactsSearchQuery).subscribe(response => {
         this.contacts = response.contacts;
@@ -168,6 +177,15 @@ export class ContactsComponent implements OnInit, OnDestroy {
   getContactItemClass = (userId: string) => userId === this.currentOpenedContact.userId
     ? 'contacts-item active'
     : 'contacts-item';
+
+  isCurrentUserOpened(): boolean {
+    const tokens = this.sessionService.getTokens();
+    const userId = tokens?.userId;
+
+    const currentOpenedIsSelf = this.currentOpenedContact.userId === userId;
+
+    return currentOpenedIsSelf;
+  }
 
 
   ngOnDestroy(): void {
