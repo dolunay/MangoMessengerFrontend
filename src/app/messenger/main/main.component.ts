@@ -182,11 +182,17 @@ export class MainComponent implements OnInit, OnDestroy {
     this.connection.on("UpdateUserChatsAsync", (chat: IChat) => this.chats.push(chat));
 
     this.connection.on('NotifyOnMessageDeleteAsync', (notification: IDeleteMessageNotification) => {
+        let message = this.messages.filter(x => x.messageId === notification.messageId)[this.messages.length - 1];
+
+        if(message) {
+          this.activeChat.lastMessageAuthor = notification.newLastMessageAuthor;
+          this.activeChat.lastMessageText = notification.newLastMessageText;
+          this.activeChat.lastMessageTime = notification.newLastMessageTime;
+          this.activeChat.lastMessageId = notification.newLastMessageId;
+        }
+
+        
         this.messages = this.messages.filter(x => x.messageId !== notification.messageId);
-        this.activeChat.lastMessageAuthor = notification.newLastMessageAuthor;
-        this.activeChat.lastMessageText = notification.newLastMessageText;
-        this.activeChat.lastMessageTime = notification.newLastMessageTime;
-        this.activeChat.lastMessageId = notification.newLastMessageId;
       }
     );
 
