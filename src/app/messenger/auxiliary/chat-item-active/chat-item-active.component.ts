@@ -27,7 +27,14 @@ export class ChatItemActiveComponent {
   };
 
   chatContainsMessages(): boolean {
-    return this.chat.lastMessageId != null && this.chat.lastMessageAuthor != null && this.chat.lastMessageText != null;
+
+    console.log(this.chat)
+
+    const containsMessages =
+      this.chat.lastMessageAuthor != null &&
+      this.chat.lastMessageText != null;
+
+    return containsMessages;
   }
 
   getChatPictureUrl(): string {
