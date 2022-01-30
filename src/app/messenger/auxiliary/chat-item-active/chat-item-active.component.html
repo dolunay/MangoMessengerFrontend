@@ -9,7 +9,7 @@
           <div style="display: inline-block; margin-right: 10px;">
             <img src="./../../../../assets/media/icons/group.svg" />
           </div>
-          <div style="display: inline-block; vertical-align: top; max-width: 25ch; text-overflow: ellipsis; overflow: hidden">{{chat.title}}</div>
+          <div class="chat-title">{{chat.title}}</div>
         </div>
       </div>
       <ng-template #elseDirect>
@@ -17,7 +17,7 @@
           <div style="display: inline-block; margin-right: 10px;">
             <mat-icon *ngIf="chat.communityType == 2">shield</mat-icon>
           </div>
-          <div style="display: inline-block; vertical-align: top;">{{chat.title}}</div>
+          <div class="chat-title">{{chat.title}}</div>
         </div>
       </ng-template>
       <div class="chat-time">{{chat.lastMessageTime}}</div>

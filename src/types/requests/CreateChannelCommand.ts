@@ -1,13 +1,9 @@
-﻿import {ChannelType} from "../enums/ChannelType";
-
-export class CreateChannelCommand {
-  channelType: ChannelType | number;
+﻿export class CreateChannelCommand {
   channelTitle: string;
   channelDescription: string;
 
 
-  constructor(groupType: ChannelType | number, groupTitle: string, groupDescription: string) {
-    this.channelType = groupType;
+  constructor(groupTitle: string, groupDescription: string) {
     this.channelTitle = groupTitle;
     this.channelDescription = groupDescription;
   }
