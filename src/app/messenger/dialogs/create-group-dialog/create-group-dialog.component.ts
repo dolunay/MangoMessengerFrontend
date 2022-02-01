@@ -24,8 +24,6 @@ export class CreateGroupDialogComponent implements OnDestroy {
 
   protected createChannelSub$!: Subscription;
 
-  public groupType = "Private Channel";
-  public groupTypes = ["Private Channel", "Public Channel", "ReadOnly Channel"];
   public groupTitle = '';
   public groupDescription = '';
 
@@ -35,24 +33,11 @@ export class CreateGroupDialogComponent implements OnDestroy {
     this.validationService.validateField(this.groupTitle, 'Group Title');
     this.validationService.validateField(this.groupDescription, 'Group Description');
 
-    const groupType = this.parseGroupType();
-    const createGroupCommand = new CreateChannelCommand(groupType, this.groupTitle, this.groupDescription);
+    const createGroupCommand = new CreateChannelCommand(this.groupTitle, this.groupDescription);
 
     this.createChannelSub$ = this.chatService.createChannel(createGroupCommand).subscribe(_ => {
       this.dialogRef.close();
     }, error => alert(error.error.errorDetails));
-  }
-
-  private parseGroupType(): number {
-    if (this.groupType === "Private Channel") {
-      return 3;
-    }
-
-    if (this.groupType === "Public Channel") {
-      return 4;
-    }
-
-    return 5;
   }
 
   ngOnDestroy(): void {
