@@ -23,8 +23,9 @@ export class CommunitiesService {
   }
 
   // POST /api/communities/chat
-  createChat(request: CreateChatCommand): Observable<ICreateCommunityResponse> {
-    return this.httpClient.post<ICreateCommunityResponse>(environment.baseUrl + this.chatsRoute + 'chat', request);
+  createChat(userId: string): Observable<ICreateCommunityResponse> {
+    let request = new CreateChatCommand(userId);
+    return this.httpClient.post<ICreateCommunityResponse>(environment.baseUrl + this.chatsRoute + `chat/${userId}` , request);
   }
 
   // POST /api/communities/channel

@@ -33,8 +33,9 @@
               d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
       </svg>
     </div>
-    <div class="dropdown">
-      <div class="text-muted" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+    <div class="dropdown" >
+      <div class="text-muted" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" *ngIf="message.self">
         <!-- Default :: Inline SVG -->
         <svg class="hw-18 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -67,7 +68,6 @@
 
       </div>
     </div>
-
     
   </div>
 </div>

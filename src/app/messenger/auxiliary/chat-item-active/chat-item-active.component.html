@@ -4,20 +4,17 @@
   </div>
   <div class="contacts-content">
     <div class="contacts-info">
-      <div *ngIf="chat.communityType != 1 && chat.communityType != 2; else elseDirect" class="chat-name text-truncate">
+      <div *ngIf="chat.communityType === 2; else elseDirect" class="chat-name text-truncate">
         <div>
           <div style="display: inline-block; margin-right: 10px;">
-            <img src="./../../../../assets/media/icons/group.svg" />
+            <img src="./assets/media/icons/group.svg"  alt="group icon"/>
           </div>
-          <div style="display: inline-block; vertical-align: top; max-width: 25ch; text-overflow: ellipsis; overflow: hidden">{{chat.title}}</div>
+          <div class="chat-title">{{chat.title}}</div>
         </div>
       </div>
       <ng-template #elseDirect>
         <div>
-          <div style="display: inline-block; margin-right: 10px;">
-            <mat-icon *ngIf="chat.communityType == 2">shield</mat-icon>
-          </div>
-          <div style="display: inline-block; vertical-align: top;">{{chat.title}}</div>
+          <div class="chat-title">{{chat.title}}</div>
         </div>
       </ng-template>
       <div class="chat-time">{{chat.lastMessageTime}}</div>

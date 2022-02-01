@@ -119,7 +119,7 @@ export class MainComponent implements OnInit, OnDestroy {
   initializeView(): void {
     this.getUsersChatSub$ = this.chatService.getUserChats().subscribe(chatsResponse => {
 
-      this.chats = chatsResponse.chats.filter(x => !x.isArchived && x.communityType !== CommunityType.SecretChat);
+      this.chats = chatsResponse.chats.filter(x => !x.isArchived);
 
       if (this.connection.state !== signalR.HubConnectionState.Connected) {
         this.connectChatsToHub();
@@ -182,11 +182,17 @@ export class MainComponent implements OnInit, OnDestroy {
     this.connection.on("UpdateUserChatsAsync", (chat: IChat) => this.chats.push(chat));
 
     this.connection.on('NotifyOnMessageDeleteAsync', (notification: IDeleteMessageNotification) => {
+        let message = this.messages.filter(x => x.messageId === notification.messageId)[this.messages.length - 1];
+
+        if(message) {
+          this.activeChat.lastMessageAuthor = notification.newLastMessageAuthor;
+          this.activeChat.lastMessageText = notification.newLastMessageText;
+          this.activeChat.lastMessageTime = notification.newLastMessageTime;
+          this.activeChat.lastMessageId = notification.newLastMessageId;
+        }
+
+        
         this.messages = this.messages.filter(x => x.messageId !== notification.messageId);
-        this.activeChat.lastMessageAuthor = notification.newLastMessageAuthor;
-        this.activeChat.lastMessageText = notification.newLastMessageText;
-        this.activeChat.lastMessageTime = notification.newLastMessageTime;
-        this.activeChat.lastMessageId = notification.newLastMessageId;
       }
     );
 
@@ -264,10 +270,7 @@ export class MainComponent implements OnInit, OnDestroy {
         case 'Groups':
           this.chats = getUserChatsResponse.chats
             .filter(x => !x.isArchived)
-            .filter(x =>
-              x.communityType === CommunityType.ReadOnlyChannel ||
-              x.communityType === CommunityType.PublicChannel ||
-              x.communityType === CommunityType.PrivateChannel);
+            .filter(x => x.communityType === CommunityType.PublicChannel);
           break;
         case 'Direct Chats':
           this.chats = getUserChatsResponse.chats.filter(x => x.communityType === CommunityType.DirectChat);
@@ -393,9 +396,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onChangePictureClick(): void {
 
-    const validChat = this.activeChat.communityType === CommunityType.PublicChannel
-      || this.activeChat.communityType === CommunityType.PrivateChannel
-      || this.activeChat.communityType === CommunityType.ReadOnlyChannel;
+    const validChat = this.activeChat.communityType === CommunityType.PublicChannel;
 
     const validRole = this.activeChat.roleId > 1;
 

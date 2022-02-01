@@ -6,8 +6,6 @@ import {UsersService} from "../../services/users.service";
 import {IUser} from "../../../types/models/IUser";
 import {CommunitiesService} from "../../services/communities.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {CreateChatCommand} from "../../../types/requests/CreateChatCommand";
-import {ChatType} from "../../../types/enums/ChatType";
 import {SessionService} from "../../services/session.service";
 import {Subscription} from "rxjs";
 import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
@@ -151,10 +149,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   onStartDirectChatClick() {
     const userId = this.currentOpenedContact.userId;
-    const createDirectChatCommand = new CreateChatCommand(userId, ChatType.DirectChat);
 
     this.createDirectChatSub$ =
-      this.chatsService.createChat(createDirectChatCommand).subscribe(response => {
+      this.chatsService.createChat(userId).subscribe(response => {
         this.router.navigate(['main', {chatId: response.chatId}]).then(r => r);
       }, error => {
         this.errorNotificationService.notifyOnError(error);
