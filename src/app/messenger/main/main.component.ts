@@ -141,7 +141,6 @@ export class MainComponent implements OnInit, OnDestroy {
         const userId = this.userId as string;
         this.getCurrentUserSub$ = this.userService.getUserById(userId).subscribe(data => this.currentUser = data.user);
       }
-
     }, error => {
       this.errorNotificationService.notifyOnError(error);
 
@@ -182,9 +181,9 @@ export class MainComponent implements OnInit, OnDestroy {
     this.connection.on("UpdateUserChatsAsync", (chat: IChat) => this.chats.push(chat));
 
     this.connection.on('NotifyOnMessageDeleteAsync', (notification: IDeleteMessageNotification) => {
-        let message = this.messages.filter(x => x.messageId === notification.messageId)[this.messages.length - 1];
-
-        if(message) {
+        let message = this.messages.filter(x => x.messageId === notification.messageId)[0];
+        
+        if(message.messageId === this.activeChat.lastMessageId) {
           this.activeChat.lastMessageAuthor = notification.newLastMessageAuthor;
           this.activeChat.lastMessageText = notification.newLastMessageText;
           this.activeChat.lastMessageTime = notification.newLastMessageTime;
@@ -217,6 +216,7 @@ export class MainComponent implements OnInit, OnDestroy {
     chat.lastMessageAuthor = message.userDisplayName;
     chat.lastMessageText = message.messageText;
     chat.lastMessageTime = message.createdAt;
+    chat.lastMessageId = message.messageId;
     this.chats = this.chats.filter(x => x.chatId !== message.chatId);
     this.chats = [chat, ...this.chats];
 

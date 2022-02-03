@@ -27,9 +27,6 @@ export class ChatItemActiveComponent {
   };
 
   chatContainsMessages(): boolean {
-
-    console.log(this.chat)
-
     const containsMessages =
       this.chat.lastMessageAuthor != null &&
       this.chat.lastMessageText != null;
