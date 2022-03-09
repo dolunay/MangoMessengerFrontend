@@ -44,13 +44,14 @@ Perform the following steps:
 
 - Install NVM: https://github.com/coreybutler/nvm-windows
 - Install NodeJS 14.17.3 via NVM: `nvm install 14.17.3`
-- Use NodeJS 14.17.3 via NVM: `nvm use 14.17.3`
+- Open PowerShell as Administrator and type: `nvm use 14.17.3`
 - Check NodeJS installed properly: `node -v`
 - Fork this repository
 - Clone forked repository locally: `git clone https://github.com/${{ username }}/MangoMessengerFrontend.git`
 - Go to the project folder
 - Restore packages: `npm ci`
 - Install Angular CLI globally: `npm install -g @angular/cli@11.2.7`
+- Open PowerShell as Administrator and type: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned`
 - Check that Angular CLI installed properly: `ng version`
 - Run project: `ng serve`
 
