@@ -11,7 +11,8 @@ import {ErrorNotificationService} from "../../services/error-notification.servic
 @AutoUnsubscribe()
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
+  standalone: true
 })
 export class RegisterComponent implements OnDestroy {
 

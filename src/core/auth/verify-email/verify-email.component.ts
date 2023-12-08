@@ -1,62 +1,52 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {SessionService, UsersService} from "@core/services";
+import {Component, OnInit, inject, DestroyRef} from '@angular/core';
+import { UsersService} from "@core/services";
 import {ActivatedRoute, Router} from "@angular/router";
-import {VerifyEmailCommand} from "@types/requests";
-import {Subscription} from "rxjs";
+import {map} from "rxjs";
+import {takeUntilDestroyed, toSignal} from "@angular/core/rxjs-interop";
 import {IBaseResponse} from "@types/responses";
-import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
-import {inject} from "@angular/core/testing";
+import {VerifyEmailCommand} from "@types/requests";
 
-@AutoUnsubscribe()
+
+
+
 @Component({
   selector: 'app-verify-email',
   templateUrl: './verify-email.component.html',
   standalone: true
 })
-export class VerifyEmailComponent implements OnInit, OnDestroy {
-  private readonly sessionService = inject(SessionService);
+export class VerifyEmailComponent implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly usersService = inject(UsersService)
+  private readonly destroyRef = inject(DestroyRef)
+  private readonly emailCode = toSignal(this.route.queryParamMap.pipe(map( query => query.get('emailCode') as string)), {initialValue: ''})
+  private readonly email = toSignal(this.route.queryParamMap.pipe(map( query => query.get('emailCode') as string)), {initialValue: ''})
 
-
-  constructor(private sessionService: SessionService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private usersService: UsersService) {
-  }
-
-  public response: IBaseResponse = {
+  response: IBaseResponse = {
     message: "",
     success: false
   };
 
-  public isLoaded = false;
-  public errorMessage = '';
-
-  protected routeSub$!: Subscription;
-  protected confirmEmailSub$!: Subscription;
+  errorMessage = '';
 
   ngOnInit(): void {
-    this.routeSub$ = this.route.queryParams.subscribe(params => {
-      const emailCode = params['emailCode'];
-      const email = params['email'];
-      const command = new VerifyEmailCommand(email, emailCode);
+      const command = new VerifyEmailCommand(this.email(), this.emailCode());
 
-      if (!emailCode || !email) {
+      if (!this.email() || !this.emailCode()) {
         alert("Invalid or expired activation link.");
         return;
       }
 
-      this.confirmEmailSub$ = this.usersService.confirmEmail(command).subscribe({
-        next: (result) =>
-      }result =>
-          this.response = result,
-        _ => this.errorMessage = "Invalid or expired activation link.");
-    });
+      this.usersService.confirmEmail(command).pipe(
+          takeUntilDestroyed(this.destroyRef)
+      ).subscribe({
+        next: (result) => this.response = result,
+        error: () => this.errorMessage + "Invalid or expired activation link."
+      });
   }
 
-  proceedToLoginComponent(): void {
-    this.router.navigateByUrl('login').then(r => r);
+  async proceedToLoginComponent(): Promise<void> {
+    await this.router.navigateByUrl('login')
   }
 
-  ngOnDestroy(): void {
-  }
 }
