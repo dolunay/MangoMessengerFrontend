@@ -134,18 +134,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mango-angular-frontend:build"
+            "buildTarget": "mango-angular-frontend:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "mango-angular-frontend:build:production"
+              "buildTarget": "mango-angular-frontend:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mango-angular-frontend:build"
+            "buildTarget": "mango-angular-frontend:build"
           }
         },
         "test": {
