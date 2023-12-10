@@ -6,11 +6,11 @@ on:
       - master
       - dev
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
   pull_request:
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
   lintcheck:
@@ -24,7 +24,7 @@ jobs:
       - name: Set node
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install
         run: pnpm install --ignore-scripts
@@ -43,16 +43,10 @@ jobs:
       - name: Set node
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install
         run: pnpm install --ignore-scripts
 
       - name: Typecheck
         run: pnpm run typecheck
-
-
-
-
-
-

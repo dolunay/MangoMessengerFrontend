@@ -1,47 +1,67 @@
 <body class="authentication-page">
-<div class="main-layout card-bg-1">
-  <div class="container d-flex flex-column">
-    <div class="row no-gutters text-center align-items-center justify-content-center min-vh-100">
-      <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-        <h1 class="font-weight-bold">Register</h1>
-        <p class="text-dark mb-3">We are Different, We Make You Different.</p>
-        <form class="mb-3" [formGroup]="registerCommand">
-          <div class="form-group">
-            <label for="displayName" class="sr-only">Display Name</label>
-            <input formArrayName="displayeNAme" name="DisplayName" type="text"
-                   class="form-control form-control-md"
-                   id="displayName"
-                   placeholder="Enter display name">
-          </div>
-          <div class="form-group">
-            <label for="email" class="sr-only">Email Address</label>
-            <input formControlName="email" name="Email" type="email" class="form-control form-control-md"
-                   id="email"
-                   placeholder="Enter valid email address">
-          </div>
-          <div class="form-group">
-            <label for="password" class="sr-only">Password</label>
-            <input formArrayName="pasword" name="Password" type="password"
-                   class="form-control form-control-md"
-                   id="password"
-                   placeholder="Enter password (8 chars, numbers, lower, upper, symbol)">
-          </div>
-          <div class="form-group">
-            <input formControlName="termsAccepted"
-                   [name]="'termsAccepted'"
-                   type="checkbox"
-                   id="termsOfService" name="termsOfService">
-            <label for="termsOfService">I accept terms of service</label>
-          </div>
-          <button (click)="register()" class="btn btn-primary btn-lg btn-block text-uppercase font-weight-semibold"
-                  type="submit">Register
-          </button>
-        </form>
+	<div class="main-layout card-bg-1">
+		<div class="container d-flex flex-column">
+			<div class="row no-gutters text-center align-items-center justify-content-center min-vh-100">
+				<div class="col-12 col-md-6 col-lg-5 col-xl-4">
+					<h1 class="font-weight-bold">Register</h1>
+					<p class="text-dark mb-3">We are Different, We Make You Different.</p>
+					<form class="mb-3" [formGroup]="registerCommand">
+						<div class="form-group">
+							<label for="displayName" class="sr-only">Display Name</label>
+							<input
+								formArrayName="displayeNAme"
+								name="DisplayName"
+								type="text"
+								class="form-control form-control-md"
+								id="displayName"
+								placeholder="Enter display name"
+							/>
+						</div>
+						<div class="form-group">
+							<label for="email" class="sr-only">Email Address</label>
+							<input
+								formControlName="email"
+								name="Email"
+								type="email"
+								class="form-control form-control-md"
+								id="email"
+								placeholder="Enter valid email address"
+							/>
+						</div>
+						<div class="form-group">
+							<label for="password" class="sr-only">Password</label>
+							<input
+								formArrayName="pasword"
+								name="Password"
+								type="password"
+								class="form-control form-control-md"
+								id="password"
+								placeholder="Enter password (8 chars, numbers, lower, upper, symbol)"
+							/>
+						</div>
+						<div class="form-group">
+							<input
+								formControlName="termsAccepted"
+								[name]="'termsAccepted'"
+								type="checkbox"
+								id="termsOfService"
+								name="termsOfService"
+							/>
+							<label for="termsOfService">I accept terms of service</label>
+						</div>
+						<button
+							(click)="register()"
+							class="btn btn-primary btn-lg btn-block text-uppercase font-weight-semibold"
+							type="submit"
+						>
+							Register
+						</button>
+					</form>
 
-        <p>Already have an account? <a class="font-weight-semibold" routerLink="/login">Login</a>.</p>
-        <p>Forgot password? <a class="font-weight-semibold" routerLink="/restore-password-request">Restore</a>.</p>
-      </div>
-    </div>
-  </div>
-</div>
+					<p>Already have an account? <a class="font-weight-semibold" routerLink="/login">Login</a>.</p>
+					<p>Forgot password? <a class="font-weight-semibold" routerLink="/restore-password-request">Restore</a>.</p>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>

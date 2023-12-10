@@ -1,9 +1,9 @@
 // Install express server
 
-const path = require('node:path');
-const process = require('node:process');
+const path = require("node:path");
+const process = require("node:process");
 
-const express = require('express');
+const express = require("express");
 
 const app = express();
 
@@ -11,7 +11,7 @@ const app = express();
 // eslint-disable-next-line node/no-path-concat
 app.use(express.static(`${__dirname}/dist/mango-angular-frontend`));
 
-app.get('/*', (req, res) => {
+app.get("/*", (req, res) => {
 	res.sendFile(
 		// eslint-disable-next-line node/no-path-concat
 		path.join(`${__dirname}/dist/mango-angular-frontend/index.html`),

@@ -1,61 +1,94 @@
 <!-- Navigation Start -->
 <div class="navigation navbar navbar-light bg-primary">
+	<!-- Logo Start -->
+	<div class="logo">
+		<img
+			class="cursor-pointer"
+			routerLink="/main"
+			src="../../../../assets/media/mango_icon.png"
+			width="40"
+			height="40"
+			alt=""
+		/>
+	</div>
+	<!-- Logo End -->
 
-  <!-- Logo Start -->
-  <div class="logo">
-    <img class="cursor-pointer" routerLink="/main" src="../../../../assets/media/mango_icon.png" width="40" height="40" alt="">
-  </div>
-  <!-- Logo End -->
+	<!-- Main Nav Start -->
+	<ul
+		class="nav nav-minimal flex-row flex-grow-1 justify-content-between flex-xl-column justify-content-xl-center"
+		id="mainNavTab"
+		role="tablist"
+	>
+		<!-- Chats Tab Start -->
+		<li class="nav-item">
+			<div
+				[ngClass]="
+					activeRoute === 'chats' ? 'nav-link p-0 py-xl-3 active cursor-pointer' : 'nav-link p-0 py-xl-3 cursor-pointer'
+				"
+				title="Chats"
+				(click)="navigateToChats()"
+			>
+				<!-- Default :: Inline SVG -->
+				<svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+					/>
+				</svg>
+			</div>
+		</li>
+		<!-- Chats Tab End -->
 
-  <!-- Main Nav Start -->
-  <ul class="nav nav-minimal flex-row flex-grow-1 justify-content-between flex-xl-column justify-content-xl-center"
-      id="mainNavTab" role="tablist">
+		<!-- Friends Tab Start -->
+		<li class="nav-item">
+			<div
+				[ngClass]="
+					activeRoute === 'contacts'
+						? 'nav-link p-0 py-xl-3 active cursor-pointer'
+						: 'nav-link p-0 py-xl-3 cursor-pointer'
+				"
+				title="Friends"
+				(click)="navigateToContacts()"
+			>
+				<svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+					/>
+				</svg>
+			</div>
+		</li>
+		<!-- Friends Tab End -->
 
-    <!-- Chats Tab Start -->
-    <li class="nav-item">
-      <div
-        [ngClass]="activeRoute === 'chats' ? 'nav-link p-0 py-xl-3 active cursor-pointer' : 'nav-link p-0 py-xl-3 cursor-pointer'"
-        title="Chats"
-        (click)="navigateToChats()">
-        <!-- Default :: Inline SVG -->
-        <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/>
-        </svg>
-      </div>
-    </li>
-    <!-- Chats Tab End -->
+		<!-- Profile Tab Start -->
+		<li class="nav-item">
+			<div
+				[ngClass]="
+					activeRoute === 'profile-settings'
+						? 'nav-link p-0 py-xl-3 active cursor-pointer'
+						: 'nav-link p-0 py-xl-3 cursor-pointer'
+				"
+				title="Profile"
+				(click)="navigateToSettings()"
+			>
+				<!-- Default :: Inline SVG -->
+				<svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+					/>
+				</svg>
+			</div>
+		</li>
+		<!-- Profile Tab End -->
+	</ul>
 
-    <!-- Friends Tab Start -->
-    <li class="nav-item">
-      <div
-        [ngClass]="activeRoute === 'contacts' ? 'nav-link p-0 py-xl-3 active cursor-pointer' : 'nav-link p-0 py-xl-3 cursor-pointer'"
-        title="Friends"
-        (click)="navigateToContacts()">
-        <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-        </svg>
-      </div>
-    </li>
-    <!-- Friends Tab End -->
-
-    <!-- Profile Tab Start -->
-    <li class="nav-item">
-      <div
-        [ngClass]="activeRoute === 'profile-settings' ? 'nav-link p-0 py-xl-3 active cursor-pointer' : 'nav-link p-0 py-xl-3 cursor-pointer'"
-        title="Profile"
-        (click)="navigateToSettings()">
-        <!-- Default :: Inline SVG -->
-        <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-      </div>
-    </li>
-    <!-- Profile Tab End -->
-  </ul>
-
-  <!-- Main Nav End -->
+	<!-- Main Nav End -->
 </div>
 <!-- Navigation End -->

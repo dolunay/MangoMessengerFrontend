@@ -1,7 +1,7 @@
-﻿const url = require('node:url');
-const path = require('node:path');
-const process = require('node:process');
-const { app, BrowserWindow } = require('electron');
+const url = require("node:url");
+const path = require("node:path");
+const process = require("node:process");
+const { app, BrowserWindow } = require("electron");
 
 let mainWindow;
 
@@ -17,26 +17,24 @@ function createWindow() {
 	mainWindow.loadURL(
 		url.format({
 			pathname: path.join(__dirname, `/dist/mango-angular-frontend/index.html`),
-			protocol: 'file:',
+			protocol: "file:",
 			slashes: true,
 		}),
 	);
 	// Open the DevTools.
 	mainWindow.webContents.openDevTools();
 
-	mainWindow.on('closed', () => {
+	mainWindow.on("closed", () => {
 		mainWindow = null;
 	});
 }
 
-app.on('ready', createWindow);
+app.on("ready", createWindow);
 
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin')
-		app.quit();
+app.on("window-all-closed", () => {
+	if (process.platform !== "darwin") app.quit();
 });
 
-app.on('activate', () => {
-	if (mainWindow === null)
-		createWindow();
+app.on("activate", () => {
+	if (mainWindow === null) createWindow();
 });

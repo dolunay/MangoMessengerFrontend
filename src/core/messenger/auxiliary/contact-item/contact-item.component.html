@@ -1,36 +1,41 @@
 <div class="contacts-item">
-  <div class="contacts-link">
-    <div class="avatar">
-      <img [src]="contact.pictureUrl | defaultImage: defaultUrl" alt="">
-    </div>
-    <div class="contacts-content">
-      <div class="contacts-info">
-        <h6 class="chat-name text-truncate">{{contact.displayName}}</h6>
-      </div>
-      @if(contact.bio) {
-        <div  class="contacts-texts">
-          <svg class="hw-20 mr-2" fill="none" viewBox="0 0 30 30" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
+	<div class="contacts-link">
+		<div class="avatar">
+			<img [src]="contact.pictureUrl | defaultImage: defaultUrl" alt="" />
+		</div>
+		<div class="contacts-content">
+			<div class="contacts-info">
+				<h6 class="chat-name text-truncate">{{ contact.displayName }}</h6>
+			</div>
+			@if (contact.bio) {
+				<div class="contacts-texts">
+					<svg class="hw-20 mr-2" fill="none" viewBox="0 0 30 30" stroke="currentColor">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+						/>
+					</svg>
 
-          <p class="text-muted mb-0" style="margin-left: -10px;">{{contact.bio}}</p>
-        </div>
-      }
+					<p class="text-muted mb-0" style="margin-left: -10px">{{ contact.bio }}</p>
+				</div>
+			}
 
-      @if (contact.address) {
-        <div class="contacts-texts">
-          <!-- Default :: Inline SVG -->
-          <svg class="hw-16 text-muted mr-1" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd"
-                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                  clip-rule="evenodd"/>
-          </svg>
+			@if (contact.address) {
+				<div class="contacts-texts">
+					<!-- Default :: Inline SVG -->
+					<svg class="hw-16 text-muted mr-1" viewBox="0 0 20 20" fill="currentColor">
+						<path
+							fill-rule="evenodd"
+							d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+							clip-rule="evenodd"
+						/>
+					</svg>
 
-          <p class="text-muted mb-0">{{contact.address}}</p>
-        </div>
-      }
-
-    </div>
-  </div>
+					<p class="text-muted mb-0">{{ contact.address }}</p>
+				</div>
+			}
+		</div>
+	</div>
 </div>

@@ -1,10 +1,13 @@
 ::ng-deep {
+
 	.mat-dialog-container {
 		background: #383f44;
 	}
+
 	.mat-form-field {
 		color: #fff;
 	}
+
 	mat-label {
 		color: #fff;
 	}
@@ -13,12 +16,15 @@
 p {
 	color: #fff;
 }
+
 .cancel {
 	background: #d71a1a;
 }
+
 .ok {
 	color: #fff;
+	&:hover {
+		background: #8b8989;
+	}
 }
-.ok:hover {
-	background: #8b8989;
-}
+
