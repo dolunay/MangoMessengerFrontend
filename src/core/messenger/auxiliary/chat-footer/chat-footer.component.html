@@ -1,6 +1,8 @@
-<emoji-mart class="emoji-mart" *ngIf="isEmojiPickerVisible"
-            (emojiSelect)="addEmoji($event)" title="Choose your emoji">
-</emoji-mart>
+@if (isEmojiPickerVisible) {
+  <emoji-mart class="emoji-mart"
+              (emojiSelect)="addEmoji($event)" title="Choose your emoji">
+  </emoji-mart>
+}
 <div class="chat-footer">
   <div class="form-row">
     <div class="input-group-prepend mr-sm-2 mr-1">
@@ -37,30 +39,33 @@
     <!-- Emoji End -->
     <!-- Chat Input Group Start -->
     <div class="col">
-      <div *ngIf="editMessageRequest">
+      <div>
         Editing message
         <button (click)="clearInEdit()" class="btn-close"></button>
       </div>
-      <div class="input-group">
+      <div class="input-group" [formGroup]="form">
         <!-- Textarea Start-->
-        <textarea [(ngModel)]="currentMessageText"
+        <textarea formControlName="currentMessageText"
                   (keydown.enter)="onMessageSendClick($event)"
                   name="currentMessageText"
                   class="form-control transparent-bg border-0 no-resize hide-scrollbar text-white"
                   placeholder="Write your message..."
-                  value="{{currentMessageText}}"
                   rows="1">
         </textarea>
         <!-- Textarea End -->
       </div>
-      <div *ngIf="attachmentName">
-        {{attachmentName}}
-        <button (click)="clearAttachment()" class="btn-close"></button>
-      </div>
-      <div *ngIf="inReplayAuthor && inReplayText">
-        In replay to <strong>{{inReplayAuthor}}:</strong>  {{inReplayText}}
-        <button (click)="clearInReplay()" class="btn-close"></button>
-      </div>
+      @if(attachmentName) {
+        <div *ngIf="attachmentName">
+          {{attachmentName}}
+          <button (click)="clearAttachment()" class="btn-close"></button>
+        </div>
+      }
+      @if (inReplayAuthor && inReplayText) {
+        <div>
+          In replay to <strong>{{inReplayAuthor}}:</strong>  {{inReplayText}}
+          <button (click)="clearInReplay()" class="btn-close"></button>
+        </div>
+      }
     </div>
     <!-- Chat Input Group End -->
 

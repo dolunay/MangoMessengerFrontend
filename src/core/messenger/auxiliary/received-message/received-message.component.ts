@@ -1,86 +1,72 @@
-import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {IMessage} from "../../../../types/models/IMessage";
-import {MessagesService} from "../../../services/messages.service";
-import {Subscription} from "rxjs";
-import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
-import {DeleteMessageCommand} from "../../../../types/requests/DeleteMessageCommand";
-import {ErrorNotificationService} from "../../../services/error-notification.service";
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, Output, inject } from '@angular/core';
+import { ErrorNotificationService, MessagesService } from '@core/services';
+import { EMPTY, catchError } from 'rxjs';
+import { NgClass } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DeleteMessageCommand } from '@shared/types/requests';
+import type { IMessage } from '@shared/types/models';
 
-@AutoUnsubscribe()
 @Component({
-  selector: 'app-received-message',
-  templateUrl: './received-message.component.html',
-  styleUrls: ['./received-message.component.scss']
+	selector: 'app-received-message',
+	templateUrl: './received-message.component.html',
+	styleUrls: ['./received-message.component.scss'],
+	standalone: true,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgClass],
 })
-export class ReceivedMessageComponent implements OnDestroy {
+export class ReceivedMessageComponent {
+	private messageService = inject(MessagesService);
+	private errorNotificationService = inject(ErrorNotificationService);
 
-  constructor(private messageService: MessagesService,
-              private errorNotificationService: ErrorNotificationService) {
-  }
+	// this abstract class was access to onDestroy lc hook and make unsubscribe if component will be destroyed
+	private destroyRef = inject(DestroyRef);
 
-  protected deleteMessageSub$!: Subscription;
+	@Input() message: IMessage = {} as IMessage;
 
-  @Input() message: IMessage = {
-    inReplayToAuthor: "",
-    inReplayToText: "",
-    messageAttachmentUrl: "",
-    userId: "",
-    chatId: "",
-    messageAuthorPictureUrl: "",
-    updatedAt: "",
-    messageId: "",
-    messageText: "",
-    self: false,
-    createdAt: "",
-    userDisplayName: ""
-  };
+	@Output() notifyParentOnEditMessage = new EventEmitter<any>();
+	@Output() notifyParentOnReplayMessage = new EventEmitter<any>();
 
-  @Output() notifyParentOnEditMessage = new EventEmitter<any>();
-  @Output() notifyParentOnReplayMessage = new EventEmitter<any>();
+	isImageOrGif(): boolean {
+		const attachmentSplit = this.message.messageAttachmentUrl.split('.');
+		const attachmentFileExtension = attachmentSplit[attachmentSplit.length - 1];
 
-  isImageOrGif(): boolean {
-    let attachmentSplit = this.message.messageAttachmentUrl.split(".");
-    let attachmentFileExtension = attachmentSplit[attachmentSplit.length - 1];
+		return attachmentFileExtension === 'jpg' || attachmentFileExtension === 'png' || attachmentFileExtension === 'gif';
+	}
 
-    return attachmentFileExtension == "jpg" ||
-      attachmentFileExtension == "png" ||
-      attachmentFileExtension == "gif";
-  }
+	deleteMessage(): void {
+		const deleteMessageCommand = new DeleteMessageCommand(this.message.messageId, this.message.chatId);
 
-  deleteMessage(): void {
-    const deleteMessageCommand = new DeleteMessageCommand(this.message.messageId, this.message.chatId);
+		this.messageService
+			.deleteMessage(deleteMessageCommand)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe();
+	}
 
+	editMessage(): void {
+		const body = {
+			messageId: this.message.messageId,
+			messageText: this.message.messageText,
+		};
 
-    this.deleteMessageSub$ =
-      this.messageService.deleteMessage(deleteMessageCommand).subscribe(_ => {
-      }, error => {
-        this.errorNotificationService.notifyOnError(error);
-      });
+		this.notifyParentOnEditMessage.emit(body);
+	}
 
-  }
+	replayMessage(): void {
+		const body = {
+			messageAuthor: this.message.userDisplayName,
+			messageText: this.message.messageText,
+		};
 
-  editMessage(): void {
-    const body = {
-      messageId: this.message.messageId,
-      messageText: this.message.messageText
-    }
+		this.notifyParentOnReplayMessage.emit(body);
+	}
 
-    this.notifyParentOnEditMessage.emit(body);
-  }
-
-  replayMessage(): void {
-    const body = {
-      messageAuthor: this.message.userDisplayName,
-      messageText: this.message.messageText,
-    }
-
-    this.notifyParentOnReplayMessage.emit(body);
-  }
-
-  getMessageText(): string {
-    return this.message.messageText;
-  }
-
-  ngOnDestroy(): void {
-  }
+	getMessageText(): string {
+		return this.message.messageText;
+	}
 }

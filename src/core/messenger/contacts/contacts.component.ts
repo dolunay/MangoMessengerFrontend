@@ -1,190 +1,201 @@
-import { ValidationService } from '../../services/validation.service';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ContactsService} from "../../services/contacts.service";
-import {IContact} from "../../../types/models/IContact";
-import {UsersService} from "../../services/users.service";
-import {IUser} from "../../../types/models/IUser";
-import {CommunitiesService} from "../../services/communities.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {SessionService} from "../../services/session.service";
-import {Subscription} from "rxjs";
-import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
-import {ErrorNotificationService} from "../../services/error-notification.service";
+import type { OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import type { IContact, IUser } from '@shared/types/models';
+import { Router } from '@angular/router';
+import {
+	CommunitiesService,
+	ContactsService,
+	ErrorNotificationService,
+	SessionService,
+	UsersService,
+	ValidationService,
+} from '@core/services';
+import { EMPTY, catchError } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ContactItemComponent, NavigationBarComponent } from '@core/messenger/auxiliary';
+import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
 
-@AutoUnsubscribe()
 @Component({
-  selector: 'app-contacts',
-  templateUrl: './contacts.component.html',
-  styleUrls: ['./contacts.component.scss']
+	selector: 'app-contacts',
+	templateUrl: './contacts.component.html',
+	styleUrls: ['./contacts.component.scss'],
+	standalone: true,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NavigationBarComponent, ContactItemComponent, FormsModule, NgClass],
 })
-export class ContactsComponent implements OnInit, OnDestroy {
+export class ContactsComponent implements OnInit {
+	private readonly contactsService = inject(ContactsService);
+	public readonly userService = inject(UsersService);
+	private readonly communitiesService = inject(CommunitiesService);
+	private readonly sessionService = inject(SessionService);
+	private readonly router = inject(Router);
+	private readonly errorNotificationService = inject(ErrorNotificationService);
+	private readonly validationService = inject(ValidationService);
+	private readonly destroyRef = inject(DestroyRef);
 
-  constructor(private contactsService: ContactsService,
-              public userService: UsersService,
-              private chatsService: CommunitiesService,
-              private sessionService: SessionService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private errorNotificationService: ErrorNotificationService,
-              private validationService: ValidationService) {
-  }
+	private currentUser!: IUser;
 
-  private currentUser!: IUser;
+	public contacts: IContact[] = [];
+	public isLoaded = false;
 
-  protected getCurrentUserContactsSub$!: Subscription;
-  protected getCurrentUserSub$!: Subscription;
-  protected onFilterSub$!: Subscription;
-  protected searchSub$!: Subscription;
-  protected getUserByIdSub$!: Subscription;
-  protected addContactSub$!: Subscription;
-  protected createDirectChatSub$!: Subscription;
-  protected deleteContactSub$!: Subscription;
+	public currentOpenedContact: IUser = {} as IUser;
 
-  public contacts: IContact[] = [];
-  public isLoaded = false;
+	public contactsSearchQuery = '';
+	public contactsFilter = 'All Contacts';
+	public currentOpenedUserIsContact = false;
 
-  public currentOpenedContact: IUser = {
-    pictureUrl: "",
-    publicKey: 0,
-    address: "",
-    bio: "",
-    birthdayDate: "",
-    displayName: "",
-    email: "",
-    facebook: "",
-    firstName: "",
-    instagram: "",
-    lastName: "",
-    linkedIn: "",
-    twitter: "",
-    userId: "",
-    username: "",
-    website: ""
-  };
+	ngOnInit(): void {
+		this.initializeView();
+	}
 
-  public contactsSearchQuery = '';
-  public contactsFilter = 'All Contacts';
-  public currentOpenedUserIsContact = false;
+	private initializeView(): void {
+		const userId = this.sessionService.getTokens()?.userId;
 
-  ngOnInit(): void {
-    this.initializeView();
-  }
+		if (userId === null || userId === undefined) throw new Error('Localstorage tokens error.');
 
-  private initializeView(): void {
-    const userId = this.sessionService.getTokens()?.userId;
+		this.contactsService.getCurrentUserContacts().subscribe((contResponse) => {
+			this.contacts = contResponse.contacts;
 
-    if (userId === null || userId === undefined) {
-      throw new Error("Localstorage tokens error.");
-    }
+			this.userService
+				.getUserById(userId)
+				.pipe(
+					catchError((error) => {
+						this.errorNotificationService.notifyOnError(error);
+						if (error.status === 0 || error.status === 401 || error.status === 403)
+							this.router.navigateByUrl('login').then((r) => r);
 
-    this.getCurrentUserContactsSub$ =
-      this.contactsService.getCurrentUserContacts().subscribe(contResponse => {
-        this.contacts = contResponse.contacts;
+						return EMPTY;
+					}),
+					takeUntilDestroyed(this.destroyRef),
+				)
+				.subscribe((response) => {
+					this.currentUser = response.user;
+					this.currentOpenedContact = response.user;
+					this.isLoaded = true;
+					this.currentOpenedUserIsContact = true;
+					this.contactsFilter = 'All Contacts';
+					this.contactsSearchQuery = '';
+				});
+		});
+	}
 
-        this.getCurrentUserSub$ = this.userService.getUserById(userId).subscribe(response => {
-          this.currentUser = response.user;
-          this.currentOpenedContact = response.user;
-          this.isLoaded = true;
-          this.currentOpenedUserIsContact = true;
-          this.contactsFilter = 'All Contacts';
-          this.contactsSearchQuery = '';
-        });
-      }, error => {
-        this.errorNotificationService.notifyOnError(error);
+	onFilterClick(filter: string) {
+		this.contactsFilter = filter;
 
-        if (error.status === 0 || error.status === 401 || error.status === 403) {
-          this.router.navigateByUrl('login').then(r => r);
-        }
-      });
-  }
+		this.contactsService
+			.getCurrentUserContacts()
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe((response) => {
+				this.contacts = response.contacts;
+				this.contactsSearchQuery = '';
+			});
+	}
 
-  onFilterClick(filter: string) {
+	onUserSearchClick(): void {
+		this.validationService.validateField(this.contactsSearchQuery, 'Contact Search');
+		this.contactsService
+			.searchContacts(this.contactsSearchQuery)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe((response) => {
+				this.contacts = response.contacts;
+				this.contactsFilter = 'Search Results';
+				this.contactsSearchQuery = '';
+			});
+	}
 
-    this.contactsFilter = filter;
+	onContactClick(contact: IContact): void {
+		this.userService
+			.getUserById(contact.userId)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe((response) => {
+				this.currentOpenedContact = response.user;
+				this.currentOpenedUserIsContact = contact.isContact;
+			});
+	}
 
-    this.onFilterSub$ = this.contactsService.getCurrentUserContacts().subscribe(response => {
-      this.contacts = response.contacts;
-      this.contactsSearchQuery = '';
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
-    });
-  }
+	onAddContactClick() {
+		const contactId = this.currentOpenedContact.userId;
 
-  onUserSearchClick(): void {
-    this.validationService.validateField(this.contactsSearchQuery, 'Contact Search');
-    this.searchSub$ =
-      this.contactsService.searchContacts(this.contactsSearchQuery).subscribe(response => {
-        this.contacts = response.contacts;
-        this.contactsFilter = 'Search Results';
-        this.contactsSearchQuery = '';
-      }, error => {
-        this.errorNotificationService.notifyOnError(error);
-      });
-  }
+		this.contactsService
+			.addContact(contactId)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe((_) => {
+				// TODO: This API call is redundant, keep contacts in memory and simply push result to array
+				// TODO: Implement contacts repo
+				this.onFilterClick('All Contacts');
 
-  onContactClick(contact: IContact): void {
-    this.getUserByIdSub$ = this.userService.getUserById(contact.userId).subscribe(response => {
-      this.currentOpenedContact = response.user;
-      this.currentOpenedUserIsContact = contact.isContact;
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
-    });
-  }
+				this.contactsSearchQuery = '';
+				this.currentOpenedUserIsContact = true;
+			});
+	}
 
-  onAddContactClick() {
-    const contactId = this.currentOpenedContact.userId;
+	onStartDirectChatClick() {
+		const userId = this.currentOpenedContact.userId;
 
-    this.addContactSub$ = this.contactsService.addContact(contactId).subscribe(_ => {
+		this.communitiesService
+			.createChat(userId)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe((response) => {
+				this.router.navigate(['main', { chatId: response.chatId }]).then((r) => r);
+			});
+	}
 
-      // TODO: This API call is redundant, keep contacts in memory and simply push result to array
-      // TODO: Implement contacts repo
-      this.onFilterClick('All Contacts');
+	onRemoveContactClick() {
+		const userToRemoveId = this.currentOpenedContact.userId;
 
-      this.contactsSearchQuery = '';
-      this.currentOpenedUserIsContact = true;
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
-    });
-  }
+		this.contactsService
+			.deleteContact(this.currentOpenedContact.userId)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe((_) => {
+				this.contacts = this.contacts.filter((x) => x.userId !== userToRemoveId);
+				this.currentOpenedContact = this.currentUser;
+			});
+	}
 
-  onStartDirectChatClick() {
-    const userId = this.currentOpenedContact.userId;
+	getContactItemClass = (userId: string) =>
+		userId === this.currentOpenedContact.userId ? 'contacts-item active' : 'contacts-item';
 
-    this.createDirectChatSub$ =
-      this.chatsService.createChat(userId).subscribe(response => {
-        this.router.navigate(['main', {chatId: response.chatId}]).then(r => r);
-      }, error => {
-        this.errorNotificationService.notifyOnError(error);
-      });
-  }
+	isCurrentUserOpened(): boolean {
+		const tokens = this.sessionService.getTokens();
+		const userId = tokens?.userId;
 
-  onRemoveContactClick() {
-    const userToRemoveId = this.currentOpenedContact.userId;
-
-    this.deleteContactSub$ =
-      this.contactsService.deleteContact(this.currentOpenedContact.userId).subscribe(_ => {
-        this.contacts = this.contacts.filter(x => x.userId !== userToRemoveId);
-        this.currentOpenedContact = this.currentUser;
-      }, error => {
-        this.errorNotificationService.notifyOnError(error);
-      });
-
-  }
-
-  getContactItemClass = (userId: string) => userId === this.currentOpenedContact.userId
-    ? 'contacts-item active'
-    : 'contacts-item';
-
-  isCurrentUserOpened(): boolean {
-    const tokens = this.sessionService.getTokens();
-    const userId = tokens?.userId;
-
-    const currentOpenedIsSelf = this.currentOpenedContact.userId === userId;
-
-    return currentOpenedIsSelf;
-  }
-
-
-  ngOnDestroy(): void {
-  }
+		return this.currentOpenedContact.userId === userId;
+	}
 }

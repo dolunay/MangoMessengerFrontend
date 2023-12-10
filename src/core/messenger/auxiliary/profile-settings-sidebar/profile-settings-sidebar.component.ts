@@ -1,91 +1,82 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {SessionService} from "../../../services/session.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {UsersService} from "../../../services/users.service";
-import {IUser} from "../../../../types/models/IUser";
-import {Observable, Subscription} from "rxjs";
-import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
-import {ErrorNotificationService} from "../../../services/error-notification.service";
+import type { OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, Input, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import type { IUser } from '@shared/types/models';
+import type { Observable } from 'rxjs';
+import { EMPTY, catchError } from 'rxjs';
+import { ErrorNotificationService, SessionService } from '@core/services';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ProfileLogoutButtonComponent } from '@core/messenger/auxiliary';
+import { AsyncPipe } from '@angular/common';
 
-@AutoUnsubscribe()
 @Component({
-  selector: 'app-profile-settings-sidebar',
-  templateUrl: './profile-settings-sidebar.component.html'
+	selector: 'app-profile-settings-sidebar',
+	templateUrl: './profile-settings-sidebar.component.html',
+	standalone: true,
+	imports: [ProfileLogoutButtonComponent, AsyncPipe],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileSettingsSidebarComponent implements OnInit, OnDestroy {
+export class ProfileSettingsSidebarComponent implements OnInit {
+	private readonly sessionService = inject(SessionService);
+	private readonly router = inject(Router);
+	private readonly errorNotificationService = inject(ErrorNotificationService);
+	private readonly destroyRef = inject(DestroyRef);
+	user: IUser = {} as IUser;
+	isLoaded = false;
 
-  constructor(private sessionService: SessionService,
-              private userService: UsersService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private errorNotificationService: ErrorNotificationService) {
-  }
+	@Input() events$!: Observable<IUser>;
 
-  protected eventsSubscription$!: Subscription;
-  protected deleteSessionSub$!: Subscription;
-  protected deleteAllSessionsSub$!: Subscription;
+	ngOnInit(): void {
+		this.events$
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe({
+				next: (data) => {
+					this.user = data;
+					this.isLoaded = true;
+				},
+			});
+	}
 
-  public isLoaded = false;
-  public user: IUser = {
-    address: "",
-    bio: "",
-    birthdayDate: "",
-    displayName: "",
-    email: "",
-    facebook: "",
-    firstName: "",
-    instagram: "",
-    lastName: "",
-    linkedIn: "",
-    pictureUrl: "",
-    publicKey: 0,
-    twitter: "",
-    userId: "",
-    username: "",
-    website: ""
-  }
+	logout(): void {
+		const refreshToken = this.sessionService.getTokens()?.refreshToken;
 
-  @Input() events$!: Observable<IUser>;
+		if (refreshToken === null || refreshToken === undefined) throw new Error('Localstorage tokens error.');
 
-  ngOnInit(): void {
-    this.eventsSubscription$ = this.events$.subscribe(data => {
-      this.user = data;
-      this.isLoaded = true;
-    }, error => {
-      console.log(error);
-      this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
-    });
-  }
+		this.sessionService
+			.deleteSession(refreshToken)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe((_) => {
+				this.sessionService.clearTokens();
+				this.router.navigateByUrl('login').then((r) => r);
+			});
+	}
 
-  logout(): void {
-    let refreshToken = this.sessionService.getTokens()?.refreshToken;
+	logoutAll(): void {
+		this.sessionService
+			.deleteAllSessions()
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe((_) => {
+				this.sessionService.clearTokens();
 
-    if (refreshToken === null || refreshToken === undefined) {
-      throw new Error("Localstorage tokens error.");
-    }
-
-    this.deleteSessionSub$ = this.sessionService.deleteSession(refreshToken).subscribe(_ => {
-
-      this.sessionService.clearTokens();
-
-      this.router.navigateByUrl('login').then(r => r);
-    }, error => {
-      this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
-    });
-  }
-
-  logoutAll(): void {
-    this.deleteAllSessionsSub$ = this.sessionService.deleteAllSessions().subscribe(_ => {
-
-      this.sessionService.clearTokens();
-
-      this.router.navigateByUrl('login').then(r => r);
-    }, error => {
-      console.log(error);
-      this.errorNotificationService.notifyOnErrorWithComponentName(error, 'profile-settings-sidebar.');
-    });
-  }
-
-  ngOnDestroy(): void {
-  }
+				this.router.navigateByUrl('login').then((r) => r);
+			});
+	}
 }

@@ -1,0 +1,69 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-order-config-standard"],
+  "plugins": ["stylelint-order"],
+  "processors": ["scss", "less"],
+  "rules": {
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "tailwind",
+          "apply",
+          "variants",
+          "responsive",
+          "screen"
+        ]
+      }
+    ],
+    "selector-pseudo-element-colon-notation": "single",
+    "no-empty-source": true,
+    "rule-empty-line-before": null,
+    "declaration-empty-line-before": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "color-no-invalid-hex": true,
+    "unit-no-unknown": true,
+    "at-rule-empty-line-before": null,
+    "value-no-vendor-prefix": null,
+    "selector-no-vendor-prefix": null,
+    "property-no-vendor-prefix": null,
+    "media-feature-name-no-vendor-prefix": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
+    "alpha-value-notation": "number",
+    "order/properties-order": [
+      [
+        "display",
+        "flex-direction",
+        "align-items",
+        "align-content",
+        "justify-content",
+        "justify-items",
+        "width",
+        "min-width",
+        "max-width",
+        "height",
+        "min-height",
+        "max-height",
+        "overflow",
+        "background",
+        "background-color",
+        "background-image",
+        "box-shadow",
+        "filter",
+        "background-size",
+        "background-overflow",
+        "font-size",
+        "font-weight",
+        "color",
+        "text-align",
+        "text-shadow"
+      ],
+      {
+        "unspecified": "ignore"
+      }
+    ]
+  }
+}

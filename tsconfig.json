@@ -14,15 +14,17 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
-    "module": "es2020",
+    "target": "ESNext",
+    "module": "ESNext",
     "paths": {
-      "@types/*": ["src/types/*"],
-      "@core/*": ["src/core/*"],
+      "@types/*": ["./src/types/*"],
+      "@core/*": ["./src/core/*"],
+      "@shared/*": ["./src/shared/*"],
     },
     "lib": [
-      "es2018",
-      "dom"
+      "es2022",
+      "dom",
+      "ESNext"
     ]
   },
   "angularCompilerOptions": {

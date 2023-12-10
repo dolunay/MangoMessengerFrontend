@@ -1,35 +1,43 @@
-import {Component, OnDestroy} from '@angular/core';
-import {PasswordResetService} from "../../services/password-reset.service";
-import {Subscription} from "rxjs";
-import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { PasswordResetService } from '@core/services';
+import type { Subscription } from 'rxjs';
+import { EMPTY, catchError } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-@AutoUnsubscribe()
 @Component({
-  selector: 'app-password-restore-request',
-  templateUrl: './password-restore-request.component.html'
+	selector: 'app-password-restore-request',
+	templateUrl: './password-restore-request.component.html',
+	standalone: true,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [FormsModule],
 })
-export class PasswordRestoreRequestComponent implements OnDestroy {
+export class PasswordRestoreRequestComponent {
+	protected resetPasswordSub$!: Subscription;
+	private readonly passwordResetService = inject(PasswordResetService);
+	private readonly snackbar = inject(MatSnackBar);
+	private readonly destroyRef = inject(DestroyRef);
+	phoneOrEmail = '';
 
-  protected resetPasswordSub$!: Subscription;
+	sendPasswordRestoreRequest(): void {
+		if (!this.phoneOrEmail) {
+			this.snackbar.open('Empty email or phone not allowed.');
+			return;
+		}
 
-  public phoneOrEmail = '';
-
-  constructor(private passwordResetService: PasswordResetService) {
-  }
-
-  sendPasswordRestoreRequest(): void {
-    if (!this.phoneOrEmail) {
-      alert('Empty email or phone not allowed.');
-      return;
-    }
-
-    this.resetPasswordSub$ = this.passwordResetService.sendPasswordResetRequest(this.phoneOrEmail)
-      .subscribe(data => {
-        this.phoneOrEmail = '';
-        alert(data.message);
-      }, error => alert(error.error.errorDetails));
-  }
-
-  ngOnDestroy(): void {
-  }
+		this.resetPasswordSub$ = this.passwordResetService
+			.sendPasswordResetRequest(this.phoneOrEmail)
+			.pipe(
+				catchError((error) => {
+					this.snackbar.open(error.error.errorDetails);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe((data) => {
+				this.phoneOrEmail = '';
+				this.snackbar.open(data.message);
+			});
+	}
 }

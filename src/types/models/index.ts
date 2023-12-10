@@ -1,7 +1,0 @@
-export * from './IChat'
-export * from './IContact'
-export * from './IDeleteMessageNotification'
-export * from './IEditMessageNotification'
-export * from './IMessage'
-export * from './ITokens'
-export * from './IUser'

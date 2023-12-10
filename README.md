@@ -1,3 +1,7 @@
+> IF YOU WANT TO WRITE ANYTHING ON Angular AND TypeScript, PLEASE WRITE DOCUMENTATION
+
+> Until I came here, the code looked like complete crap. You either go and read Angular's doc, or don't bother with it at all, you fucking morons
+
 # Mango Messenger Angular Frontend
 
 <p align="center">

@@ -1,45 +1,60 @@
-import { ValidationService } from '../../../services/validation.service';
-import {Component, Inject, OnDestroy} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ICreateCommunityResponse} from "../../../../types/responses/ICreateCommunityResponse";
-import {CommunitiesService} from "../../../services/communities.service";
-import {CreateChannelCommand} from "../../../../types/requests/CreateChannelCommand";
-import {Subscription} from "rxjs";
-import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import { ChangeDetectionStrategy, Component, Inject, inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import type { Subscription } from 'rxjs';
+import { EMPTY, catchError } from 'rxjs';
+import { CommunitiesService, ValidationService } from '@core/services';
+import type { ICreateCommunityResponse } from '@shared/types/responses';
+import { DialogRef } from '@angular/cdk/dialog';
+import type { CreateChannelCommand } from '@shared/types/requests';
+import { MatImports } from '@shared/mat-imports/mat-iьports';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import type { TypedControl } from '@shared/utils';
+import { FocusInitialDirective } from '@shared/directives';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-@AutoUnsubscribe()
 @Component({
-  selector: 'app-create-group-dialog',
-  templateUrl: './create-group-dialog.component.html',
-  styleUrls: ['./create-group-dialog.component.scss']
+	selector: 'app-create-group-dialog',
+	templateUrl: './create-group-dialog.component.html',
+	styleUrls: ['./create-group-dialog.component.scss'],
+	standalone: true,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [...MatImports, ReactiveFormsModule, FocusInitialDirective],
 })
-export class CreateGroupDialogComponent implements OnDestroy {
+export class CreateGroupDialogComponent {
+	readonly dialogRef = inject(DialogRef);
+	private readonly chatService = inject(CommunitiesService);
+	private readonly validationService = inject(ValidationService);
+	private readonly snackBar = inject(MatSnackBar);
+	private readonly fb = inject(FormBuilder);
+	form = this.fb.group<TypedControl<CreateChannelCommand>>({
+		channelDescription: [''],
+		channelTitle: [''],
+	});
 
-  constructor(public dialogRef: MatDialogRef<CreateGroupDialogComponent>,
-              @Inject(MAT_DIALOG_DATA)
-              public data: ICreateCommunityResponse,
-              private chatService: CommunitiesService,
-              private validationService: ValidationService) {
-  }
+	constructor(@Inject(MAT_DIALOG_DATA) public data: ICreateCommunityResponse) {}
 
-  protected createChannelSub$!: Subscription;
+	protected createChannelSub$!: Subscription;
 
-  public groupTitle = '';
-  public groupDescription = '';
+	onNoClick = () => this.dialogRef.close();
 
-  onNoClick = () => this.dialogRef.close();
+	onCreateGroupClick(): void {
+		this.validationService.validateField(this.form.get('channelTitle')?.value as string, 'Group Title');
+		this.validationService.validateField(this.form.get('channelDescription')?.value as string, 'Group Description');
 
-  onCreateGroupClick(): void {
-    this.validationService.validateField(this.groupTitle, 'Group Title');
-    this.validationService.validateField(this.groupDescription, 'Group Description');
+		const createGroupCommand: CreateChannelCommand = {
+			...(this.form.value as CreateChannelCommand),
+		};
 
-    const createGroupCommand = new CreateChannelCommand(this.groupTitle, this.groupDescription);
-
-    this.createChannelSub$ = this.chatService.createChannel(createGroupCommand).subscribe(_ => {
-      this.dialogRef.close();
-    }, error => alert(error.error.errorDetails));
-  }
-
-  ngOnDestroy(): void {
-  }
+		this.createChannelSub$ = this.chatService
+			.createChannel(createGroupCommand)
+			.pipe(
+				catchError((error) => {
+					this.snackBar.open(error.error.errorDetails);
+					return EMPTY;
+				}),
+			)
+			.subscribe((_) => {
+				this.dialogRef.close();
+			});
+	}
 }

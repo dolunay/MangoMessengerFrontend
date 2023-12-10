@@ -1,228 +1,259 @@
-import { ValidationService } from '../../services/validation.service';
-import {SessionService} from '../../services/session.service';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UsersService} from "../../services/users.service";
-import {UpdateAccountInformationCommand} from "../../../types/requests/UpdateAccountInformationCommand";
-import {ChangePasswordCommand} from "../../../types/requests/ChangePasswordCommand";
-import {IUser} from "../../../types/models/IUser";
-import {Subject, Subscription} from "rxjs";
-import {UpdateUserSocialsCommand} from "../../../types/requests/UpdateUserSocialsCommand";
-import {DocumentsService} from "../../services/documents.service";
-import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
-import {ErrorNotificationService} from "../../services/error-notification.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {DatePipe} from '@angular/common';
+import { ErrorNotificationService, SessionService, UsersService, ValidationService } from '@core/services';
+import type { OnInit } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 
-@AutoUnsubscribe()
+import type { Observable } from 'rxjs';
+import { EMPTY, catchError } from 'rxjs';
+
+import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import type {
+	ChangePasswordCommand,
+	UpdateAccountInformationCommand,
+	UpdateUserSocialsCommand,
+} from '@shared/types/requests';
+import type { IUser } from '@shared/types/models';
+import { MatImports } from '@shared/mat-imports';
+import type { TypedControl } from '@shared/utils';
+import { NavigationBarComponent, ProfileSettingsSidebarComponent } from '@core/messenger';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 @Component({
-  selector: 'app-profile-settings',
-  templateUrl: './profile-settings.component.html',
-  styleUrls: ['./profile-settings.component.scss']
+	selector: 'app-profile-settings',
+	templateUrl: './profile-settings.component.html',
+	styleUrls: ['./profile-settings.component.scss'],
+	imports: [...MatImports, FormsModule, ReactiveFormsModule, NavigationBarComponent, ProfileSettingsSidebarComponent],
+	standalone: true,
 })
-export class ProfileSettingsComponent implements OnInit, OnDestroy {
+export class ProfileSettingsComponent implements OnInit {
+	private readonly userService = inject(UsersService);
+	private readonly errorNotificationService = inject(ErrorNotificationService);
+	private readonly sessionService = inject(SessionService);
+	private readonly router = inject(Router);
+	private readonly datePipe = inject(DatePipe);
+	private readonly snackbar = inject(MatSnackBar);
+	private readonly validationService = inject(ValidationService);
+	private readonly destroyRef = inject(DestroyRef);
+	private readonly formBuilder = inject(FormBuilder);
+	private userId: string | undefined = this.sessionService.getTokens()?.userId;
+	eventsSubject!: Observable<IUser>;
+	isLoaded = false;
+	clonedUser!: IUser;
+	currentPassword = '';
+	newPassword = '';
+	repeatNewPassword = '';
+	fileName = '';
+	file!: File;
+	form = this.formBuilder.group<TypedControl<IUser>>({
+		address: [''],
+		bio: [''],
+		birthdayDate: [''],
+		email: [''],
+		facebook: [''],
+		firstName: [''],
+		instagram: [''],
+		lastName: [''],
+		linkedIn: [''],
+		twitter: [''],
+		username: [''],
+		website: [''],
+		pictureUrl: ['', [Validators.required]],
+		displayName: ['', []],
+		userId: ['', []],
+		publicKey: ['', []],
+	});
 
-  constructor(private userService: UsersService,
-              private documentService: DocumentsService,
-              private errorNotificationService: ErrorNotificationService,
-              private sessionService: SessionService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private datePipe: DatePipe,
-              private validationService: ValidationService) {
-  }
+	ngOnInit(): void {
+		this.initializeView();
+	}
 
-  protected getCurrentUserSub$!: Subscription;
-  protected updateAccountInfoSub$!: Subscription;
-  protected updateUserSocialsSub$!: Subscription;
-  protected changePasswordSub$!: Subscription;
-  protected updateProfilePictureSub$!: Subscription;
+	initializeView(): void {
+		const userId = this.userId as string;
+		this.userService
+			.getUserById(userId)
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe({
+				next: (currenrUserResponse) => {
+					const { user } = currenrUserResponse;
+					this.isLoaded = true;
+					this.assignForm(user);
+					this.cloneCurrentUser();
+					this.emitEventToChild(this.clonedUser);
+				},
+				error: (err) => {
+					this.errorNotificationService.notifyOnError(err);
+				},
+			});
+	}
 
-  private userId: string | undefined = this.sessionService.getTokens()?.userId;
+	private assignForm(user: IUser) {
+		this.form.patchValue({
+			...user,
+		});
+	}
 
-  public eventsSubject: Subject<IUser> = new Subject<IUser>();
-  public isLoaded = false;
-  public cloneUser!: IUser;
-  public currentPassword = '';
-  public newPassword = '';
-  public repeatNewPassword = '';
-  public fileName = '';
-  public file!: File;
+	saveAccountInfo(): void {
+		if (!this.validateDate(this.form.controls.birthdayDate.value as string)) {
+			this.snackbar.open('Invalid birthday date format. Correct and try again.');
+			return;
+		}
 
-  public currentUser: IUser = {
-    pictureUrl: "",
-    publicKey: 0,
-    address: "",
-    bio: "",
-    birthdayDate: "",
-    displayName: "",
-    email: "",
-    facebook: "",
-    firstName: "",
-    instagram: "",
-    lastName: "",
-    linkedIn: "",
-    twitter: "",
-    userId: "",
-    username: "",
-    website: ""
-  };
+		const command: UpdateAccountInformationCommand = {
+			...(this.form.value as UpdateAccountInformationCommand),
+		};
 
-  ngOnInit(): void {
-    this.initializeView();
-  }
+		this.validateUsersAccountInfo(command);
+		this.userService
+			.updateUserAccountInformation(command)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
 
-  initializeView(): void {
-    const userId = this.userId as string;
-    this.getCurrentUserSub$ = this.userService.getUserById(userId).subscribe(getUserResponse => {
-      this.currentUser = getUserResponse.user;
-      this.cloneCurrentUser();
-      this.emitEventToChild(this.cloneUser);
-      this.isLoaded = true;
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
+					if (error.status === 0 || error.status === 401 || error.status === 403)
+						this.router.navigateByUrl('login').then((r) => r);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe({
+				next: () => {
+					this.snackbar.open('Personal information has been updated successfully.');
+					this.cloneCurrentUser();
+					this.emitEventToChild(this.clonedUser);
+				},
+			});
+	}
 
-      if (error.status === 0 || error.status === 401 || error.status === 403) {
-        this.router.navigateByUrl('login').then(r => r);
-      }
-    });
-  }
+	saveSocialMediaInfo(): void {
+		const command: UpdateUserSocialsCommand = { ...(this.form.value as UpdateUserSocialsCommand) };
 
-  saveAccountInfo(): void {
-    if (!this.validateDate(this.currentUser.birthdayDate)) {
-      alert('Invalid birthday date format. Correct and try again.');
-      return;
-    }
+		this.validateUsersSocials(command);
 
-    const command = new UpdateAccountInformationCommand(
-      this.currentUser.birthdayDate,
-      this.currentUser.website,
-      this.currentUser.username,
-      this.currentUser.bio,
-      this.currentUser.address,
-      this.currentUser.displayName);
+		this.userService
+			.updateUserSocials(command)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
 
-      this.validateUsersAccountInfo(command);
+					if (error.status === 0 || error.status === 401 || error.status === 403)
+						this.router.navigateByUrl('login').then((r) => r);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe({
+				next: () => {
+					this.snackbar.open('Social media links updated successfully.');
+					this.cloneCurrentUser();
+					this.emitEventToChild(this.clonedUser);
+				},
+			});
+	}
 
-      this.updateAccountInfoSub$ = this.userService.updateUserAccountInformation(command).subscribe(_ => {
-      alert('Personal information has been updated successfully.');
-      this.cloneCurrentUser();
-      this.emitEventToChild(this.cloneUser);
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
+	changePassword(): void {
+		this.validationService.validateField(this.currentPassword, 'Current Password');
+		this.validationService.validateField(this.newPassword, 'New Password');
+		if (this.currentPassword === this.newPassword) {
+			this.snackbar.open('New password should not equals current password.');
+			return;
+		}
 
-      if (error.status === 0 || error.status === 401 || error.status === 403) {
-        this.router.navigateByUrl('login').then(r => r);
-      }
-    });
-  }
+		if (this.newPassword !== this.repeatNewPassword) {
+			this.snackbar.open('Passwords are different.');
+			return;
+		}
 
-  saveSocialMediaInfo(): void {
-    const command = new UpdateUserSocialsCommand(this.currentUser.facebook,
-      this.currentUser.twitter,
-      this.currentUser.instagram,
-      this.currentUser.linkedIn);
+		const command: ChangePasswordCommand = {
+			currentPassword: this.currentPassword,
+			newPassword: this.newPassword,
+		};
 
-    this.validateUsersSocials(command);
+		this.userService
+			.changePassword(command)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					if (error.status === 0 || error.status === 401 || error.status === 403)
+						this.router.navigateByUrl('login').then((r) => r);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe({
+				next: (data) => {
+					this.snackbar.open(data.message);
+				},
+			});
+	}
 
-    this.updateUserSocialsSub$ = this.userService.updateUserSocials(command).subscribe(_ => {
-      alert('Social media links updated successfully.');
-      this.cloneCurrentUser();
-      this.emitEventToChild(this.cloneUser);
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
+	updateProfilePicture(): void {
+		const formData = new FormData();
+		const pictureFileName = this.fileName ?? this.file.name;
+		this.validationService.validateFileName(pictureFileName);
+		formData.append('pictureFile', this.file);
+		this.userService
+			.updateProfilePicture(formData)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe({
+				next: (updateResponse) => {
+					this.snackbar.open(updateResponse.message);
+					this.form.patchValue({
+						pictureUrl: updateResponse.newUserPictureUrl,
+					});
+					this.cloneCurrentUser();
+					this.emitEventToChild(this.clonedUser);
+				},
+			});
+	}
 
-      if (error.status === 0 || error.status === 401 || error.status === 403) {
-        this.router.navigateByUrl('login').then(r => r);
-      }
-    });
-  }
+	onFileSelected(event: any): void {
+		const file: File = event.target.files[0];
 
-  changePassword(): void {
-    this.validationService.validateField(this.currentPassword, 'Current Password');
-    this.validationService.validateField(this.newPassword, 'New Password');
-    if (this.currentPassword === this.newPassword) {
-      alert("New password should not equals current password.");
-      return;
-    }
+		if (file) {
+			this.file = file;
+			this.fileName = file.name;
+		}
+	}
 
-    if (this.newPassword !== this.repeatNewPassword) {
-      alert('Passwords are different.');
-      return;
-    }
+	emitEventToChild(user: IUser): void {
+		this.userService.assignSubject(user);
+		this.eventsSubject = this.userService.getEvents();
+	}
 
-    const command = new ChangePasswordCommand(this.currentPassword, this.newPassword);
+	private cloneCurrentUser = () => {
+		this.clonedUser = JSON.parse(JSON.stringify(this.form.value));
+		this.clonedUser.birthdayDate = this.datePipe.transform(this.clonedUser.birthdayDate, 'MM-dd-yyyy') as any;
+	};
 
-    this.changePasswordSub$ = this.userService.changePassword(command).subscribe(data => {
-      alert(data.message);
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
+	validateDate(date: string): boolean {
+		if (date === null) return false;
 
-      if (error.status === 0 || error.status === 401 || error.status === 403) {
-        this.router.navigateByUrl('login').then(r => r);
-      }
-    });
-  }
+		const anyDate = date as any;
+		const parsedDate = new Date(anyDate).getDate();
+		return !Number.isNaN(parsedDate);
+	}
 
-  updateProfilePicture(): void {
-    const formData = new FormData();
-    let pictureFileName = this.fileName ?? this.file.name;
-    this.validationService.validateFileName(pictureFileName);
-    formData.append("pictureFile", this.file);
+	validateUsersAccountInfo(command: UpdateAccountInformationCommand) {
+		this.validationService.validateField(command.displayName, 'Display Name');
+		this.validationService.validateField(command.username, 'User Name');
+		this.validationService.validateField(command.website, 'Web Site');
+		this.validationService.validateField(command.bio, 'Bio');
+		this.validationService.validateField(command.address, 'Address');
+	}
 
-    this.updateProfilePictureSub$ =
-      this.userService.updateProfilePicture(formData).subscribe(updateResponse => {
-        alert(updateResponse.message);
-        this.currentUser.pictureUrl = updateResponse.newUserPictureUrl;
-        this.cloneCurrentUser();
-        this.emitEventToChild(this.cloneUser);
-      }, error => {
-        this.errorNotificationService.notifyOnError(error);
-      });
-  }
-
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-
-    if (file) {
-      this.file = file;
-      this.fileName = file.name;
-    }
-  }
-
-  ngOnDestroy(): void {
-  }
-
-  emitEventToChild(user: IUser): void {
-    this.eventsSubject.next(user);
-  }
-
-  private cloneCurrentUser = () => {
-    this.cloneUser = JSON.parse(JSON.stringify(this.currentUser));
-    this.cloneUser.birthdayDate = this.datePipe.transform(this.cloneUser.birthdayDate, "MM-dd-yyyy") as any;
-  }
-
-  validateDate(date: string): boolean {
-    if (date === null) {
-      return false;
-    }
-
-    let anyDate = date as any;
-    let parsedDate = (new Date(anyDate)).getDate();
-    return !isNaN(parsedDate);
-  }
-
-  validateUsersAccountInfo(command: UpdateAccountInformationCommand) {
-    this.validationService.validateField(command.displayName, 'Display Name');
-    this.validationService.validateField(command.username, 'User Name');
-    this.validationService.validateField(command.website, 'Web Site');
-    this.validationService.validateField(command.bio, 'Bio');
-    this.validationService.validateField(command.address, 'Adress');
-  }
-
-  validateUsersSocials(command: UpdateUserSocialsCommand) {
-    this.validationService.validateField(command.facebook, 'Facebook');
-    this.validationService.validateField(command.instagram, 'Instagram');
-    this.validationService.validateField(command.twitter, 'Twitter');
-    this.validationService.validateField(command.linkedIn, 'LinkedIn');
-  }
+	validateUsersSocials(command: UpdateUserSocialsCommand) {
+		this.validationService.validateField(command.facebook, 'Facebook');
+		this.validationService.validateField(command.instagram, 'Instagram');
+		this.validationService.validateField(command.twitter, 'Twitter');
+		this.validationService.validateField(command.linkedIn, 'LinkedIn');
+	}
 }

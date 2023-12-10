@@ -8,7 +8,7 @@
   <!-- Navigation End -->
 
   <!-- Sidebar Start -->
-  <app-profile-settings-sidebar [events$]="eventsSubject.asObservable()"></app-profile-settings-sidebar>
+  <app-profile-settings-sidebar [events$]="eventsSubject"></app-profile-settings-sidebar>
   <!-- Sidebar End -->
 
   <!-- Main Start-->
@@ -31,213 +31,215 @@
           <p class="text-muted mb-0">Update Personal Information &amp; Settings</p>
         </div>
       </div>
+			@if (isLoaded) {
+				<div class="container-xl px-2 px-sm-3">
+					<div class="row">
+						<div class="col">
+							<div class="card mb-3">
+								<div class="card-header">
+									<h3 class="mb-1">Account</h3>
+									<p class="mb-0 text-muted small">Update personal &amp; contact information</p>
+								</div>
 
-      <div class="container-xl px-2 px-sm-3" *ngIf="isLoaded">
-        <div class="row">
-          <div class="col">
-            <div class="card mb-3">
-              <div class="card-header">
-                <h3 class="mb-1">Account</h3>
-                <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
-              </div>
+								<div class="card-body" [formGroup]="form">
+									<div class="row">
+										<div class="col-md-6 col-12">
+											<mat-form-field appearance="fill">
+												<mat-label>Birthday Date</mat-label>
+												<input matInput [matDatepicker]="picker">
+												<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+												<mat-datepicker #picker></mat-datepicker>
+											</mat-form-field>
+										</div>
+										<div class="col-md-6 col-12">
+											<div class="form-group">
+												<label for="webSite">Website</label>
+												<input formControlName="website" type="text" class="form-control form-control-md"
+															 id="webSite"
+															 placeholder="Type your website">
+											</div>
+										</div>
+										<div class="col-md-6 col-12">
+											<div class="form-group">
+												<label for="userName">Username</label>
+												<input formControlName="username" type="text" class="form-control form-control-md"
+															 id="username"
+															 placeholder="Type your user name">
+											</div>
+										</div>
 
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-6 col-12">
-                    <mat-form-field appearance="fill">
-                      <mat-label>Birthday Date</mat-label>
-                      <input matInput [matDatepicker]="picker" [(ngModel)]="currentUser.birthdayDate">
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group">
-                      <label for="webSite">Website</label>
-                      <input [(ngModel)]="currentUser.website" type="text" class="form-control form-control-md"
-                             id="webSite"
-                             placeholder="Type your website" value="{{currentUser.website}}">
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group">
-                      <label for="userName">Username</label>
-                      <input [(ngModel)]="currentUser.username" type="text" class="form-control form-control-md"
-                             id="username"
-                             placeholder="Type your user name" value="{{currentUser.username}}">
-                    </div>
-                  </div>
+										<div class="col-md-6 col-12">
+											<div class="form-group">
+												<label for="displayName">Display Name</label>
+												<input formControlName="displayName" type="text" class="form-control form-control-md"
+															 id="displayName"
+															 placeholder="Type your display name">
+											</div>
+										</div>
 
-                  <div class="col-md-6 col-12">
-                    <div class="form-group">
-                      <label for="displayName">Display Name</label>
-                      <input [(ngModel)]="currentUser.displayName" type="text" class="form-control form-control-md"
-                             id="displayName"
-                             placeholder="Type your display name" value="{{currentUser.displayName}}">
-                    </div>
-                  </div>
+										<div class="col-12">
+											<div class="form-group">
+												<label for="bio">Bio</label>
+												<input formControlName="bio" type="text" class="form-control form-control-md" id="bio"
+															 placeholder="Any details about you"
+												>
+											</div>
+										</div>
+										<div class="col-12">
+											<div class="form-group">
+												<label for="Address">Address</label>
+												<input formControlName="address" type="text" class="form-control form-control-md"
+															 id="Address"
+															 placeholder="Type your address"
+												>
+											</div>
+										</div>
+									</div>
+								</div>
 
-                  <div class="col-12">
-                    <div class="form-group">
-                      <label for="bio">Bio</label>
-                      <input [(ngModel)]="currentUser.bio" type="text" class="form-control form-control-md" id="bio"
-                             placeholder="Any details about you"
-                             value="{{currentUser.bio}}">
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="form-group">
-                      <label for="Address">Address</label>
-                      <input [(ngModel)]="currentUser.address" type="text" class="form-control form-control-md"
-                             id="Address"
-                             placeholder="Type your address"
-                             value="{{currentUser.address}}">
-                    </div>
-                  </div>
-                </div>
-              </div>
+								<div class="card-footer d-flex justify-content-end">
+									<button (click)="initializeView()" type="button" class="btn btn-link text-muted mx-1">Reset</button>
+									<button (click)="saveAccountInfo()" type="button" class="btn btn-primary">Save Changes</button>
+								</div>
+							</div>
 
-              <div class="card-footer d-flex justify-content-end">
-                <button (click)="initializeView()" type="button" class="btn btn-link text-muted mx-1">Reset</button>
-                <button (click)="saveAccountInfo()" type="button" class="btn btn-primary">Save Changes</button>
-              </div>
-            </div>
+							<div class="card mb-3">
+								<div class="card-header">
+									<h3 class="mb-1">Social network profiles</h3>
+									<p class="mb-0 text-muted small">Update personal &amp; contact information</p>
+								</div>
 
-            <div class="card mb-3">
-              <div class="card-header">
-                <h3 class="mb-1">Social network profiles</h3>
-                <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
-              </div>
+								<div class="card-body" [formGroup]="form">
+									<div class="row">
+										<div class="col-md-6 col-12">
+											<div class="form-group">
+												<label for="facebookId">Facebook</label>
+												<input formControlName="facebook" type="text" class="form-control form-control-md"
+															 id="facebookId"
+															 placeholder="Username" >
+											</div>
+										</div>
+										<div class="col-md-6 col-12">
+											<div class="form-group">
+												<label for="twitterId">Twitter</label>
+												<input formControlName="twitter" type="text" class="form-control form-control-md"
+															 id="twitterId"
+															 placeholder="Username">
+											</div>
+										</div>
+										<div class="col-md-6 col-12">
+											<div class="form-group">
+												<label for="instagramId">Instagram</label>
+												<input formControlName="instagram" type="text" class="form-control form-control-md"
+															 id="instagramId"
+															 placeholder="Username">
+											</div>
+										</div>
+										<div class="col-md-6 col-12">
+											<div class="form-group">
+												<label for="linkedinId">Linkedin</label>
+												<input formControlName="linkedIn" type="text" class="form-control form-control-md"
+															 id="linkedinId"
+															 placeholder="Username" >
+											</div>
+										</div>
+									</div>
+								</div>
 
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-6 col-12">
-                    <div class="form-group">
-                      <label for="facebookId">Facebook</label>
-                      <input [(ngModel)]="currentUser.facebook" type="text" class="form-control form-control-md"
-                             id="facebookId"
-                             placeholder="Username" value="{{currentUser.facebook}}">
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group">
-                      <label for="twitterId">Twitter</label>
-                      <input [(ngModel)]="currentUser.twitter" type="text" class="form-control form-control-md"
-                             id="twitterId"
-                             placeholder="Username" value="{{currentUser.twitter}}">
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group">
-                      <label for="instagramId">Instagram</label>
-                      <input [(ngModel)]="currentUser.instagram" type="text" class="form-control form-control-md"
-                             id="instagramId"
-                             placeholder="Username" value="{{currentUser.instagram}}">
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group">
-                      <label for="linkedinId">Linkedin</label>
-                      <input [(ngModel)]="currentUser.linkedIn" type="text" class="form-control form-control-md"
-                             id="linkedinId"
-                             placeholder="Username" value="{{currentUser.linkedIn}}">
-                    </div>
-                  </div>
-                </div>
-              </div>
+								<div class="card-footer d-flex justify-content-end">
+									<button (click)="initializeView()" type="button" class="btn btn-link text-muted mx-1">Reset</button>
+									<button (click)="saveSocialMediaInfo()" type="button" class="btn btn-primary">Save Changes</button>
+								</div>
+							</div>
 
-              <div class="card-footer d-flex justify-content-end">
-                <button (click)="initializeView()" type="button" class="btn btn-link text-muted mx-1">Reset</button>
-                <button (click)="saveSocialMediaInfo()" type="button" class="btn btn-primary">Save Changes</button>
-              </div>
-            </div>
+							<div class="card mb-3">
+								<div class="card-header">
+									<h3 class="mb-1">Password</h3>
+									<p class="mb-0 text-muted small">Update personal &amp; contact information</p>
+								</div>
 
-            <div class="card mb-3">
-              <div class="card-header">
-                <h3 class="mb-1">Password</h3>
-                <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
-              </div>
+								<div class="card-body">
+									<form>
+										<div class="row">
+											<div class="col-md-6 col-12">
+												<div class="form-group">
+													<label for="current-password">Current Password</label>
+													<input [(ngModel)]="currentPassword"
+																 type="password"
+																 class="form-control form-control-md"
+																 id="current-password"
+																 placeholder="Current password"
+																 value="{{currentPassword}}"
+																 name="current-password"
+																 autocomplete="on">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6 col-12">
+												<div class="form-group">
+													<label for="new-password">New Password</label>
+													<input [(ngModel)]="newPassword"
+																 type="password"
+																 class="form-control form-control-md"
+																 id="new-password"
+																 placeholder="New password"
+																 autocomplete="off"
+																 name="new-password"
+																 value="{{newPassword}}">
+												</div>
+											</div>
+											<div class="col-md-6 col-12">
+												<div class="form-group">
+													<label for="repeat-password">Repeat Password</label>
+													<input [(ngModel)]="repeatNewPassword"
+																 type="password"
+																 class="form-control form-control-md"
+																 id="repeat-password"
+																 placeholder="Repeat password"
+																 value="{{repeatNewPassword}}"
+																 name="repeat-password"
+																 autocomplete="off">
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
 
-              <div class="card-body">
-                <form>
-                  <div class="row">
-                    <div class="col-md-6 col-12">
-                      <div class="form-group">
-                        <label for="current-password">Current Password</label>
-                        <input [(ngModel)]="currentPassword"
-                               type="password"
-                               class="form-control form-control-md"
-                               id="current-password"
-                               placeholder="Current password"
-                               value="{{currentPassword}}"
-                               name="current-password"
-                               autocomplete="on">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 col-12">
-                      <div class="form-group">
-                        <label for="new-password">New Password</label>
-                        <input [(ngModel)]="newPassword"
-                               type="password"
-                               class="form-control form-control-md"
-                               id="new-password"
-                               placeholder="New password"
-                               autocomplete="off"
-                               name="new-password"
-                               value="{{newPassword}}">
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-12">
-                      <div class="form-group">
-                        <label for="repeat-password">Repeat Password</label>
-                        <input [(ngModel)]="repeatNewPassword"
-                               type="password"
-                               class="form-control form-control-md"
-                               id="repeat-password"
-                               placeholder="Repeat password"
-                               value="{{repeatNewPassword}}"
-                               name="repeat-password"
-                               autocomplete="off">
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
+								<div class="card-footer d-flex justify-content-end">
+									<button (click)="initializeView()" type="button" class="btn btn-link text-muted mx-1">Reset</button>
+									<button (click)="changePassword()" type="button" class="btn btn-primary">Save Changes</button>
+								</div>
+							</div>
 
-              <div class="card-footer d-flex justify-content-end">
-                <button (click)="initializeView()" type="button" class="btn btn-link text-muted mx-1">Reset</button>
-                <button (click)="changePassword()" type="button" class="btn btn-primary">Save Changes</button>
-              </div>
-            </div>
+							<div class="card mb-3">
+								<div class="card-header">
+									<h3 class="mb-1">Update Profile picture</h3>
+									<p class="mb-0 text-muted small">Update personal &amp; contact information</p>
+								</div>
 
-            <div class="card mb-3">
-              <div class="card-header">
-                <h3 class="mb-1">Update Profile picture</h3>
-                <p class="mb-0 text-muted small">Update personal &amp; contact information</p>
-              </div>
+								<div class="card-body">
+									<form>
+										<div class="row">
+											<div class="col-md-6 col-12">
+												<div class="form-group">
+													<input type="file" class="btn btn-close-white" name="picture"
+																 (change)="onFileSelected($event)">
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
 
-              <div class="card-body">
-                <form>
-                  <div class="row">
-                    <div class="col-md-6 col-12">
-                      <div class="form-group">
-                        <input type="file" class="btn btn-close-white" name="picture"
-                               (change)="onFileSelected($event)">
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
+								<div class="card-footer d-flex justify-content-end">
+									<button (click)="updateProfilePicture()" type="button" class="btn btn-primary">Update</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
 
-              <div class="card-footer d-flex justify-content-end">
-                <button (click)="updateProfilePicture()" type="button" class="btn btn-primary">Update</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <!-- Profile Settings End -->
   </main>

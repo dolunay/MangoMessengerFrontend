@@ -1,57 +1,30 @@
-﻿import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root',
 })
 export class ErrorNotificationService {
-  notifyOnError(error: any): void {
-    if (error.status === 0) {
-      alert("Cannot connect to the server. Response code: 0.");
-      return;
-    }
+	private errorMessages: Record<number, string> = {
+		0: 'Cannot connect to the server. Response code: 0.',
+		403:
+			'Your account is not activated yet. ' +
+			'Activate to start chatting. Activation links are sent by email after registration.',
+		409: 'Conflict while creating chatroom',
+		400: 'Bad Request',
+		404: 'Not Found',
+	};
 
-    if (error.status === 403) {
-      alert("Your account is not activated yet. Activate to start chatting. " +
-        "Activation links is sent by email after registration.");
-      return;
-    }
+	private handleErrorStatus(status: number, customMessage?: string): void {
+		const errorMessage = this.errorMessages[status] || `Unhandled error status: ${status}.`;
 
-    if (error.status === 409) {
-      alert(error.error.errorDetails);
-      return;
-    }
+		throw new Error(`${errorMessage} ${customMessage}`);
+	}
 
-    if (error.status === 400) {
-      alert(error.error.ErrorMessage);
-      return;
-    }
+	notifyOnError(error: any): void {
+		this.handleErrorStatus(error.status);
+	}
 
-    if (error.status === 404) {
-      console.log(error);
-      alert(error.message);
-    }
-  }
-
-  notifyOnErrorWithComponentName(error: any, componentName: string): void {
-    if (error.status === 0) {
-      alert("Cannot connect to the server. Response code: 0." + ` ${componentName}`);
-      return;
-    }
-
-    if (error.status === 403) {
-      alert("Your account is not activated yet. Activate to start chatting. " +
-        "Activation links is sent by email after registration." + ` ${componentName}`);
-      return;
-    }
-
-    if (error.status === 409) {
-      alert(error.error.errorDetails + ` ${componentName}`);
-      return;
-    }
-
-    if (error.status === 400) {
-      alert(error.error.ErrorMessage + ` ${componentName}`);
-      return;
-    }
-  }
+	notifyOnErrorWithComponentName(error: any, componentName: string): void {
+		this.handleErrorStatus(error.status, componentName);
+	}
 }

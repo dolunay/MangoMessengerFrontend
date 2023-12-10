@@ -1,56 +1,59 @@
-import { ValidationService } from '../../services/validation.service';
-import {Component, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {SessionService} from "../../services/session.service";
-import {UsersService} from "../../services/users.service";
-import {RegisterCommand} from "../../../types/requests/RegisterCommand";
-import {Subscription} from "rxjs";
-import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
-import {ErrorNotificationService} from "../../services/error-notification.service";
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import type { RegisterCommand } from '@shared/types/requests';
+import { ErrorNotificationService, UsersService, ValidationService } from '@core/services';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import type { TypedControl } from '@shared/utils';
+import { EMPTY, catchError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-@AutoUnsubscribe()
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  standalone: true
+	selector: 'app-register',
+	templateUrl: './register.component.html',
+	standalone: true,
+	imports: [ReactiveFormsModule, RouterLink],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterComponent implements OnDestroy {
+export class RegisterComponent {
+	private readonly usersService = inject(UsersService);
+	private readonly router = inject(Router);
+	private readonly snackBar = inject(MatSnackBar);
+	private readonly errorNotificationService = inject(ErrorNotificationService);
+	private readonly validationService = inject(ValidationService);
+	private readonly destroyRef = inject(DestroyRef);
+	private readonly fb = inject(FormBuilder);
 
-  public registerCommand: RegisterCommand = {
-    displayName: "",
-    email: "",
-    password: "",
-    termsAccepted: false,
-  };
+	registerCommand = this.fb.group<TypedControl<RegisterCommand>>({
+		displayName: [''],
+		email: [''],
+		password: [''],
+		termsAccepted: [''],
+	});
 
-  protected registerSub$!: Subscription;
+	register(): void {
+		this.validationService.validateField(this.registerCommand.get('email')?.value as string, 'Email');
+		this.validationService.validateField(this.registerCommand.get('displayName')?.value as string, 'Display Name');
+		this.validationService.validateField(this.registerCommand.get('password')?.value as string, 'Password');
 
-  constructor(private usersService: UsersService,
-              private sessionService: SessionService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private errorNotificationService: ErrorNotificationService,
-              private validationService: ValidationService) {
-  }
+		if (!this.registerCommand.get('termsAccepted')?.value) {
+			this.snackBar.open('Terms of service must be accepted.');
+			return;
+		}
 
-  register(): void {
-
-    this.validationService.validateField(this.registerCommand.email, 'Email');
-    this.validationService.validateField(this.registerCommand.displayName, 'Display Name');
-    this.validationService.validateField(this.registerCommand.password, 'Password');
-
-    if (!this.registerCommand.termsAccepted) {
-      alert("Terms of service must be accepted.");
-      return;
-    }
-
-    this.registerSub$ = this.usersService.createUser(this.registerCommand).subscribe(_ => {
-      this.router.navigateByUrl('verify-email-note').then(r => r);
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
-    });
-  }
-
-  ngOnDestroy(): void {
-  }
+		this.usersService
+			.createUser(this.registerCommand.value as RegisterCommand)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe({
+				next: () => {
+					this.router.navigateByUrl('verify-email-note').then((r) => r);
+				},
+			});
+	}
 }

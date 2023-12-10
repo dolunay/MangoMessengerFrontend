@@ -1,25 +1,15 @@
-import {Component, Input} from '@angular/core';
-import {IContact} from "../../../../types/models/IContact";
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import type { IContact } from '@shared/types/models';
+import { DefaultImagePipe } from '@core/pipes/default-image.pipe';
 
 @Component({
-  selector: 'app-contact-item',
-  templateUrl: './contact-item.component.html'
+	selector: 'app-contact-item',
+	templateUrl: './contact-item.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [DefaultImagePipe],
+	standalone: true,
 })
 export class ContactItemComponent {
-
-  constructor() {
-  }
-
-  @Input() contact: IContact = {
-    address: "",
-    bio: "",
-    displayName: "",
-    isContact: false,
-    pictureUrl: "",
-    userId: ""
-  }
-
-  getProfilePicture(): string {
-    return this.contact.pictureUrl ? this.contact.pictureUrl : 'assets/media/avatar/3.png';
-  }
+	@Input() contact: IContact = {} as IContact;
+	defaultUrl = 'assets/media/avatar/3.png';
 }

@@ -5,7 +5,8 @@
     <div class="row no-gutters text-center align-items-center justify-content-center min-vh-100">
       <div class="col-12 col-md-6 col-lg-5 col-xl-4">
         <h4 class="font-weight-bold">Email Verification Result</h4>
-        <div *ngIf="response.success; else elseBlock" class="text-white">
+        @if(response().success) {
+        <div  class="text-white">
           Account activated successfully.
           <br>
           <button (click)="proceedToLoginComponent()"
@@ -13,11 +14,11 @@
                   type="submit">Go To Login
           </button>
         </div>
-        <ng-template #elseBlock>
+        } @else {
           <div class="text-white">
-            AN ERROR OCCURRED: {{errorMessage}}
+            AN ERROR OCCURRED: {{errorMessage()}}
           </div>
-        </ng-template>
+        }
       </div>
     </div>
   </div>

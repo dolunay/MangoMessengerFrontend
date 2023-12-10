@@ -1,52 +1,58 @@
-import { ValidationService } from '../../services/validation.service';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {SessionService} from "@core/services/session.service";
-import {LoginCommand} from "@types/requests";
-import {Subscription} from "rxjs";
-import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
-import {ErrorNotificationService} from "../../services/error-notification.service";
+import { ErrorNotificationService, ValidationService } from '@core/services';
+import type { OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { SessionService } from '@core/services/session.service';
+import type { LoginCommand } from '@shared/types/requests';
 
-@AutoUnsubscribe()
+import { MatImports } from '@shared/mat-imports';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import type { TypedControl } from '@shared/utils';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EMPTY, catchError } from 'rxjs';
+
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  standalone: true
+	selector: 'app-login',
+	templateUrl: './login.component.html',
+	standalone: true,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [...MatImports, ReactiveFormsModule, RouterLink],
 })
-export class LoginComponent implements OnDestroy, OnInit {
+export class LoginComponent implements OnInit {
+	private readonly sessionService = inject(SessionService);
+	private readonly router = inject(Router);
+	private readonly errorNotificationService = inject(ErrorNotificationService);
+	private readonly validationService = inject(ValidationService);
+	private readonly formBuilder = inject(FormBuilder);
+	private readonly destroyRef = inject(DestroyRef);
 
-  constructor(private sessionService: SessionService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private errorNotificationService: ErrorNotificationService,
-              private validationService: ValidationService) {
-  }
+	loginCommand = this.formBuilder.group<TypedControl<LoginCommand>>({
+		email: [''],
+		password: [''],
+	});
 
-  protected loginSub$!: Subscription;
+	login(): void {
+		this.validationService.validateField(this.loginCommand.get('email')?.value as string, 'Email');
+		this.validationService.validateField(this.loginCommand.get('password')?.value as string, 'Password');
 
-  public loginCommand: LoginCommand = {
-    email: "",
-    password: ""
-  };
+		this.sessionService
+			.createSession(this.loginCommand.value as LoginCommand)
+			.pipe(
+				catchError((error) => {
+					this.errorNotificationService.notifyOnError(error);
+					return EMPTY;
+				}),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe({
+				next: (response) => {
+					this.sessionService.setTokens(response.tokens);
+					this.router.navigateByUrl('main').then((r) => r);
+				},
+			});
+	}
 
-  login(): void {
-    this.validationService.validateField(this.loginCommand.email, 'Email');
-    this.validationService.validateField(this.loginCommand.password, 'Password');
-
-    this.loginSub$ = this.sessionService.createSession(this.loginCommand).subscribe(response => {
-
-      this.sessionService.setTokens(response.tokens);
-
-      this.router.navigateByUrl('main').then(r => r);
-    }, error => {
-      this.errorNotificationService.notifyOnError(error);
-    });
-  }
-
-  ngOnDestroy(): void {
-  }
-
-  ngOnInit(): void {
-    this.sessionService.clearTokens();
-  }
+	ngOnInit(): void {
+		this.sessionService.clearTokens();
+	}
 }
