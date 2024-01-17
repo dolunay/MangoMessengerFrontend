@@ -1,0 +1,97 @@
+@if (isEmojiPickerVisible) {
+	<emoji-mart class="emoji-mart" (emojiSelect)="addEmoji($event)" title="Choose your emoji"> </emoji-mart>
+}
+<div class="chat-footer">
+	<div class="form-row">
+		<div class="input-group-prepend mr-sm-2 mr-1">
+			<div class="dropdown">
+				<button
+					class="btn btn-secondary btn-icon btn-minimal btn-sm text-muted text-muted"
+					type="button"
+					data-toggle="dropdown"
+					aria-haspopup="true"
+					aria-expanded="false"
+				>
+					<!-- Default :: Inline SVG -->
+					<svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+						/>
+					</svg>
+				</button>
+				<div class="dropdown-menu cursor-pointer">
+					<input type="file" #fileInput id="attachment" class="dropdown-item" (change)="attachDocument($event)" />
+				</div>
+			</div>
+		</div>
+		<!-- Emoji Start -->
+		<div class="input-group-prepend mr-sm-2 mr-1">
+			<button
+				(click)="isEmojiPickerVisible = !isEmojiPickerVisible"
+				class="btn btn-secondary btn-icon btn-minimal btn-sm text-muted text-muted"
+				type="button"
+			>
+				<!-- Default :: Inline SVG -->
+				<svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+					/>
+				</svg>
+
+				<!-- Alternate :: External File link -->
+				<!-- <img class="injectable hw-20" src="./../assets/media/heroicons/outline/emoji-happy.svg" alt=""> -->
+			</button>
+		</div>
+		<!-- Emoji End -->
+		<!-- Chat Input Group Start -->
+		<div class="col">
+			<div>
+				Editing message
+				<button (click)="clearInEdit()" class="btn-close"></button>
+			</div>
+			<div class="input-group" [formGroup]="form">
+				<!-- Textarea Start-->
+				<textarea
+					formControlName="currentMessageText"
+					(keydown.enter)="onMessageSendClick($event)"
+					name="currentMessageText"
+					class="form-control transparent-bg border-0 no-resize hide-scrollbar text-white"
+					placeholder="Write your message..."
+					rows="1"
+				>
+				</textarea>
+				<!-- Textarea End -->
+			</div>
+			@if (attachmentName) {
+				<div *ngIf="attachmentName">
+					{{ attachmentName }}
+					<button (click)="clearAttachment()" class="btn-close"></button>
+				</div>
+			}
+			@if (inReplayAuthor && inReplayText) {
+				<div>
+					In replay to <strong>{{ inReplayAuthor }}:</strong> {{ inReplayText }}
+					<button (click)="clearInReplay()" class="btn-close"></button>
+				</div>
+			}
+		</div>
+		<!-- Chat Input Group End -->
+
+		<!-- Submit Button Start -->
+		<div class="col-auto" (click)="onMessageSendClick($event)">
+			<div class="btn btn-primary btn-icon rounded-circle text-light mb-1" role="button">
+				<!-- Default :: Inline SVG -->
+				<svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+				</svg>
+			</div>
+		</div>
+		<!-- Submit Button End-->
+	</div>
+</div>

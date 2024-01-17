@@ -1,0 +1,20 @@
+<form mat-dialog-container [formGroup]="form">
+	<h1 mat-dialog-title>Create group</h1>
+	<div mat-dialog-content>
+		<p>Enter title of the group</p>
+		<mat-form-field appearance="fill">
+			<mat-label>Title of the group</mat-label>
+			<input formControlName="channelTitle" matInput />
+		</mat-form-field>
+
+		<p>Description of the group</p>
+		<mat-form-field appearance="fill">
+			<mat-label>Description of the chat</mat-label>
+			<input matInput formControlName="channelDescription" />
+		</mat-form-field>
+	</div>
+	<div mat-dialog-actions>
+		<button class="btn cancel" mat-button style="color: #dbd8d8" (click)="onNoClick()">Cancel</button>
+		<button mat-button class="ok" (click)="onCreateGroupClick()" focusInitial>Ok</button>
+	</div>
+</form>

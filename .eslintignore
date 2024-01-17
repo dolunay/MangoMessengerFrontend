@@ -1,0 +1,10 @@
+*.json
+*.js
+**/*.js
+**/*.yml
+*.md
+app.js
+**/app.js
+server.js
+README.md
+changelog.md

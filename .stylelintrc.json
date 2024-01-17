@@ -1,0 +1,97 @@
+{
+	"configBasedir": "./",
+	"extends": ["stylelint-config-standard", "stylelint-order-config-standard"],
+	"plugins": ["stylelint-order"],
+	"processors": ["scss", "less"],
+	"rules": {
+		"at-rule-no-unknown": [
+			true,
+			{
+				"ignoreAtRules": ["tailwind", "apply", "variants", "responsive", "screen"]
+			}
+		],
+		"indentation": "tab",
+		"function-parentheses-space-inside": "never",
+		"max-empty-lines": null,
+		"selector-pseudo-element-colon-notation": "single",
+		"no-empty-source": true,
+		"at-rule-name-case": "lower",
+		"at-rule-name-space-after": null,
+		"no-eol-whitespace": true,
+		"number-leading-zero": "never",
+		"media-feature-parentheses-space-inside": "always",
+		"length-zero-no-unit": true,
+		"property-case": "lower",
+		"selector-combinator-space-after": "always",
+		"selector-max-empty-lines": null,
+		"selector-pseudo-class-case": "lower",
+		"value-list-comma-newline-after": null,
+		"value-list-comma-newline-before": null,
+		"value-list-comma-space-before": "never",
+		"unit-case": "lower",
+		"value-list-comma-space-after": "never",
+		"selector-pseudo-element-case": "lower",
+		"selector-pseudo-class-parentheses-space-inside": "always",
+		"selector-list-comma-space-before": "always",
+		"selector-list-comma-newline-after": "always",
+		"selector-combinator-space-before": "never",
+		"selector-attribute-operator-space-before": "never",
+		"selector-attribute-operator-space-after": "never",
+		"selector-attribute-brackets-space-inside": "never",
+		"rule-non-nested-empty-line-before": "never",
+		"number-zero-length-no-unit": null,
+		"number-no-trailing-zeros": null,
+		"no-missing-eof-newline": true,
+		"no-extra-semicolons": true,
+		"color-hex-length": "short",
+		"rule-empty-line-before": null,
+		"declaration-empty-line-before": null,
+		"selector-pseudo-element-no-unknown": [true, { "ignorePseudoElements": ["ng-deep"] }],
+		"declaration-block-no-redundant-longhand-properties": null,
+		"color-no-invalid-hex": true,
+		"unit-no-unknown": true,
+		"at-rule-empty-line-before": null,
+		"value-no-vendor-prefix": null,
+		"selector-no-vendor-prefix": null,
+		"property-no-vendor-prefix": null,
+		"media-feature-name-no-vendor-prefix": [
+			true,
+			{
+				"severity": "warning"
+			}
+		],
+		"alpha-value-notation": "number",
+		"order/properties-order": [
+			[
+				"display",
+				"flex-direction",
+				"align-items",
+				"align-content",
+				"justify-content",
+				"justify-items",
+				"width",
+				"min-width",
+				"max-width",
+				"height",
+				"min-height",
+				"max-height",
+				"overflow",
+				"background",
+				"background-color",
+				"background-image",
+				"box-shadow",
+				"filter",
+				"background-size",
+				"background-overflow",
+				"font-size",
+				"font-weight",
+				"color",
+				"text-align",
+				"text-shadow"
+			],
+			{
+				"unspecified": "ignore"
+			}
+		]
+	}
+}
